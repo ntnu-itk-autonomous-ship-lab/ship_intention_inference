@@ -120,8 +120,8 @@ void writeIntentionToFile(int timestep, INTENTION_INFERENCE::IntentionModelParam
     std::ofstream intentionFile;
     std::string filename_intention = "intention_files/risk_dist_intention_"+filename;
     intentionFile.open (filename_intention);
-    //intentionFile << "mmsi,x,y,time,colreg_compliant,distance_risk_of_collision,distance_risk_of_collision_front,good_seamanship,unmodeled_behaviour,CR_PS,CR_SS,HO,OT_en,OT_ing,priority_lower,priority_similar,priority_higher\n"; //,CR_SS2,CR_PS2,OT_ing2,OT_en2,priority_lower2,priority_similar2,priority_higher2\n";
-    intentionFile << "mmsi,x,y,time,colreg_compliant,good_seamanship,unmodeled_behaviour,CR_PS,CR_SS,HO,OT_en,OT_ing,priority_lower,priority_similar,priority_higher\n"; //,CR_SS2,CR_PS2,OT_ing2,OT_en2,priority_lower2,priority_similar2,priority_higher2\n";
+    intentionFile << "mmsi,x,y,time,colreg_compliant,distance_risk_of_collision,distance_risk_of_collision_front,good_seamanship,unmodeled_behaviour,CR_PS,CR_SS,HO,OT_en,OT_ing,priority_lower,priority_similar,priority_higher\n"; //,CR_SS2,CR_PS2,OT_ing2,OT_en2,priority_lower2,priority_similar2,priority_higher2\n";
+    //intentionFile << "mmsi,x,y,time,colreg_compliant,good_seamanship,unmodeled_behaviour,CR_PS,CR_SS,HO,OT_en,OT_ing,priority_lower,priority_similar,priority_higher\n"; //,CR_SS2,CR_PS2,OT_ing2,OT_en2,priority_lower2,priority_similar2,priority_higher2\n";
 
     for(int i = timestep; i < unique_time_vec.size() ; i++){ //from 1 because first state might be NaN
         std::cout << "timestep: " << i << std::endl;
@@ -198,11 +198,11 @@ int main(){
     //std::string filename = "new_Case - 01-09-2018, 01-11-37 - RT3LY-60-sec-two-ships-filled.csv"; //head-on
     //std::string filename = "new_Case - 01-09-2018, 01-45-02 - 19JNJ-60-sec-two-ships.csv";
     //std::string filename  = "new_Case - 01-11-2019, 02-30-00 - LP84U-60-sec.csv";
-    //std::string filename  = "new_Case - 01-17-2018, 06-26-20 - W4H51-60-sec.csv";
-    std::string filename = "new_Case - 05-26-2019, 20-39-57 - 60GEW-60-sec.csv";
+    std::string filename  = "new_Case - 07-25-2019, 10-57-14 - HUHYL-60-sec.csv";
+    //std::string filename = "new_Case - 05-26-2019, 20-39-57 - 60GEW-60-sec.csv";
 
-    //std::string intentionModelFilename = "intention_model_with_risk_of_collision.xdsl";
-    std::string intentionModelFilename = "intention_model_two_ships.xdsl";
+    std::string intentionModelFilename = "intention_model_with_risk_of_collision.xdsl";
+    //std::string intentionModelFilename = "intention_model_two_ships.xdsl";
 
     std::vector<std::map<int, Eigen::Vector4d> > ship_state;
     std::vector<int> mmsi_vec;
