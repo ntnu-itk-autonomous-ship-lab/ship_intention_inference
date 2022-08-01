@@ -118,10 +118,11 @@ std::vector<int> getShipList(std::vector<int> mmsi_vec){
 
 void writeIntentionToFile(int timestep, INTENTION_INFERENCE::IntentionModelParameters parameters, std::string filename, std::map<int, INTENTION_INFERENCE::IntentionModel> ship_intentions, std::vector<std::map<int, Eigen::Vector4d > > ship_state, std::vector<int> ship_list, std::vector<double> unique_time_vec, std::vector<double> x_vec, std::vector<double> y_vec){
     std::ofstream intentionFile;
-    std::string filename_intention = "intention_files/dist_intention_"+filename;
+    std::string filename_intention = "intention_files/risk_dist_intention_"+filename;
     intentionFile.open (filename_intention);
+    //intentionFile << "mmsi,x,y,time,colreg_compliant,distance_risk_of_collision,distance_risk_of_collision_front,good_seamanship,unmodeled_behaviour,CR_PS,CR_SS,HO,OT_en,OT_ing,priority_lower,priority_similar,priority_higher\n"; //,CR_SS2,CR_PS2,OT_ing2,OT_en2,priority_lower2,priority_similar2,priority_higher2\n";
     intentionFile << "mmsi,x,y,time,colreg_compliant,good_seamanship,unmodeled_behaviour,CR_PS,CR_SS,HO,OT_en,OT_ing,priority_lower,priority_similar,priority_higher\n"; //,CR_SS2,CR_PS2,OT_ing2,OT_en2,priority_lower2,priority_similar2,priority_higher2\n";
-    
+
     for(int i = timestep; i < unique_time_vec.size() ; i++){ //from 1 because first state might be NaN
         std::cout << "timestep: " << i << std::endl;
         int j= 0;
@@ -142,7 +143,7 @@ INTENTION_INFERENCE::IntentionModelParameters setModelParameters(int num_ships){
     param.number_of_network_evaluation_samples = 100000;
 	param.max_number_of_obstacles = num_ships-1; //must be set to num_ships-1 or else segmantation fault
 	param.time_into_trajectory = 10;
-    param.starting_distance = 10000;
+    param.starting_distance = 6100;
 	param.expanding_dbn.min_time_s = 10;
 	param.expanding_dbn.max_time_s = 1200;
 	param.expanding_dbn.min_course_change_rad = 0.13;
@@ -152,17 +153,17 @@ INTENTION_INFERENCE::IntentionModelParameters setModelParameters(int num_ships){
 	param.ample_time_s.max = 1000;
 	param.ample_time_s.n_bins = 30; // this value must match the bayesian network
 	param.ample_time_s.minimal_accepted_by_ownship = 20;
-    param.safe_distance_m.mu = 400;
-	param.safe_distance_m.sigma = 20;
-	param.safe_distance_m.max = 2000;
+    param.safe_distance_m.mu = 200;
+	param.safe_distance_m.sigma = 5;
+	param.safe_distance_m.max = 1000;
 	param.safe_distance_m.n_bins = 30; // this value must match the bayesian network
 	param.safe_distance_midpoint_m.mu = 600;
 	param.safe_distance_midpoint_m.sigma = 20;
 	param.safe_distance_midpoint_m.max = 2500;
 	param.safe_distance_midpoint_m.n_bins = 30; // this value must match the bayesian network
-	param.safe_distance_front_m.mu = 50;
-	param.safe_distance_front_m.sigma = 10;
-	param.safe_distance_front_m.max = 200;
+	param.safe_distance_front_m.mu = 100;
+	param.safe_distance_front_m.sigma = 20;
+	param.safe_distance_front_m.max = 1000;
 	param.safe_distance_front_m.n_bins = 30; // this value must match the bayesian network
 	param.change_in_course_rad.minimal_change = 0.13;
 	param.change_in_speed_m_s.minimal_change = 1;
@@ -189,7 +190,7 @@ int main(){
     using namespace INTENTION_INFERENCE;
     
 	int num_ships = 2;
-    std::string filename = "new_Case_LQLVS-60-sec.csv"; //crossing
+    //std::string filename = "new_Case_LQLVS-60-sec.csv"; //crossing
     //std::string filename = "new_Case - 04-12-2019, 20-10-56 - DOTVP-two-ships-60-sec-kopi.csv";
     //std::string filename = "new_case_2ZC9Z-60-sec-two-ships.csv"; //head on
     //std::string filename = "new_Case - 01-08-2021, 08-21-29 - AQ5VM-60-sec-two-ships.csv"; //overtaking must start at timestep 4
@@ -198,8 +199,10 @@ int main(){
     //std::string filename = "new_Case - 01-09-2018, 01-45-02 - 19JNJ-60-sec-two-ships.csv";
     //std::string filename  = "new_Case - 01-11-2019, 02-30-00 - LP84U-60-sec.csv";
     //std::string filename  = "new_Case - 01-17-2018, 06-26-20 - W4H51-60-sec.csv";
+    std::string filename = "new_Case - 05-26-2019, 20-39-57 - 60GEW-60-sec.csv";
 
-    std::string intentionModelFilename = "intention_model_with_risk_of_collision.xdsl";
+    //std::string intentionModelFilename = "intention_model_with_risk_of_collision.xdsl";
+    std::string intentionModelFilename = "intention_model_two_ships.xdsl";
 
     std::vector<std::map<int, Eigen::Vector4d> > ship_state;
     std::vector<int> mmsi_vec;
