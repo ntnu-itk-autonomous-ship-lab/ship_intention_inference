@@ -248,14 +248,14 @@ namespace INTENTION_INFERENCE
 			}
 
 			//net.setPriorNormalDistribution("intention_ample_time", parameters.ample_time_s.mu, parameters.ample_time_s.sigma, parameters.ample_time_s.max / parameters.ample_time_s.n_bins);
-			net.setPriorNormalDistribution("intention_distance_risk_of_collision", parameters.safe_distance_m.mu*3, parameters.safe_distance_m.sigma*1.5, parameters.safe_distance_m.max*3 / parameters.safe_distance_m.n_bins);
+			net.setPriorNormalDistribution("intention_distance_risk_of_collision", parameters.risk_distance_m.mu, parameters.risk_distance_m.sigma, parameters.risk_distance_m.max / parameters.risk_distance_m.n_bins);
 			//net.setPriorNormalDistribution("intention_distance_risk_of_collision_front", parameters.safe_distance_front_m.mu, parameters.safe_distance_front_m.sigma, parameters.safe_distance_front_m.max / parameters.safe_distance_front_m.n_bins);
 
 			//int colreg_idx = 7;
 			//int cpa_ts_idx = 4;  // per nå lik r_maneuver_own (skal byttes til cpa_ts_idx)
 
 			net.setPriorNormalDistribution("intention_safe_distance_front", parameters.safe_distance_front_m.mu, parameters.safe_distance_front_m.sigma, parameters.safe_distance_front_m.max / parameters.safe_distance_front_m.n_bins);
-			net.setPriorNormalDistribution("intention_distance_risk_of_collision_front", parameters.safe_distance_front_m.mu*3, parameters.safe_distance_front_m.sigma*1.5, parameters.safe_distance_front_m.max*3 / parameters.safe_distance_front_m.n_bins);
+			net.setPriorNormalDistribution("intention_distance_risk_of_collision_front", parameters.risk_distance_front_m.mu, parameters.risk_distance_front_m.sigma, parameters.risk_distance_front_m.max / parameters.risk_distance_front_m.n_bins);
 			
 
 			// MOVE LATER
@@ -331,11 +331,11 @@ namespace INTENTION_INFERENCE
 					net.setEvidence("time_untill_closest_point_of_approach_towards_" + ship_name, timeIdentifier(parameters, cpa.time_untill_CPA));
 
 					net.setEvidence("distance_at_cpa_towards_" + ship_name, highresCPADistanceIdentifier(parameters, cpa.distance_at_CPA));
-					//net.setEvidence("lowres_distance_at_cpa_towards_" + ship_name, highresCPADistanceIdentifier(parameters, cpa.distance_at_CPA));
+					net.setEvidence("lowres_distance_at_cpa_towards_" + ship_name, highresCPADistanceIdentifier(parameters, cpa.distance_at_CPA));
 
 					double crossing_in_front_distance = crossingInFrontDistance(better_at(ship_states, my_id), ship_state);
 					net.setEvidence("crossing_distance_front_towards_" + ship_name, crossInFrontHighresIdentifier(parameters, crossing_in_front_distance));
-					//net.setEvidence("lowres_crossing_distance_front_towards_" + ship_name, crossInFrontHighresIdentifier(parameters, crossing_in_front_distance));
+					net.setEvidence("lowres_crossing_distance_front_towards_" + ship_name, crossInFrontHighresIdentifier(parameters, crossing_in_front_distance));
 
 					auto distanceToMidpointResult = distanceToMidpointCourse(better_at(ship_states, my_id), ship_state);
 				
