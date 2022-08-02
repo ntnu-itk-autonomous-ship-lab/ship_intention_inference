@@ -153,7 +153,7 @@ INTENTION_INFERENCE::IntentionModelParameters setModelParameters(int num_ships){
     param.number_of_network_evaluation_samples = 100000;
 	param.max_number_of_obstacles = num_ships-1; //must be set to num_ships-1 or else segmantation fault
 	param.time_into_trajectory = 10;
-    param.starting_distance = 10000;
+    param.starting_distance = 5000;
 	param.expanding_dbn.min_time_s = 10;
 	param.expanding_dbn.max_time_s = 1200;
 	param.expanding_dbn.min_course_change_rad = 0.13;
@@ -171,11 +171,19 @@ INTENTION_INFERENCE::IntentionModelParameters setModelParameters(int num_ships){
 	param.safe_distance_midpoint_m.sigma = 20;
 	param.safe_distance_midpoint_m.max = 2500;
 	param.safe_distance_midpoint_m.n_bins = 30; // this value must match the bayesian network
-	param.safe_distance_front_m.mu = 100;
-	param.safe_distance_front_m.sigma = 20;
+	param.safe_distance_front_m.mu = 200;
+	param.safe_distance_front_m.sigma = 10;
 	param.safe_distance_front_m.max = 1000;
 	param.safe_distance_front_m.n_bins = 30; // this value must match the bayesian network
-	param.change_in_course_rad.minimal_change = 0.13;
+	param.risk_distance_m.mu = 200;
+	param.risk_distance_m.sigma = 5;
+	param.risk_distance_m.max = 1000;
+    param.risk_distance_m.n_bins = 30; // this value must match the bayesian network
+    param.risk_distance_front_m.mu = 200;
+	param.risk_distance_front_m.sigma = 10;
+	param.risk_distance_front_m.max = 1000;
+    param.risk_distance_front_m.n_bins = 30;  // this value must match the bayesian network
+    param.change_in_course_rad.minimal_change = 0.13;
 	param.change_in_speed_m_s.minimal_change = 1;
 	param.colregs_situation_borders_rad.HO_uncertainty_start = 2.79;
 	param.colregs_situation_borders_rad.HO_start = 2.96;
@@ -207,7 +215,7 @@ int main(){
     //std::string filename = "new_Case - 01-09-2018, 01-11-37 - RT3LY-60-sec-two-ships-filled.csv"; //head-on
     //std::string filename = "new_Case - 01-09-2018, 01-45-02 - 19JNJ-60-sec-two-ships.csv";
     //std::string filename  = "new_Case - 01-11-2019, 02-30-00 - LP84U-60-sec.csv";
-    std::string filename  = "new_Case - 07-25-2019, 10-57-14 - HUHYL-60-sec.csv";
+    std::string filename  = "new_Case - 05-09-2018, 10-05-48 - 9PNLJ-60-sec.csv";
     //std::string filename = "new_Case - 05-26-2019, 20-39-57 - 60GEW-60-sec.csv";
 
     std::string intentionModelFilename = "intention_model_with_risk_of_collision.xdsl";

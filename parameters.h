@@ -42,6 +42,18 @@ struct IntentionModelParameters{
         unsigned n_bins;
     }safe_distance_front_m;
     struct{
+        double mu;
+        double sigma;
+        double max;
+        unsigned n_bins;
+    }risk_distance_m;
+     struct{
+        double mu;
+        double sigma;
+        double max;
+        unsigned n_bins;
+    }risk_distance_front_m;
+    struct{
         double minimal_change;
     }change_in_course_rad;
     struct{
