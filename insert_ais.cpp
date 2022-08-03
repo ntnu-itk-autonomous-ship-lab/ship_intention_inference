@@ -138,7 +138,7 @@ void writeIntentionToFile(int timestep, INTENTION_INFERENCE::IntentionModelParam
         std::cout << "timestep: " << i << std::endl;
         int ot_en = 0;
         for(auto& [ship_id, current_ship_intention_model] : ship_intentions){
-            std::cout << "ship_id: " << ship_id << std::endl;
+            std::cout << "ship_id" << ship_id << std::endl;
             int j = getShipListIndex(ship_id,ship_list);
             current_ship_intention_model.insertObservation(parameters,ot_en, ship_state[i], ship_list, false, unique_time_vec[i], x_vec[unique_time_vec.size()*j+i], y_vec[unique_time_vec.size()*j+i], intentionFile); //writes intantion variables to file as well
     }
