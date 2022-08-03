@@ -3,12 +3,10 @@
 #include <fstream>
 #include <string>
 #include <vector>
-#include <set>
 #include <sstream>
 #include <iomanip>
 #include <ctime>
 #include <math.h>
-#include <cmath>
 #include "intention_model.h"
 #include "parameters.h"
 #include "geometry.h"
@@ -142,7 +140,6 @@ void writeIntentionToFile(int timestep, INTENTION_INFERENCE::IntentionModelParam
         for(auto& [ship_id, current_ship_intention_model] : ship_intentions){
             std::cout << "ship_id" << ship_id << std::endl;
             int j = getShipListIndex(ship_id,ship_list);
-            std::cout << "index" << j << std::endl;
             current_ship_intention_model.insertObservation(parameters,ot_en, ship_state[i], ship_list, false, unique_time_vec[i], x_vec[unique_time_vec.size()*j+i], y_vec[unique_time_vec.size()*j+i], intentionFile); //writes intantion variables to file as well
     }
    }
@@ -204,15 +201,11 @@ int main(){
     
 	int num_ships = 2;
     //std::string filename = "new_Case_LQLVS-60-sec.csv"; //crossing
-    //std::string filename = "new_Case - 04-12-2019, 20-10-56 - DOTVP-two-ships-60-sec-kopi.csv";
     //std::string filename = "new_case_2ZC9Z-60-sec-two-ships.csv"; //head on
     //std::string filename = "new_Case - 01-08-2021, 08-21-29 - AQ5VM-60-sec-two-ships.csv"; //overtaking must start at timestep 4
     //std::string filename = "new_Case - 01-15-2020, 09-05-49 - VATEN-60-sec-two-ships.csv"; //overtaking
-    //std::string filename = "new_Case - 01-09-2018, 01-11-37 - RT3LY-60-sec-two-ships-filled.csv"; //head-on
-    //std::string filename = "new_Case - 01-09-2018, 01-45-02 - 19JNJ-60-sec-two-ships.csv";
-    //std::string filename  = "new_Case - 01-11-2019, 02-30-00 - LP84U-60-sec.csv";
     //std::string filename  = "new_Case - 01-17-2018, 06-26-20 - W4H51-60-sec.csv";
-    std::string filename = "new_Case - 01-04-2020, 15-34-37 - 7SWX4-60-sec.csv";
+    std::string filename = "new_Case - 10-08-2020, 12-10-10 - VDPGK-60-sec 2.csv";
 
     //std::string intentionModelFilename = "intention_model_with_risk_of_collision.xdsl";
     std::string intentionModelFilename = "intention_model_two_ships.xdsl";
@@ -250,8 +243,6 @@ int main(){
         }
         timestep ++;
    }
-    std::cout<< "ship0: " << ship_list[0] << std::endl;
-    std::cout<< "ship1: " << ship_list[1] << std::endl;
 
     writeIntentionToFile(timestep, parameters,filename, ship_intentions, ship_state, ship_list, unique_time_vec, x_vec,y_vec); //intentionfile is called: intention_<filename>  NB: not all intentions!
     
