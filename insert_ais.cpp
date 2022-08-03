@@ -100,9 +100,9 @@ void vecsToShipStateVectorMap(std::vector<std::map<int, Eigen::Vector4d > > &shi
 
 
 std::vector<int> getShipList(std::vector<int> mmsi_vec){
-    std::set<int> s( mmsi_vec.begin(), mmsi_vec.end() );
-    std::vector<int> ship_list;
-    ship_list.assign( s.begin(), s.end() );
+    std::vector<int> ship_list( mmsi_vec.begin(), mmsi_vec.end() );
+    auto it = unique(ship_list.begin(), ship_list.end());
+    ship_list.resize(distance(ship_list.begin(), it));
     return ship_list;
 }
 
@@ -115,6 +115,19 @@ std::vector<int> getShipList(std::vector<int> mmsi_vec){
 		}
 	}*/
 
+int getShipListIndex(int mmsi, std::vector<int> ship_list){
+    int index = -1;
+    for (int i = 0; i < ship_list.size(); i++){
+        if(mmsi==ship_list[i]){
+            index = i;
+        }
+    }
+    if (index == -1){
+        std::cout<<"ERROR: mmsi not found in ship list\n";
+    }
+    return index;
+}
+
 
 void writeIntentionToFile(int timestep, INTENTION_INFERENCE::IntentionModelParameters parameters, std::string filename, std::map<int, INTENTION_INFERENCE::IntentionModel> ship_intentions, std::vector<std::map<int, Eigen::Vector4d > > ship_state, std::vector<int> ship_list, std::vector<double> unique_time_vec, std::vector<double> x_vec, std::vector<double> y_vec){
     std::ofstream intentionFile;
@@ -125,12 +138,11 @@ void writeIntentionToFile(int timestep, INTENTION_INFERENCE::IntentionModelParam
 
     for(int i = timestep; i < unique_time_vec.size() ; i++){ //from 1 because first state might be NaN
         std::cout << "timestep: " << i << std::endl;
-        int j= 0;
         int ot_en = 0;
         for(auto& [ship_id, current_ship_intention_model] : ship_intentions){
             std::cout << "ship_id" << ship_id << std::endl;
+            int j = getShipListIndex(ship_id,ship_list);
             current_ship_intention_model.insertObservation(parameters,ot_en, ship_state[i], ship_list, false, unique_time_vec[i], x_vec[unique_time_vec.size()*j+i], y_vec[unique_time_vec.size()*j+i], intentionFile); //writes intantion variables to file as well
-            j++;
     }
    }
     intentionFile.close(); 
