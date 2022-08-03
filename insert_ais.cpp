@@ -100,9 +100,9 @@ void vecsToShipStateVectorMap(std::vector<std::map<int, Eigen::Vector4d > > &shi
 
 
 std::vector<int> getShipList(std::vector<int> mmsi_vec){
-    std::set<int> s( mmsi_vec.begin(), mmsi_vec.end() );
-    std::vector<int> ship_list;
-    ship_list.assign( s.begin(), s.end() );
+    std::vector<int> ship_list( mmsi_vec.begin(), mmsi_vec.end() );
+    auto it = unique(ship_list.begin(), ship_list.end());
+    ship_list.resize(distance(ship_list.begin(), it));
     return ship_list;
 }
 
@@ -115,22 +115,35 @@ std::vector<int> getShipList(std::vector<int> mmsi_vec){
 		}
 	}*/
 
+int getShipListIndex(int mmsi, std::vector<int> ship_list){
+    int index = -1;
+    for (int i = 0; i < ship_list.size(); i++){
+        if(mmsi==ship_list[i]){
+            index = i;
+        }
+    }
+    if (index == -1){
+        std::cout<<"ERROR: mmsi not found in ship list\n";
+    }
+    return index;
+}
+
 
 void writeIntentionToFile(int timestep, INTENTION_INFERENCE::IntentionModelParameters parameters, std::string filename, std::map<int, INTENTION_INFERENCE::IntentionModel> ship_intentions, std::vector<std::map<int, Eigen::Vector4d > > ship_state, std::vector<int> ship_list, std::vector<double> unique_time_vec, std::vector<double> x_vec, std::vector<double> y_vec){
     std::ofstream intentionFile;
-    std::string filename_intention = "intention_files/risk_dist_intention_"+filename;
+    std::string filename_intention = "intention_files/dist_intention_"+filename;
     intentionFile.open (filename_intention);
     //intentionFile << "mmsi,x,y,time,colreg_compliant,distance_risk_of_collision,distance_risk_of_collision_front,good_seamanship,unmodeled_behaviour,CR_PS,CR_SS,HO,OT_en,OT_ing,priority_lower,priority_similar,priority_higher\n"; //,CR_SS2,CR_PS2,OT_ing2,OT_en2,priority_lower2,priority_similar2,priority_higher2\n";
     intentionFile << "mmsi,x,y,time,colreg_compliant,good_seamanship,unmodeled_behaviour,CR_PS,CR_SS,HO,OT_en,OT_ing,priority_lower,priority_similar,priority_higher\n"; //,CR_SS2,CR_PS2,OT_ing2,OT_en2,priority_lower2,priority_similar2,priority_higher2\n";
 
     for(int i = timestep; i < unique_time_vec.size() ; i++){ //from 1 because first state might be NaN
         std::cout << "timestep: " << i << std::endl;
-        int j= 0;
         int ot_en = 0;
         for(auto& [ship_id, current_ship_intention_model] : ship_intentions){
             std::cout << "ship_id" << ship_id << std::endl;
+            int j = getShipListIndex(ship_id,ship_list);
+            std::cout << "index" << j << std::endl;
             current_ship_intention_model.insertObservation(parameters,ot_en, ship_state[i], ship_list, false, unique_time_vec[i], x_vec[unique_time_vec.size()*j+i], y_vec[unique_time_vec.size()*j+i], intentionFile); //writes intantion variables to file as well
-            j++;
     }
    }
     intentionFile.close(); 
@@ -143,7 +156,7 @@ INTENTION_INFERENCE::IntentionModelParameters setModelParameters(int num_ships){
     param.number_of_network_evaluation_samples = 100000;
 	param.max_number_of_obstacles = num_ships-1; //must be set to num_ships-1 or else segmantation fault
 	param.time_into_trajectory = 10;
-    param.starting_distance = 6100;
+    param.starting_distance = 5000;
 	param.expanding_dbn.min_time_s = 10;
 	param.expanding_dbn.max_time_s = 1200;
 	param.expanding_dbn.min_course_change_rad = 0.13;
@@ -199,7 +212,7 @@ int main(){
     //std::string filename = "new_Case - 01-09-2018, 01-45-02 - 19JNJ-60-sec-two-ships.csv";
     //std::string filename  = "new_Case - 01-11-2019, 02-30-00 - LP84U-60-sec.csv";
     //std::string filename  = "new_Case - 01-17-2018, 06-26-20 - W4H51-60-sec.csv";
-    std::string filename = "new_Case - 05-26-2019, 20-39-57 - 60GEW-60-sec.csv";
+    std::string filename = "new_Case - 01-04-2020, 15-34-37 - 7SWX4-60-sec.csv";
 
     //std::string intentionModelFilename = "intention_model_with_risk_of_collision.xdsl";
     std::string intentionModelFilename = "intention_model_two_ships.xdsl";
@@ -237,7 +250,8 @@ int main(){
         }
         timestep ++;
    }
-
+    std::cout<< "ship0: " << ship_list[0] << std::endl;
+    std::cout<< "ship1: " << ship_list[1] << std::endl;
 
     writeIntentionToFile(timestep, parameters,filename, ship_intentions, ship_state, ship_list, unique_time_vec, x_vec,y_vec); //intentionfile is called: intention_<filename>  NB: not all intentions!
     
