@@ -2,7 +2,7 @@
 
 The goal of this work is to evaluate the intention model using AIS data.
 
-To run AIS data on the intention model a case file with two (three) ships is used. The file must contain mmsi, times (YYYY-mm-dd HH:MM:SS), x (north), y (east), sog and cog. The file must have consistent time intervals that are the same for both ships. A matlab file (extract_file.m) was used to filter case files to only get the wanted mmsis and x,y coordinates instead of latitude and longitude.
+To run AIS data on the intention model a case file with two (three) ships is used. The file must contain mmsi, times (YYYY-mm-dd HH:MM:SS), x (north), y (east), sog (speen over ground) and cog (course over ground). The file must have consistent time intervals that are the same for both ships. A matlab file (extract_file.m) was used to filter case files to only get the wanted mmsis and x,y coordinates instead of latitude and longitude.
 
 insert_ais.cpp reads the AIS data file and uses the intention model. For each timestep, it inserts an observation of the ships into the model and writes the intentions at that timestep to an intention file. These variables are written to the intention file: mmsi, x, y, and time. As well as the intention variables: colreg_compliant, good_semanship, unmodeled_behaviour. Probability of what kind of situation it is in, and the probability that the priority is lower, similar, or higher.
 
