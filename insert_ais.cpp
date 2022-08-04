@@ -138,7 +138,7 @@ void writeIntentionToFile(int timestep, INTENTION_INFERENCE::IntentionModelParam
         std::cout << "timestep: " << i << std::endl;
         int ot_en = 0;
         for(auto& [ship_id, current_ship_intention_model] : ship_intentions){
-            std::cout << "ship_id" << ship_id << std::endl;
+            std::cout << "ship_id: " << ship_id << std::endl;
             int j = getShipListIndex(ship_id,ship_list);
             current_ship_intention_model.insertObservation(parameters,ot_en, ship_state[i], ship_list, false, unique_time_vec[i], x_vec[unique_time_vec.size()*j+i], y_vec[unique_time_vec.size()*j+i], intentionFile); //writes intantion variables to file as well
     }
@@ -222,27 +222,25 @@ int main(){
     std::vector<int> ship_list = getShipList(mmsi_vec);
 
 
-
     INTENTION_INFERENCE::IntentionModelParameters parameters = setModelParameters(num_ships);
-
 
     std::map<int, INTENTION_INFERENCE::IntentionModel> ship_intentions;
 
-    int timestep = 1;
+    int timestep = 0;
     bool inserted = false;
 
-   while (!inserted){
+    while (!inserted){
         for (int i = 0; i < num_ships; i++){
             std::cout<< INTENTION_INFERENCE::better_at(ship_state[timestep], ship_list[1])[INTENTION_INFERENCE::PX]- INTENTION_INFERENCE::better_at(ship_state[timestep], ship_list[2])[INTENTION_INFERENCE::PX] << std::endl;
             double dist = evaluateDistance(INTENTION_INFERENCE::better_at(ship_state[timestep], ship_list[1])[INTENTION_INFERENCE::PX] - INTENTION_INFERENCE::better_at(ship_state[timestep], ship_list[2])[INTENTION_INFERENCE::PX], INTENTION_INFERENCE::better_at(ship_state[timestep], ship_list[1])[INTENTION_INFERENCE::PY] - INTENTION_INFERENCE::better_at(ship_state[timestep], ship_list[2])[INTENTION_INFERENCE::PY]);
             std::cout<< "dist: " << dist << std::endl;
-            if ((dist < parameters.starting_distance) && (sog_vec[timestep]>1) && (sog_vec[unique_time_vec.size()+timestep]>1)){
+            if ((dist < parameters.starting_distance) && (sog_vec[timestep]>1) && (sog_vec[unique_time_vec.size()+timestep]>1)){ //only checks the speed for two ships
             ship_intentions.insert(std::pair<int, INTENTION_INFERENCE::IntentionModel>(ship_list[i], INTENTION_INFERENCE::IntentionModel(intentionModelFilename,parameters,ship_list[i],ship_state[timestep]))); //ship_state[1] as initial as first state might be NaN
             inserted = true;
             }
         }
         timestep ++;
-   }
+    }
 
     writeIntentionToFile(timestep, parameters,filename, ship_intentions, ship_state, ship_list, unique_time_vec, x_vec,y_vec); //intentionfile is called: intention_<filename>  NB: not all intentions!
     
