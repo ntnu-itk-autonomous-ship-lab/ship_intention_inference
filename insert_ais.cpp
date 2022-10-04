@@ -207,8 +207,8 @@ int main(){
     //std::string filename  = "new_Case - 01-17-2018, 06-26-20 - W4H51-60-sec.csv";
     std::string filename = "new_Case - 05-26-2019, 20-39-57 - 60GEW-60-sec.csv";
 
-    //std::string intentionModelFilename = "intention_model_with_risk_of_collision.xdsl";
-    std::string intentionModelFilename = "forgetting_maneuvers_intention_model_two_ships.xdsl";
+    std::string intentionModelFilename = "intention_model_with_risk_of_collision.xdsl";
+    //std::string intentionModelFilename = "forgetting_maneuvers_intention_model_two_ships.xdsl";
 
     std::vector<std::map<int, Eigen::Vector4d> > ship_state;
     std::vector<int> mmsi_vec;
