@@ -319,6 +319,7 @@ namespace INTENTION_INFERENCE
 
 					net.setEvidence("distance_at_cpa_towards_" + ship_name, highresCPADistanceIdentifier(parameters, cpa.distance_at_CPA));
 					//net.setEvidence("lowres_distance_at_cpa_towards_" + ship_name, highresCPADistanceIdentifier(parameters, cpa.distance_at_CPA));
+					std::cout << "r_cpa: " << cpa.distance_at_CPA << std::endl;
 
 					double crossing_in_front_distance = crossingInFrontDistance(better_at(ship_states, my_id), ship_state);
 					net.setEvidence("crossing_distance_front_towards_" + ship_name, crossInFrontHighresIdentifier(parameters, crossing_in_front_distance));
@@ -340,7 +341,7 @@ namespace INTENTION_INFERENCE
 					
 				}
 			}
-
+			
 	
 			for (const auto ship_name1 : ship_names)
 			{
@@ -352,7 +353,7 @@ namespace INTENTION_INFERENCE
 
 			net.setEvidence(output_name, "true");
 			evaluate_nodes(intentionFile, time, x, y);
-
+			
 			return did_save;
 			
 		}
