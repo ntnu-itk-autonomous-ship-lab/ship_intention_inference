@@ -10,6 +10,7 @@ struct IntentionModelParameters{
     unsigned max_number_of_obstacles;
     unsigned time_into_trajectory;
     double starting_distance;
+    double starting_cpa_distance;
     struct{
         double min_time_s;
         double max_time_s;

@@ -153,7 +153,8 @@ INTENTION_INFERENCE::IntentionModelParameters setModelParameters(int num_ships){
     param.number_of_network_evaluation_samples = 100000;
 	param.max_number_of_obstacles = num_ships-1; //must be set to num_ships-1 or else segmantation fault
 	param.time_into_trajectory = 10;
-    param.starting_distance = 5000;
+    param.starting_distance = 6000;
+    param.starting_cpa_distance = 500;
 	param.expanding_dbn.min_time_s = 10;
 	param.expanding_dbn.max_time_s = 1200;
 	param.expanding_dbn.min_course_change_rad = 0.13;
@@ -205,7 +206,7 @@ int main(){
     //std::string filename = "new_Case - 01-08-2021, 08-21-29 - AQ5VM-60-sec-two-ships.csv"; //overtaking must start at timestep 4
     //std::string filename = "new_Case - 01-15-2020, 09-05-49 - VATEN-60-sec-two-ships.csv"; //overtaking
     //std::string filename  = "new_Case - 01-17-2018, 06-26-20 - W4H51-60-sec.csv";
-    std::string filename = "new_Case - 10-08-2020, 12-10-10 - VDPGK-60-sec 2.csv";
+    std::string filename = "new_Case - 05-26-2019, 20-39-57 - 60GEW-60-sec.csv";
 
     //std::string intentionModelFilename = "intention_model_with_risk_of_collision.xdsl";
     std::string intentionModelFilename = "intention_model_two_ships.xdsl";
@@ -236,7 +237,7 @@ int main(){
             std::cout<< "dist: " << dist << std::endl;
             auto CPA = evaluateCPA(INTENTION_INFERENCE::better_at(ship_state[timestep], ship_list[1]), INTENTION_INFERENCE::better_at(ship_state[timestep], ship_list[2]));
             std::cout<< "CPA dist: " << CPA.distance_at_CPA << std::endl;
-            if ((dist < parameters.starting_distance) && (sog_vec[timestep]>1) && (sog_vec[unique_time_vec.size()+timestep]>1)){ //only checks the speed for two ships
+            if ((dist < parameters.starting_distance) && (sog_vec[timestep]>1) && (sog_vec[unique_time_vec.size()+timestep]>1) && (CPA.distance_at_CPA < parameters.starting_cpa_distance) ){ //only checks the speed for two ships
             ship_intentions.insert(std::pair<int, INTENTION_INFERENCE::IntentionModel>(ship_list[i], INTENTION_INFERENCE::IntentionModel(intentionModelFilename,parameters,ship_list[i],ship_state[timestep]))); //ship_state[1] as initial as first state might be NaN
             inserted = true;
             }
