@@ -182,7 +182,7 @@ namespace INTENTION_INFERENCE
         return result;
     }
 
-    /*std::map<std::string, double> evaluateRelativeSituation(const IntentionModelParameters &parameters, const Eigen::Vector4d &ownship_state, const Eigen::Vector4d &obstacle_state)
+    std::map<std::string, double> evaluateRelativeSituation(const IntentionModelParameters &parameters, const Eigen::Vector4d &ownship_state, const Eigen::Vector4d &obstacle_state)
     {
         const auto &p = parameters.colregs_situation_borders_rad;
 
@@ -217,7 +217,6 @@ namespace INTENTION_INFERENCE
         }
         else if ((relative_heading > p.HO_uncertainty_start && relative_heading < p.HO_start) && (bearing_relative_to_ownship_heading <= theta2 && bearing_relative_to_ownship_heading >= -theta2))
         {
-        {
             result.at("HO") = (relative_heading - p.HO_uncertainty_start) / (p.HO_start - p.HO_uncertainty_start);
             CR = (p.HO_start - relative_heading) / (p.HO_start - p.HO_uncertainty_start);
         }
@@ -226,30 +225,30 @@ namespace INTENTION_INFERENCE
             result.at("HO") = (relative_heading - p.HO_uncertainty_stop) / (p.HO_stop - p.HO_uncertainty_stop);
             CR = (p.HO_stop - relative_heading) / (p.HO_stop - p.HO_uncertainty_stop);
         }
-        else if ((bearing_relative_to_ownship_heading > p.OT_start || bearing_relative_to_ownship_heading < p.OT_stop) && (relative_heading <= (M_PI - theta3) && relative heading >= -(M_PI - theta3)))
+        else if ((bearing_relative_to_ownship_heading > p.OT_start || bearing_relative_to_ownship_heading < p.OT_stop) && (relative_heading <= (M_PI - theta3) && relative_heading >= -(M_PI - theta3)))
         {
             result.at("OT_en") = 1;
         }
-        else if ((bearing_relative_to_ownship_heading > p.OT_uncertainty_start && bearing_relative_to_ownship_heading < p.OT_start) && (relative_heading < (M_PI - theta3) && relative heading > -(M_PI - theta3)))
+        else if ((bearing_relative_to_ownship_heading > p.OT_uncertainty_start && bearing_relative_to_ownship_heading < p.OT_start) && (relative_heading < (M_PI - theta3) && relative_heading > -(M_PI - theta3)))
         {
             result.at("OT_en") = (bearing_relative_to_ownship_heading - p.OT_uncertainty_start) / (p.OT_start - p.OT_uncertainty_start);
             CR = (p.OT_start - bearing_relative_to_ownship_heading) / (p.OT_start - p.OT_uncertainty_start);
         }
-        else if ((bearing_relative_to_ownship_heading < p.OT_uncertainty_stop && bearing_relative_to_ownship_heading > p.OT_stop) && (relative_heading < (M_PI - theta3) && relative heading > -(M_PI - theta3)))
+        else if ((bearing_relative_to_ownship_heading < p.OT_uncertainty_stop && bearing_relative_to_ownship_heading > p.OT_stop) && (relative_heading < (M_PI - theta3) && relative_heading > -(M_PI - theta3)))
         {
             result.at("OT_en") = (bearing_relative_to_ownship_heading - p.OT_uncertainty_stop) / (p.OT_stop - p.OT_uncertainty_stop);
             CR = (p.OT_stop - bearing_relative_to_ownship_heading) / (p.OT_stop - p.OT_uncertainty_stop);
         }
-        else if ((bearing_relative_to_obstacle_heading > p.OT_start || bearing_relative_to_obstacle_heading < p.OT_stop) && (relative_heading < (M_PI - theta3) && relative heading > -(M_PI - theta3)))
+        else if ((bearing_relative_to_obstacle_heading > p.OT_start || bearing_relative_to_obstacle_heading < p.OT_stop) && (relative_heading < (M_PI - theta3) && relative_heading > -(M_PI - theta3)))
         {
             result.at("OT_ing") = 1;
         }
-        else if ((bearing_relative_to_obstacle_heading > p.OT_uncertainty_start && bearing_relative_to_obstacle_heading < p.OT_start) && (relative_heading < (M_PI - theta3) && relative heading > -(M_PI - theta3)))
+        else if ((bearing_relative_to_obstacle_heading > p.OT_uncertainty_start && bearing_relative_to_obstacle_heading < p.OT_start) && (relative_heading < (M_PI - theta3) && relative_heading > -(M_PI - theta3)))
         {
             result.at("OT_ing") = (bearing_relative_to_obstacle_heading - p.OT_uncertainty_start) / (p.OT_start - p.OT_uncertainty_start);
             CR = (p.OT_start - bearing_relative_to_obstacle_heading) / (p.OT_start - p.OT_uncertainty_start);
         }
-        else if ((bearing_relative_to_obstacle_heading < p.OT_uncertainty_stop && bearing_relative_to_obstacle_heading > p.OT_stop) && (relative_heading < (M_PI - theta3) && relative heading > -(M_PI - theta3)))
+        else if ((bearing_relative_to_obstacle_heading < p.OT_uncertainty_stop && bearing_relative_to_obstacle_heading > p.OT_stop) && (relative_heading < (M_PI - theta3) && relative_heading > -(M_PI - theta3)))
         {
             result.at("OT_ing") = (bearing_relative_to_obstacle_heading - p.OT_uncertainty_stop) / (p.OT_stop - p.OT_uncertainty_stop);
             CR = (p.OT_stop - bearing_relative_to_obstacle_heading) / (p.OT_stop - p.OT_uncertainty_stop);
@@ -263,13 +262,24 @@ namespace INTENTION_INFERENCE
         {
             result.at("CR_PS") = CR;
         }
-        else
+        else if ((bearing_relative_to_ownship_heading < M_PI && bearing_relative_to_ownship_heading > theta3) && (relative_heading > (M_PI - theta2) && relative_heading < (M_PI - theta1) ))
+        {
+            result.at("CR_PS") = CR;
+        }
+        else if ((bearing_relative_to_ownship_heading > -theta2 && bearing_relative_to_ownship_heading < theta3 ) && (relative_heading > -(M_PI - theta1) && relative_heading < -(M_PI - theta3) ))
         {
             result.at("CR_SS") = CR;
         }
-
+        else if ((bearing_relative_to_ownship_heading > -M_PI && bearing_relative_to_ownship_heading < -(M_PI - theta3) ) && (relative_heading > -(M_PI - theta2) && relative_heading < -(M_PI - theta1) ))
+        {
+            result.at("CR_SS") = CR;
+        }
+        else {
+            result.at("CR_SS") = CR/2;
+            result.at("CR_PS") = CR/2;
+        }
         return result;
-    }*/
+    }
 
     std::string compareSpeed(double ownship_speed, double obstacle_speed)
     {

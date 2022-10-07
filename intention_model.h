@@ -274,6 +274,34 @@ namespace INTENTION_INFERENCE
 			net.setAmpleTimeDistribution("intention_ample_time", "classified_west_5.csv", cpa_ample_time_idx, timestep, n_bins);
 		}
 
+		void insertObservationRelativeSituation(const IntentionModelParameters parameters, int &ot_en, const std::map<int, Eigen::Vector4d> ship_states, std::vector<int> currently_tracked_ships, bool is_changing_course, double time, double x, double y, std::ofstream &intentionFile)
+		{
+			
+			for (auto const &ship_id : currently_tracked_ships)
+			{
+				if (ship_id != my_id)
+				{
+					intentionFile << my_id << ",";
+            		intentionFile << x << ",";
+            		intentionFile << y << ","; 
+            		intentionFile << time << ",";
+					const auto ship_state = better_at(ship_states, ship_id);
+					const auto situation = evaluateRelativeSituation(parameters, better_at(ship_states, my_id), ship_state);
+					for (const auto &[name, value] : situation){
+						std::cout << name << "=" << value << ", ";
+						if (name == "OT_ing") {
+							intentionFile << value;
+						}
+						else {
+							intentionFile << value << ",";
+						}
+						
+					}
+					intentionFile << "\n";
+				}
+			}
+		}
+
 		bool insertObservation(const IntentionModelParameters parameters, int &ot_en, const std::map<int, Eigen::Vector4d> ship_states, std::vector<int> currently_tracked_ships, bool is_changing_course, double time, double x, double y, std::ofstream &intentionFile)
 		{
 
