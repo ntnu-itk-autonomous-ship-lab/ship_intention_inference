@@ -202,12 +202,12 @@ int main(){
     using namespace INTENTION_INFERENCE;
     
 	int num_ships = 2;
-    //std::string filename = "new_Case_LQLVS-60-sec.csv"; //crossing
+    std::string filename = "new_Case_LQLVS-60-sec.csv"; //crossing
     //std::string filename = "new_case_2ZC9Z-60-sec-two-ships.csv"; //head on
     //std::string filename = "new_Case - 01-08-2021, 08-21-29 - AQ5VM-60-sec-two-ships.csv"; //overtaking must start at timestep 4
     //std::string filename = "new_Case - 01-15-2020, 09-05-49 - VATEN-60-sec-two-ships.csv"; //overtaking
     //std::string filename  = "new_Case - 01-17-2018, 06-26-20 - W4H51-60-sec.csv";
-    std::string filename = "new_Case - 05-26-2019, 20-39-57 - 60GEW-60-sec.csv";
+    //std::string filename = "new_Case - 05-26-2019, 20-39-57 - 60GEW-60-sec.csv";
 
     //std::string intentionModelFilename = "intention_model_with_risk_of_collision.xdsl";
     std::string intentionModelFilename = "intention_model_two_ships.xdsl";

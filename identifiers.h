@@ -209,49 +209,50 @@ namespace INTENTION_INFERENCE
         double theta1 = 22.5*M_PI/180;
         double theta2 = 90*M_PI/180;
         double theta3 = 112.5*M_PI/180;
+        double uncertainty = 0.2;
 
         double CR = 0; //crossing is added to the results later di be ble to distinguish between CR_PS adn CR_SS
-        if ((relative_heading > p.HO_start || relative_heading < p.HO_stop) && (bearing_relative_to_ownship_heading <= theta2 || bearing_relative_to_ownship_heading >= -theta2)) // must add relative bearing
+        if ((relative_heading > M_PI-theta1 || relative_heading < -M_PI+theta1) && (bearing_relative_to_ownship_heading <= theta2 || bearing_relative_to_ownship_heading >= -theta2)) // must add relative bearing
         {
             result.at("HO") = 1;
         }
-        else if ((relative_heading > p.HO_uncertainty_start && relative_heading < p.HO_start) && (bearing_relative_to_ownship_heading <= theta2 && bearing_relative_to_ownship_heading >= -theta2))
+        else if ((relative_heading > M_PI-theta1-uncertainty && relative_heading < M_PI-theta1) && (bearing_relative_to_ownship_heading <= theta2 && bearing_relative_to_ownship_heading >= -theta2))
         {
-            result.at("HO") = (relative_heading - p.HO_uncertainty_start) / (p.HO_start - p.HO_uncertainty_start);
-            CR = (p.HO_start - relative_heading) / (p.HO_start - p.HO_uncertainty_start);
+            result.at("HO") = (relative_heading - (M_PI-theta1-uncertainty)) / (uncertainty);
+            CR = (M_PI-theta1 - relative_heading) / (uncertainty);
         }
-        else if ((relative_heading < p.HO_uncertainty_stop && relative_heading > p.HO_stop) && (bearing_relative_to_ownship_heading <= theta2 && bearing_relative_to_ownship_heading >= -theta2))
+        else if ((relative_heading < -M_PI+theta1 && relative_heading > -M_PI+theta1+uncertainty) && (bearing_relative_to_ownship_heading <= theta2 && bearing_relative_to_ownship_heading >= -theta2))
         {
-            result.at("HO") = (relative_heading - p.HO_uncertainty_stop) / (p.HO_stop - p.HO_uncertainty_stop);
-            CR = (p.HO_stop - relative_heading) / (p.HO_stop - p.HO_uncertainty_stop);
+            result.at("HO") = (relative_heading - (-M_PI+theta1+uncertainty)) / (uncertainty);
+            CR = (-M_PI+theta1 - relative_heading) / (uncertainty);
         }
-        else if ((bearing_relative_to_ownship_heading > p.OT_start || bearing_relative_to_ownship_heading < p.OT_stop) && (relative_heading <= (M_PI - theta3) && relative_heading >= -(M_PI - theta3)))
+        else if ((bearing_relative_to_ownship_heading > theta2 || bearing_relative_to_ownship_heading < -theta2) && (relative_heading <= (M_PI - theta3) && relative_heading >= -(M_PI - theta3)))
         {
             result.at("OT_en") = 1;
         }
-        else if ((bearing_relative_to_ownship_heading > p.OT_uncertainty_start && bearing_relative_to_ownship_heading < p.OT_start) && (relative_heading < (M_PI - theta3) && relative_heading > -(M_PI - theta3)))
+        else if ((bearing_relative_to_ownship_heading > theta2 || bearing_relative_to_ownship_heading < -theta2) && (relative_heading > (M_PI - theta3) && relative_heading < (M_PI - theta3+uncertainty)))
         {
-            result.at("OT_en") = (bearing_relative_to_ownship_heading - p.OT_uncertainty_start) / (p.OT_start - p.OT_uncertainty_start);
-            CR = (p.OT_start - bearing_relative_to_ownship_heading) / (p.OT_start - p.OT_uncertainty_start);
+            result.at("OT_en") = ((M_PI-theta3+uncertainty)- relative_heading) / (uncertainty);
+            CR = (relative_heading - (M_PI-theta3)) / (uncertainty);
         }
-        else if ((bearing_relative_to_ownship_heading < p.OT_uncertainty_stop && bearing_relative_to_ownship_heading > p.OT_stop) && (relative_heading < (M_PI - theta3) && relative_heading > -(M_PI - theta3)))
+        else if ((bearing_relative_to_ownship_heading > theta2 || bearing_relative_to_ownship_heading < -theta2) && (relative_heading < (-M_PI + theta3) && relative_heading > (-M_PI + theta3-uncertainty)))
         {
-            result.at("OT_en") = (bearing_relative_to_ownship_heading - p.OT_uncertainty_stop) / (p.OT_stop - p.OT_uncertainty_stop);
-            CR = (p.OT_stop - bearing_relative_to_ownship_heading) / (p.OT_stop - p.OT_uncertainty_stop);
+            result.at("OT_en") = (relative_heading - (-M_PI+theta3-uncertainty)) / (uncertainty);
+            CR = (M_PI-theta3) / (uncertainty);
         }
-        else if ((bearing_relative_to_obstacle_heading > p.OT_start || bearing_relative_to_obstacle_heading < p.OT_stop) && (relative_heading < (M_PI - theta3) && relative_heading > -(M_PI - theta3)))
+        else if ((bearing_relative_to_obstacle_heading > theta2 || bearing_relative_to_obstacle_heading < -theta2) && (relative_heading < (M_PI - theta3) && relative_heading > -(M_PI - theta3)))
         {
             result.at("OT_ing") = 1;
         }
-        else if ((bearing_relative_to_obstacle_heading > p.OT_uncertainty_start && bearing_relative_to_obstacle_heading < p.OT_start) && (relative_heading < (M_PI - theta3) && relative_heading > -(M_PI - theta3)))
+        else if ((bearing_relative_to_obstacle_heading > theta2-uncertainty && bearing_relative_to_obstacle_heading < theta2) && (relative_heading < (M_PI - theta3) && relative_heading > -(M_PI - theta3)))
         {
-            result.at("OT_ing") = (bearing_relative_to_obstacle_heading - p.OT_uncertainty_start) / (p.OT_start - p.OT_uncertainty_start);
-            CR = (p.OT_start - bearing_relative_to_obstacle_heading) / (p.OT_start - p.OT_uncertainty_start);
+            result.at("OT_ing") = (bearing_relative_to_obstacle_heading - (theta2-uncertainty)) / (uncertainty);
+            CR = (theta2 - bearing_relative_to_obstacle_heading) / (uncertainty);
         }
-        else if ((bearing_relative_to_obstacle_heading < p.OT_uncertainty_stop && bearing_relative_to_obstacle_heading > p.OT_stop) && (relative_heading < (M_PI - theta3) && relative_heading > -(M_PI - theta3)))
+        else if ((bearing_relative_to_obstacle_heading < -theta2+uncertainty && bearing_relative_to_obstacle_heading > -theta2 ) && (relative_heading < (M_PI - theta3) && relative_heading > -(M_PI - theta3)))
         {
-            result.at("OT_ing") = (bearing_relative_to_obstacle_heading - p.OT_uncertainty_stop) / (p.OT_stop - p.OT_uncertainty_stop);
-            CR = (p.OT_stop - bearing_relative_to_obstacle_heading) / (p.OT_stop - p.OT_uncertainty_stop);
+            result.at("OT_ing") = (bearing_relative_to_obstacle_heading - (-theta2+uncertainty)) / (uncertainty);
+            CR = (bearing_relative_to_obstacle_heading+theta2) / (uncertainty);
         }
         else
         {
