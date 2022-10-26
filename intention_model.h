@@ -89,12 +89,13 @@ namespace INTENTION_INFERENCE
 			auto intention_colregs_compliant = better_at(better_at(result, "intention_colregs_compliant"), "true");
 			intentionFile << intention_colregs_compliant << ",";
 			
-			auto intention_distance_risk_of_collision = better_at(better_at(result, "intention_distance_risk_of_collision"), "true");
+			/*auto intention_distance_risk_of_collision = better_at(better_at(result, "intention_distance_risk_of_collision"), "true");
 			intentionFile << intention_distance_risk_of_collision << ",";
 			std::cout << "intention_distance_risk_of_collision: " << intention_distance_risk_of_collision << std::endl;
 			auto intention_distance_risk_of_collision_front = better_at(better_at(result, "intention_distance_risk_of_collision_front"), "true");
 			intentionFile << intention_distance_risk_of_collision_front << ",";
-			std::cout << "intention_distance_risk_of_collision_front: " << intention_distance_risk_of_collision_front << std::endl;
+			std::cout << "intention_distance_risk_of_collision_front: " << intention_distance_risk_of_collision_front << std::endl;*/
+			intentionFile << "0,0,";
 			
 
 			auto intention_ignoring_safety = better_at(better_at(result, "intention_ignoring_safety"), "true");

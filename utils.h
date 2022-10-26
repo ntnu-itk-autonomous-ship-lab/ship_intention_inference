@@ -3,7 +3,7 @@
 #include <map>
 #include <sstream>
 #include <string>
-//#include <ros/ros.h>
+#include <iostream>
 
 namespace INTENTION_INFERENCE
 {
@@ -24,7 +24,7 @@ namespace INTENTION_INFERENCE
                 (void)value;
                 ss << key << ", ";
             }
-            //ROS_ERROR("%s", ss.str().c_str());
+            std::cout << ss.str() << std::flush;
             assert(false);
         }
         return map.begin()->second;
@@ -48,7 +48,7 @@ namespace INTENTION_INFERENCE
                 (void)value;
                 ss << key << ", ";
             }
-            //ROS_ERROR("%s", ss.str().c_str());
+            std::cout << ss.str() << std::flush;
             assert(false);
         }
         return map.begin()->second;

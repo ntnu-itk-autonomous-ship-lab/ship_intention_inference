@@ -13,6 +13,7 @@
 #include "geometry.h"
 #include <stdio.h>
 #include <iostream>
+#include <math.h>
 
 
 namespace INTENTION_INFERENCE
@@ -152,6 +153,8 @@ public:
 
     void setEvidence(std::string node_name, std::string observed_outcome,int time_slice=-1){
         const auto outcome_id = getOutcomeId(node_name, observed_outcome);
+        if(outcome_id<0) printf("ERRO: Illegal evidence name");
+        assert(outcome_id>=0);
         setEvidence(node_name, outcome_id,time_slice);
     }
 
