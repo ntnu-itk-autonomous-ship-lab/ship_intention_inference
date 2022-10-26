@@ -603,8 +603,14 @@ namespace INTENTION_INFERENCE
 		double start_interval = min;
 		int sum = 0;
 		std::vector<int> instance_count_vec(num_intervals,0);
+
+		for(auto it = v.begin(); it<v.end(); ++it){
+			if(*it < min)
+				*it = min;
+			else if(*it > max)
+				*it  = max;
+		}
 		
-		//TODO if other bounds than min-max are used then it should handle elements outside of the bounds. Its now added to the end. 
 		for(int j=0; j < num_intervals ; j++){
 			for(int i=0; i < v.size(); i++){ //TODO this could be done in linear time. Find the index of which interval it should end up in using the modulo (%) operator
 				double end_interval = start_interval+size_of_interval;
