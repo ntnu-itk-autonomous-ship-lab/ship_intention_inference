@@ -193,10 +193,11 @@ public:
         setDefinition(node_name, CPT);
     }
 
+    //TODO rename from AIS to safe distance
     void setAisDistribution(const std::string node_name, std::string filename, int colreg_idx, int cpa_dist_idx, int multiply, int n_bins, int col_sit){
         std::vector<std::vector<std::string> > content = read_file(filename);
-        std::map<int, std::vector<double> > ais_cpa_map = aisMap(content, colreg_idx, cpa_dist_idx, multiply);
-        std::map<int, std::vector<double> > distr_cpa_map = distributionMap(ais_cpa_map, n_bins);
+        std::map<int, std::vector<double> > ais_cpa_map = aisMap(content, colreg_idx, cpa_dist_idx, multiply); //vector over all cpa_dist cases for different colregs situations
+        std::map<int, std::vector<double> > distr_cpa_map = distributionMap(ais_cpa_map, n_bins); //vector over cpa_dist discretized distribution  for different clregs situtaions 
         const auto node_id = getNodeId(node_name);
         auto node_definition = net.GetNode(node_id)->Definition();
         DSL_doubleArray CPT(node_definition->GetMatrix()->GetSize());  //henter ut matrix i baysian network
@@ -206,7 +207,7 @@ public:
         for(std::map<int, std::vector<double> >::iterator it=distr_cpa_map.begin(); it != distr_cpa_map.end(); ++it){
             int col = (*it).first;
             std::vector<double> inVect = (*it).second;
-            if(col == col_sit){
+            if(col == col_sit){ //TODO instead iterate over distr_cpa_map.at(col_sit)
                 for(int i=0; i < CPT.GetSize()-1; ++i){
                     CPT[i]= inVect[i];
                     std::cout << CPT[i] << " ";
@@ -215,14 +216,14 @@ public:
             }
         }
         if(sum<0.9999 || sum>1.0001 || !isfinite(sum)){
-            double error = 1.0000-sum;
+            double error = 1.0000-sum; //BUG: does not work if sum is not finite. Should probably give an error? 
             CPT[CPT.GetSize()-1] +=  error;
         }
         setDefinition(node_name, CPT);
         std::cout << "\n";
     }
 
-      void setAmpleTimeDistribution(const std::string node_name, std::string filename, int ample_time_idx, int timestep, int n_bins){
+    void setAmpleTimeDistribution(const std::string node_name, std::string filename, int ample_time_idx, int timestep, int n_bins){
         std::vector<std::vector<std::string> > content = read_file(filename);
         std::vector<double> ample_time_vec = ampleTimeVec(content, ample_time_idx, timestep);
         std::vector<double> distr_ample_time_vec = find_distribution(ample_time_vec, n_bins);

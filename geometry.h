@@ -536,19 +536,19 @@ namespace INTENTION_INFERENCE
 		std::fstream file (filename, std::ios::in);
 		std::cout << "\nReading file" << filename;
 		if(file.is_open()){
-				while(getline(file, line)){
-					row.clear();
+			while(getline(file, line)){
+				row.clear();
 
-					std::stringstream str(line);
+				std::stringstream str(line);
 
-					while(std::getline(str, num, ';'))
-
+				while(std::getline(str, num, ';'))
 					row.push_back(num);
-					content.push_back(row);
-				}
+
+				content.push_back(row);
 			}
-			else
-				std::cout << "Could not open file";
+		}
+		else
+			std::cout << "Could not open file";
 		return content;
 	}
 
@@ -596,16 +596,17 @@ namespace INTENTION_INFERENCE
 	} 
 
 	inline std::vector<double> find_distribution(std::vector<double> v, int n_bins){
-		double min = find_min(v);
-		double max = find_max(v);
+		double min = find_min(v); //BUG: these must match the definition used in the rest of the code, seems not like this is the case
+		double max = find_max(v); //TODO if there are extreme outliers then this solution is not the best
 		int num_intervals = n_bins; //want 30 intervals
 		double size_of_interval = (max - min) / num_intervals;  
 		double start_interval = min;
 		int sum = 0;
 		std::vector<int> instance_count_vec(num_intervals,0);
 		
+		//TODO if other bounds than min-max are used then it should handle elements outside of the bounds. Its now added to the end. 
 		for(int j=0; j < num_intervals ; j++){
-			for(int i=0; i < v.size(); i++){
+			for(int i=0; i < v.size(); i++){ //TODO this could be done in linear time. Find the index of which interval it should end up in using the modulo (%) operator
 				double end_interval = start_interval+size_of_interval;
 				if ((v[i] > start_interval) && (v[i] < end_interval)){
 					instance_count_vec[j] += 1;
@@ -616,6 +617,7 @@ namespace INTENTION_INFERENCE
 
 		double tot_sum = 0;
 		tot_sum = std::accumulate(instance_count_vec.begin(), instance_count_vec.end(),0);
+		//TODO this should be the same as v.size(), accumulating may be unecessary 
 		
 		std::vector<double> dist(num_intervals, 0);
 		double dist_sum = 0;
@@ -623,9 +625,9 @@ namespace INTENTION_INFERENCE
 			dist[i] = (instance_count_vec[i]/tot_sum);
 			dist_sum += dist[i];
 		}
-		double error = (100 - dist_sum);
+		double error = (100 - dist_sum); //BUG: should it sum to 100 and not 1?
 		if(error != 0){
-			dist[-1] += error;
+			dist[-1] += error; //TODO should it instead give an error/warning, so that we know 
 		}
 
 		return dist;

@@ -17,10 +17,6 @@
 #include "parameters.h"
 #include "utils.h"
 
-//TODO fiks:
-// ros::Time::now() <- tidspunktet for denne målingen
-// custom_msgs::... <- er bare brukt for å vise frem resultatet, kan fjernes (erstattes?)
-// putt inn tid som input i observation
 
 namespace INTENTION_INFERENCE
 {
@@ -257,6 +253,7 @@ namespace INTENTION_INFERENCE
 				int n_bins = 30;
 				int multiply =1;
 
+				//TODO these are used hard-coded inside other functions. This makes it look like you can change them even though its not possible. Maybe use #define or a global static constant variable?
 				int head_on = 3;
 				int overtake = -2;
 				int crossing = -1;
