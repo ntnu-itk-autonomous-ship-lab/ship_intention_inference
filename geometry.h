@@ -595,9 +595,7 @@ namespace INTENTION_INFERENCE
 		return ais_cases;
 	} 
 
-	inline std::vector<double> find_distribution(std::vector<double> v, int n_bins){
-		double min = find_min(v); //BUG: these must match the definition used in the rest of the code, seems not like this is the case
-		double max = find_max(v); //TODO if there are extreme outliers then this solution is not the best
+	inline std::vector<double> find_distribution(std::vector<double> v, int n_bins, double min, double max){
 		int num_intervals = n_bins; //want 30 intervals
 		double size_of_interval = (max - min) / num_intervals;  
 		double start_interval = min;
@@ -640,12 +638,12 @@ namespace INTENTION_INFERENCE
 		return dist;
 	}
 
-	inline std::map<int, std::vector<double> > distributionMap(std::map<int, std::vector<double> > ais_map, int n_bins){
+	inline std::map<int, std::vector<double> > distributionMap(std::map<int, std::vector<double> > ais_map, int n_bins, double min, double& max){
 		std::map<int, std::vector<double> > distributionMap;
 		for(std::map<int, std::vector<double> >::iterator it=ais_map.begin(); it != ais_map.end(); ++it){
 				int col = (*it).first;
 				std::vector<double> inVect = (*it).second;
-				std::vector<double> dist = find_distribution(inVect, n_bins);
+				std::vector<double> dist = find_distribution(inVect, n_bins, min, max);
 				distributionMap[col] = dist;
 			}
 		return distributionMap;

@@ -250,7 +250,6 @@ namespace INTENTION_INFERENCE
 				int cpa_ample_time_idx = 8;
 
 				int timestep = 60;
-				int n_bins = 30;
 				int multiply =1;
 
 				//TODO these are used hard-coded inside other functions. This makes it look like you can change them even though its not possible. Maybe use #define or a global static constant variable?
@@ -263,13 +262,13 @@ namespace INTENTION_INFERENCE
 				net.setPriorNormalDistribution("intention_distance_risk_of_collision_front", parameters.risk_distance_front_m.mu, parameters.risk_distance_front_m.sigma, parameters.risk_distance_front_m.max / parameters.risk_distance_front_m.n_bins);
 
 				// Cpa distance
-				net.setAisDistribution("intention_safe_distance_midpoint", "classified_west_5.csv", colreg_idx, cpa_dist_idx, multiply, n_bins, head_on);
-				net.setAisDistribution("intention_safe_distance", "classified_west_5.csv", colreg_idx, cpa_dist_idx, multiply, n_bins, overtake);
+				net.setAisDistribution("intention_safe_distance_midpoint", "classified_west_5.csv", colreg_idx, cpa_dist_idx, multiply, parameters.safe_distance_midpoint_m.n_bins, head_on, 0, parameters.safe_distance_midpoint_m.max);
+				net.setAisDistribution("intention_safe_distance", "classified_west_5.csv", colreg_idx, cpa_dist_idx, multiply, parameters.safe_distance_m.n_bins, overtake,0, parameters.safe_distance_m.max);
 				net.setPriorNormalDistribution("intention_safe_distance_front", parameters.safe_distance_front_m.mu, parameters.safe_distance_front_m.sigma, parameters.safe_distance_front_m.max / parameters.safe_distance_front_m.n_bins);
 				//TODO: Set safe distance front based on the safe_distance distribution somehow
 				
 				// Cpa time, the model does NOT differ for the different situations
-				net.setAmpleTimeDistribution("intention_ample_time", "classified_west_5.csv", cpa_ample_time_idx, timestep, n_bins);
+				net.setAmpleTimeDistribution("intention_ample_time", "classified_west_5.csv", cpa_ample_time_idx, timestep, parameters.ample_time_s.n_bins, 0, parameters.ample_time_s.max);
 			}
 		}
 

@@ -194,10 +194,10 @@ public:
     }
 
     //TODO rename from AIS to safe distance
-    void setAisDistribution(const std::string node_name, std::string filename, int colreg_idx, int cpa_dist_idx, int multiply, int n_bins, int col_sit){
+    void setAisDistribution(const std::string node_name, std::string filename, int colreg_idx, int cpa_dist_idx, int multiply, int n_bins, int col_sit, double min, double max){
         std::vector<std::vector<std::string> > content = read_file(filename);
         std::map<int, std::vector<double> > ais_cpa_map = aisMap(content, colreg_idx, cpa_dist_idx, multiply); //vector over all cpa_dist cases for different colregs situations
-        std::map<int, std::vector<double> > distr_cpa_map = distributionMap(ais_cpa_map, n_bins); //vector over cpa_dist discretized distribution  for different clregs situtaions 
+        std::map<int, std::vector<double> > distr_cpa_map = distributionMap(ais_cpa_map, n_bins, min, max); //vector over cpa_dist discretized distribution  for different clregs situtaions 
         const auto node_id = getNodeId(node_name);
         auto node_definition = net.GetNode(node_id)->Definition();
         DSL_doubleArray CPT(node_definition->GetMatrix()->GetSize());  //henter ut matrix i baysian network
@@ -223,10 +223,10 @@ public:
         std::cout << "\n";
     }
 
-    void setAmpleTimeDistribution(const std::string node_name, std::string filename, int ample_time_idx, int timestep, int n_bins){
+    void setAmpleTimeDistribution(const std::string node_name, std::string filename, int ample_time_idx, int timestep, int n_bins, double min, double max){
         std::vector<std::vector<std::string> > content = read_file(filename);
         std::vector<double> ample_time_vec = ampleTimeVec(content, ample_time_idx, timestep);
-        std::vector<double> distr_ample_time_vec = find_distribution(ample_time_vec, n_bins);
+        std::vector<double> distr_ample_time_vec = find_distribution(ample_time_vec, n_bins, min, max);
         const auto node_id = getNodeId(node_name);
         auto node_definition = net.GetNode(node_id)->Definition();
         DSL_doubleArray CPT(node_definition->GetMatrix()->GetSize());  //henter ut matrix i baysian network
