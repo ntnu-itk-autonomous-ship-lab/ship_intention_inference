@@ -625,8 +625,9 @@ namespace INTENTION_INFERENCE
 			dist[i] = (instance_count_vec[i]/tot_sum);
 			dist_sum += dist[i];
 		}
-		double error = (100 - dist_sum); //BUG: should it sum to 100 and not 1?
+		double error = (1 - dist_sum);
 		if(error != 0){
+			std::cout << "ERRO, find_distribution does not sum to 1. This much error: " << error << std::endl << std::flush;
 			dist[-1] += error; //TODO should it instead give an error/warning, so that we know 
 		}
 
