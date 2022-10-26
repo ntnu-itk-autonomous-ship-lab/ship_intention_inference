@@ -534,7 +534,7 @@ namespace INTENTION_INFERENCE
 		std::vector<std::string> row;
 		std::string line, num;
 		std::fstream file (filename, std::ios::in);
-		std::cout << "\nReading file" << filename;
+		std::cout << "\nReading file" << filename << std::endl << std::flush;
 		if(file.is_open()){
 			while(getline(file, line)){
 				row.clear();
@@ -548,7 +548,7 @@ namespace INTENTION_INFERENCE
 			}
 		}
 		else
-			std::cout << "Could not open file";
+			std::cout << "Could not open file" << std::endl << std::flush;
 		return content;
 	}
 

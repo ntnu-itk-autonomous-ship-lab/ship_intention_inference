@@ -41,7 +41,7 @@ void readFileToVecs (std::string filename, std::vector<int> &mmsi_vec, std::vect
             std::time_t time = mktime(&td);
             time_d = time;
             //std::tm local = *std::localtime(&time);
-            //std::cout << "local: " << std::put_time(&local, "%c %Z") << '\n';
+            //std::cout << "local: " << std::put_time(&local, "%c %Z") << '\n' << std::flush;
             
             getline(iss, token, ',');
             x = stod(token);
@@ -71,7 +71,7 @@ void readFileToVecs (std::string filename, std::vector<int> &mmsi_vec, std::vect
         time_vec[0]=0;
     }
     else{
-				std::cout << "Could not open file";
+				std::cout << "Could not open file" << std::flush;
     }
 }
 
@@ -121,7 +121,7 @@ int getShipListIndex(int mmsi, std::vector<int> ship_list){
         }
     }
     if (index == -1){
-        std::cout<<"ERROR: mmsi not found in ship list\n";
+        std::cout<<"ERROR: mmsi not found in ship list\n" << std::flush;
     }
     return index;
 }
@@ -135,10 +135,10 @@ void writeIntentionToFile(int timestep, INTENTION_INFERENCE::IntentionModelParam
     //intentionFile << "mmsi,x,y,time,colreg_compliant,good_seamanship,unmodeled_behaviour,CR_PS,CR_SS,HO,OT_en,OT_ing,priority_lower,priority_similar,priority_higher\n"; //,CR_SS2,CR_PS2,OT_ing2,OT_en2,priority_lower2,priority_similar2,priority_higher2\n";
 
     for(int i = timestep; i < unique_time_vec.size() ; i++){ //from 1 because first state might be NaN
-        std::cout << "timestep: " << i << std::endl;
+        std::cout << "timestep: " << i << std::endl << std::flush;
         int ot_en = 0;
         for(auto& [ship_id, current_ship_intention_model] : ship_intentions){
-            std::cout << "ship_id" << ship_id << std::endl;
+            std::cout << "ship_id" << ship_id << std::endl << std::flush;
             int j = getShipListIndex(ship_id,ship_list);
             current_ship_intention_model.insertObservation(parameters,ot_en, ship_state[i], ship_list, false, unique_time_vec[i], x_vec[unique_time_vec.size()*j+i], y_vec[unique_time_vec.size()*j+i], intentionFile); //writes intantion variables to file as well
     }
@@ -243,9 +243,9 @@ int main(){
 
     while (!inserted){
         for (int i = 0; i < num_ships; i++){
-            std::cout<< INTENTION_INFERENCE::better_at(ship_state[timestep], ship_list[1])[INTENTION_INFERENCE::PX]- INTENTION_INFERENCE::better_at(ship_state[timestep], ship_list[2])[INTENTION_INFERENCE::PX] << std::endl;
+            std::cout<< INTENTION_INFERENCE::better_at(ship_state[timestep], ship_list[1])[INTENTION_INFERENCE::PX]- INTENTION_INFERENCE::better_at(ship_state[timestep], ship_list[2])[INTENTION_INFERENCE::PX] << std::endl << std::flush;
             double dist = evaluateDistance(INTENTION_INFERENCE::better_at(ship_state[timestep], ship_list[1])[INTENTION_INFERENCE::PX] - INTENTION_INFERENCE::better_at(ship_state[timestep], ship_list[2])[INTENTION_INFERENCE::PX], INTENTION_INFERENCE::better_at(ship_state[timestep], ship_list[1])[INTENTION_INFERENCE::PY] - INTENTION_INFERENCE::better_at(ship_state[timestep], ship_list[2])[INTENTION_INFERENCE::PY]);
-            std::cout<< "dist: " << dist << std::endl;
+            std::cout<< "dist: " << dist << std::endl << std::flush;
             if ((dist < parameters.starting_distance) && (sog_vec[timestep]>1) && (sog_vec[unique_time_vec.size()+timestep]>1)){ //only checks the speed for two ships
                 ship_intentions.insert(std::pair<int, INTENTION_INFERENCE::IntentionModel>(ship_list[i], INTENTION_INFERENCE::IntentionModel(intentionModelFilename,parameters,ship_list[i],ship_state[timestep]))); //ship_state[1] as initial as first state might be NaN
             inserted = true;
@@ -259,17 +259,17 @@ int main(){
 
     /* OLD PRINTS
     for (int i= 0; i <2; i++){
-        std::cout << "mmsi: " << mmsi_vec[i] << std::endl;
-        std::cout << "time: " << time_vec[i] << std::endl;
-        std::cout << "x: " << x_vec[i] << std::endl;
-        std::cout << "y: " << y_vec[i] << std::endl;
-        std::cout << "sog: " << sog_vec[i] << std::endl;
-        std::cout << "cog: " << cog_vec[i] << std::endl;
+        std::cout << "mmsi: " << mmsi_vec[i] << std::endl << std::flush;
+        std::cout << "time: " << time_vec[i] << std::endl << std::flush;
+        std::cout << "x: " << x_vec[i] << std::endl << std::flush;
+        std::cout << "y: " << y_vec[i] << std::endl << std::flush;
+        std::cout << "sog: " << sog_vec[i] << std::endl << std::flush;
+        std::cout << "cog: " << cog_vec[i] << std::endl << std::flush;
     } 
     for (int i = 0; i < 5; i++){
             for(auto it = ship_state[i].cbegin(); it != ship_state[i].cend(); ++it){
-            std::cout << it->first << " -> " << it->second << std::endl;
-            std::cout << " time: " << unique_time_vec[i] << std::endl;
+            std::cout << it->first << " -> " << it->second << std::endl << std::flush;
+            std::cout << " time: " << unique_time_vec[i] << std::endl << std::flush;
         }
     } */
 }

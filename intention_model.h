@@ -87,10 +87,10 @@ namespace INTENTION_INFERENCE
 			
 			/*auto intention_distance_risk_of_collision = better_at(better_at(result, "intention_distance_risk_of_collision"), "true");
 			intentionFile << intention_distance_risk_of_collision << ",";
-			std::cout << "intention_distance_risk_of_collision: " << intention_distance_risk_of_collision << std::endl;
+			std::cout << "intention_distance_risk_of_collision: " << intention_distance_risk_of_collision << std::endl << std::flush;
 			auto intention_distance_risk_of_collision_front = better_at(better_at(result, "intention_distance_risk_of_collision_front"), "true");
 			intentionFile << intention_distance_risk_of_collision_front << ",";
-			std::cout << "intention_distance_risk_of_collision_front: " << intention_distance_risk_of_collision_front << std::endl;*/
+			std::cout << "intention_distance_risk_of_collision_front: " << intention_distance_risk_of_collision_front << std::endl << std::flush;*/
 			intentionFile << "0,0,";
 			
 
@@ -101,8 +101,8 @@ namespace INTENTION_INFERENCE
 			intentionFile << intention_unmodeled_behaviour << ",";
 			auto has_turned_portwards = better_at(better_at(result, "has_turned_portwards"), "true");
 			auto has_turned_starboardwards = better_at(better_at(result, "has_turned_starboardwards"), "true");
-			std::cout << "has_turned_starboardwards: " << has_turned_starboardwards << std::endl;
-			std::cout << "has_turned_portwards: " << has_turned_portwards << std::endl;
+			std::cout << "has_turned_starboardwards: " << has_turned_starboardwards << std::endl << std::flush;
+			std::cout << "has_turned_portwards: " << has_turned_portwards << std::endl << std::flush;
 			auto stands_on_correct = better_at(better_at(result, "stands_on_correct"), "true");
 			auto observation_applicable = better_at(better_at(result, "observation_applicable"), "true");
 			
@@ -305,11 +305,11 @@ namespace INTENTION_INFERENCE
 
 					net.setEvidence("disable_" + ship_name, "enabled");
 
-					std::cout << "time to cpa: " << cpa.time_untill_CPA << std::endl;
+					std::cout << "time to cpa: " << cpa.time_untill_CPA << std::endl << std::flush;
 					
 					const auto situation = evaluateSitution(parameters, better_at(ship_states, my_id), ship_state);
 					for (const auto &[name, value] : situation){
-						std::cout << name << "=" << value << ", ";
+						std::cout << name << "=" << value << ", " << std::flush;
 					}
 
 
@@ -317,7 +317,7 @@ namespace INTENTION_INFERENCE
 
 					net.setEvidence("distance_at_cpa_towards_" + ship_name, highresCPADistanceIdentifier(parameters, cpa.distance_at_CPA));
 					net.setEvidence("lowres_distance_at_cpa_towards_" + ship_name, highresCPADistanceIdentifier(parameters, cpa.distance_at_CPA));
-					std::cout << "r_cpa: " << cpa.distance_at_CPA << std::endl;
+					std::cout << "r_cpa: " << cpa.distance_at_CPA << std::endl << std::flush;
 
 					double crossing_in_front_distance = crossingInFrontDistance(better_at(ship_states, my_id), ship_state);
 					net.setEvidence("crossing_distance_front_towards_" + ship_name, crossInFrontHighresIdentifier(parameters, crossing_in_front_distance));
@@ -330,10 +330,10 @@ namespace INTENTION_INFERENCE
 					net.setEvidence("crossing_with_midpoint_on_side_"+ship_name, crossingWithMidpointOnSideIdentifier(distanceToMidpointResult.crossing_with_midpoint_on_port_side));
 
 					net.setEvidence("aft_front_crossing_side_to_" + ship_name, frontAftIdentifier(cpa.passing_in_front));
-					//std::cout << "in front: " << cpa.passing_in_front << std::endl;
+					//std::cout << "in front: " << cpa.passing_in_front << std::endl << std::flush;
 
 					net.setEvidence("passed_" + ship_name, hasPassedIdentifier(cpa.time_untill_CPA));
-					std::cout << "passed: " << hasPassedIdentifier(cpa.time_untill_CPA) << std::endl;
+					std::cout << "passed: " << hasPassedIdentifier(cpa.time_untill_CPA) << std::endl << std::flush;
 
 					net.setEvidence("crossing_wiht_other_on_port_side_to_" + ship_name, crossing_port_starboard_identifier(cpa.bearing_relative_to_heading));
 					

@@ -202,7 +202,7 @@ public:
         auto node_definition = net.GetNode(node_id)->Definition();
         DSL_doubleArray CPT(node_definition->GetMatrix()->GetSize());  //henter ut matrix i baysian network
         // CPT = distr_map[-2];
-        std::cout << "\n Distribution added for colreg sit (" <<col_sit<<") :\n" ;
+        std::cout << "\n Distribution added for colreg sit (" <<col_sit<<") :\n"  << std::flush;
         double sum = 0;
         for(std::map<int, std::vector<double> >::iterator it=distr_cpa_map.begin(); it != distr_cpa_map.end(); ++it){
             int col = (*it).first;
@@ -210,7 +210,7 @@ public:
             if(col == col_sit){ //TODO instead iterate over distr_cpa_map.at(col_sit)
                 for(int i=0; i < CPT.GetSize()-1; ++i){
                     CPT[i]= inVect[i];
-                    std::cout << CPT[i] << " ";
+                    std::cout << CPT[i] << " " << std::flush;
                     sum += CPT[i];
                 }
             }
@@ -220,7 +220,7 @@ public:
             CPT[CPT.GetSize()-1] +=  error;
         }
         setDefinition(node_name, CPT);
-        std::cout << "\n";
+        std::cout << std::endl << std::flush;
     }
 
     void setAmpleTimeDistribution(const std::string node_name, std::string filename, int ample_time_idx, int timestep, int n_bins, double min, double max){
@@ -231,12 +231,12 @@ public:
         auto node_definition = net.GetNode(node_id)->Definition();
         DSL_doubleArray CPT(node_definition->GetMatrix()->GetSize());  //henter ut matrix i baysian network
 
-        std::cout << "\n Distribution added for ample time :\n" ;
+        std::cout << "\n Distribution added for ample time :\n"  << std::flush;
         double sum = 0;
         
         for(int i=0; i < CPT.GetSize()-1; ++i){
                     CPT[i]= distr_ample_time_vec[i];
-                    std::cout << CPT[i] << " ";
+                    std::cout << CPT[i] << " " << std::flush;
                     sum += CPT[i];
             }
         if(sum<0.9999 || sum>1.0001 || !isfinite(sum)){
@@ -244,7 +244,7 @@ public:
             CPT[CPT.GetSize()-1] +=  error;
         }
         setDefinition(node_name, CPT);
-        std::cout << "\n";
+        std::cout << "\n" << std::flush;
     }
 
     void setVirtualEvidence(std::string node_name,const std::vector<double>& virtualEvidence, int time_slice=-1){
