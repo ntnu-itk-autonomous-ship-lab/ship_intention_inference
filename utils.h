@@ -39,7 +39,6 @@ namespace INTENTION_INFERENCE
         }
         catch (const std::out_of_range &error)
         {
-            std::cout << "HERE";
             std::stringstream ss;
             ss << "Trying to get nonexisting key: " << key << "\n";
             ss << "The following keys exist: ";

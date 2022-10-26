@@ -150,7 +150,7 @@ void writeIntentionToFile(int timestep, INTENTION_INFERENCE::IntentionModelParam
 
 INTENTION_INFERENCE::IntentionModelParameters setModelParameters(int num_ships){
     INTENTION_INFERENCE::IntentionModelParameters param;
-    param.use_ais_distributions = false;
+    param.use_ais_distributions = true;
     param.number_of_network_evaluation_samples = 100000;
 	param.max_number_of_obstacles = num_ships-1; //must be set to num_ships-1 or else segmantation fault
 	param.time_into_trajectory = 10;

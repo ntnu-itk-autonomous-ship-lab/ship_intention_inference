@@ -1,4 +1,4 @@
-// This file interfaces the smile library. It implements commanly used functions.
+// This file interfaces the smile library. It implements commonly used functions.
 // This file should not care what the BBN is used for.
 
 #pragma once
@@ -51,8 +51,8 @@ class BayesianNetwork{
             sum += CPT[i];
         }
         //if(sum<0.9999 || sum>1.00001 || !isfinite(sum)) printf("ERROR: Prior distribution on \"%s\" sums to %f, should be 1", node_name.c_str(), sum);
-        if(sum<0.8 || sum>1.1 || !isfinite(sum)) printf("ERROR: Prior distribution on \"%s\" sums to %f, should be 1", node_name.c_str(), sum);
-        assert(sum>=0.8 && sum<=1.1);
+        if(sum<0.999 || sum>1.001 || !isfinite(sum)) printf("ERROR: Prior distribution on \"%s\" sums to %f, should be 1", node_name.c_str(), sum);
+        assert(sum>=0.999 && sum<=1.001 || isfinite(sum));
         const auto node_id = getNodeId(node_name);
         auto result =  net.GetNode(node_id)->Definition()->SetDefinition(CPT);
         if(result<0) printf("ERROR: Setting priors failed on node \"%s\"", node_name.c_str());
@@ -215,10 +215,8 @@ public:
                 }
             }
         }
-        if(sum<0.9999 || sum>1.0001 || !isfinite(sum)){
-            double error = 1.0000-sum; //BUG: does not work if sum is not finite. Should probably give an error? 
-            CPT[CPT.GetSize()-1] +=  error;
-        }
+        if(sum<0.999 || sum>1.001 || !isfinite(sum)) printf("ERROR: Prior distribution on \"%s\" sums to %f, should be 1", node_name.c_str(), sum);
+        assert(sum>=0.999 && sum<=1.001 || isfinite(sum));
         setDefinition(node_name, CPT);
         std::cout << std::endl << std::flush;
     }
@@ -239,10 +237,8 @@ public:
                     std::cout << CPT[i] << " " << std::flush;
                     sum += CPT[i];
             }
-        if(sum<0.9999 || sum>1.0001 || !isfinite(sum)){
-            double error = 1.0000-sum;
-            CPT[CPT.GetSize()-1] +=  error;
-        }
+        if(sum<0.999 || sum>1.001 || !isfinite(sum)) printf("ERROR: Prior distribution on \"%s\" sums to %f, should be 1", node_name.c_str(), sum);
+        assert(sum>=0.999 && sum<=1.001 || isfinite(sum));
         setDefinition(node_name, CPT);
         std::cout << "\n" << std::flush;
     }

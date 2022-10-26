@@ -603,16 +603,16 @@ namespace INTENTION_INFERENCE
 		std::vector<int> instance_count_vec(num_intervals,0);
 
 		for(auto it = v.begin(); it<v.end(); ++it){
-			if(*it < min)
-				*it = min;
-			else if(*it > max)
-				*it  = max;
+			if(*it < min+0.001)
+				*it = min+0.001;
+			else if(*it > max-0.001)
+				*it  = max-0.001;
 		}
 		
 		for(int j=0; j < num_intervals ; j++){
 			for(int i=0; i < v.size(); i++){ //TODO this could be done in linear time. Find the index of which interval it should end up in using the modulo (%) operator
 				double end_interval = start_interval+size_of_interval;
-				if ((v[i] > start_interval) && (v[i] < end_interval)){
+				if ((v[i] >= start_interval) && (v[i] < end_interval)){
 					instance_count_vec[j] += 1;
 					}
 				}
@@ -629,11 +629,8 @@ namespace INTENTION_INFERENCE
 			dist[i] = (instance_count_vec[i]/tot_sum);
 			dist_sum += dist[i];
 		}
-		double error = (1 - dist_sum);
-		if(error != 0){
-			std::cout << "ERRO, find_distribution does not sum to 1. This much error: " << error << std::endl << std::flush;
-			dist[-1] += error; //TODO should it instead give an error/warning, so that we know 
-		}
+		if(sum<0.999 || sum>1.001 || !isfinite(sum)) printf("ERROR: Distribution sums to %f, should be 1", sum);
+        assert(sum>=0.999 && sum<=1.001 || isfinite(sum));
 
 		return dist;
 	}
