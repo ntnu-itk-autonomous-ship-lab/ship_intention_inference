@@ -6,6 +6,7 @@
 namespace INTENTION_INFERENCE
 {
 struct IntentionModelParameters{
+    bool use_ais_distributions;
     unsigned number_of_network_evaluation_samples;
     unsigned max_number_of_obstacles;
     unsigned time_into_trajectory;
