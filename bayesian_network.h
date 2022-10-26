@@ -25,7 +25,7 @@ class BayesianNetwork{
     auto getNodeId(std::string name) const{
         const auto node_id = net.FindNode(name.c_str());
         if(node_id<0) printf("ERROR: Node name \"%s\" resulted in error", name.c_str());
-        assert(node_id>=0);
+        if(!(node_id>=0)) throw std::runtime_error("!(node_id>=0)");
         return node_id;
     }
 
@@ -33,7 +33,7 @@ class BayesianNetwork{
         const auto node_id = getNodeId(node_name);
         const auto outcome_id = net.GetNode(node_id)->Definition()->GetOutcomesNames()->FindPosition(outcome_name.c_str());
         if(outcome_id<0)printf("ERROR: Outcome name \"%s\" resulted in error for node name \"%s\"", outcome_name.c_str(), node_name.c_str());
-        assert(outcome_id>=0);
+        if(!(outcome_id>=0)) throw std::runtime_error("!(outcome_id>=0)");
         return outcome_id;
     }
 
@@ -41,7 +41,7 @@ class BayesianNetwork{
         const auto node_id = getNodeId(node_name);
         const auto outcome_count = net.GetNode(node_id)->Definition()->GetNumberOfOutcomes();
         if(outcome_count<=0) printf("ERROR: No outcomes for node_id %s", node_name.c_str());
-        assert(outcome_count>0);
+        if(!(outcome_count>0)) throw std::runtime_error("!(outcome_count>0)");
         return outcome_count;
     }
 
@@ -52,11 +52,11 @@ class BayesianNetwork{
         }
         //if(sum<0.9999 || sum>1.00001 || !isfinite(sum)) printf("ERROR: Prior distribution on \"%s\" sums to %f, should be 1", node_name.c_str(), sum);
         if(sum<0.999 || sum>1.001 || !isfinite(sum)) printf("ERROR: Prior distribution on \"%s\" sums to %f, should be 1", node_name.c_str(), sum);
-        assert(sum>=0.999 && sum<=1.001 || isfinite(sum));
+        if(!(sum>=0.999 && sum<=1.001 && isfinite(sum))) throw std::runtime_error("!(sum>=0.999 && sum<=1.001 && isfinite(sum))");
         const auto node_id = getNodeId(node_name);
         auto result =  net.GetNode(node_id)->Definition()->SetDefinition(CPT);
         if(result<0) printf("ERROR: Setting priors failed on node \"%s\"", node_name.c_str());
-        assert(result>=0);
+        if(!(result>=0)) throw std::runtime_error("!(result>=0)");
     }
 
     void wrapTimeSlice(int* time_slice){
@@ -65,7 +65,7 @@ class BayesianNetwork{
             *time_slice = num_slices+*time_slice;
         }
         if(*time_slice>=num_slices) printf("ERROR: Attempted to access nonexisting timeslice %d", *time_slice);
-        assert(*time_slice<num_slices);
+        if(!(*time_slice<num_slices)) throw std::runtime_error("!(*time_slice<num_slices)");
     }
 
     bool isTemporal(int node_id){
@@ -118,21 +118,21 @@ public:
         std::string full_path = file_name;
         const auto result = net.ReadFile(full_path.c_str());
         if(result<0) printf("ERROR: Unable to read file: \"%s\"", full_path.c_str());
-        assert(result>=0);
+        if(result<0) throw std::runtime_error("result>0");
         const auto result_slice = net.SetNumberOfSlices(1);
         if(result_slice<0) printf("ERROR: Insufficient number of time slices");
-        assert(result_slice>=0);
+        if(!(result_slice>=0)) throw std::runtime_error("!(result_slice>=0)");
         net.SetDefaultBNAlgorithm(DSL_ALG_BN_EPISSAMPLING);
         const auto return_set_samples = net.SetNumberOfSamples(num_network_evaluation_samples);
         if(return_set_samples<0) printf("ERROR: Illigal number of samples set: %d", num_network_evaluation_samples);
-        assert(return_set_samples>=0);
+        if(!(return_set_samples>=0)) throw std::runtime_error("!(return_set_samples>=0)");
     }
 
     void save_network(std::string file_name){
         std::string full_path = file_name;
         const auto result = net.WriteFile(full_path.c_str());
         if(result<0) printf("ERROR: Unable to write file: \"%s\"", full_path.c_str());
-        assert(result>=0);
+        if(!(result>=0)) throw std::runtime_error("!(result>=0)");
         printf("Network saved to %s", full_path.c_str());
     }
 
@@ -142,19 +142,19 @@ public:
         if(isTemporal(node_id)){
             const auto res = net.GetNode(node_id)->Value()->SetTemporalEvidence(time_slice,outcome_id);
             if(res<0) printf("ERROR: Set temporal evidence (t=%d, outcome_id=%d) on node \"%s\" resulted in error",time_slice, outcome_id, node_name.c_str());
-            assert(res>=0);
+            if(!(res>=0)) throw std::runtime_error("!(res>=0)");
         }
         else{
             const auto res = net.GetNode(node_id)->Value()->SetEvidence(outcome_id);
             if(res<0) printf("ERROR: Set evidence (outcome_id=%d) on node \"%s\" resulted in error",outcome_id,node_name.c_str());
-            assert(res>=0);
+            if(!(res>=0)) throw std::runtime_error("!(res>=0)");
         }
     }
 
     void setEvidence(std::string node_name, std::string observed_outcome,int time_slice=-1){
         const auto outcome_id = getOutcomeId(node_name, observed_outcome);
         if(outcome_id<0) printf("ERRO: Illegal evidence name");
-        assert(outcome_id>=0);
+        if(!(outcome_id>=0)) throw std::runtime_error("!(outcome_id>=0)");
         setEvidence(node_name, outcome_id,time_slice);
     }
 
@@ -216,7 +216,7 @@ public:
             }
         }
         if(sum<0.999 || sum>1.001 || !isfinite(sum)) printf("ERROR: Prior distribution on \"%s\" sums to %f, should be 1", node_name.c_str(), sum);
-        assert(sum>=0.999 && sum<=1.001 || isfinite(sum));
+        if(!(sum>=0.999 && sum<=1.001 && isfinite(sum))) throw std::runtime_error("!(sum>=0.999 && sum<=1.001 && isfinite(sum))");
         setDefinition(node_name, CPT);
         std::cout << std::endl << std::flush;
     }
@@ -238,7 +238,7 @@ public:
                     sum += CPT[i];
             }
         if(sum<0.999 || sum>1.001 || !isfinite(sum)) printf("ERROR: Prior distribution on \"%s\" sums to %f, should be 1", node_name.c_str(), sum);
-        assert(sum>=0.999 && sum<=1.001 || isfinite(sum));
+        if(!(sum>=0.999 && sum<=1.001 && isfinite(sum))) throw std::runtime_error("!(sum>=0.999 && sum<=1.001 && isfinite(sum))");
         setDefinition(node_name, CPT);
         std::cout << "\n" << std::flush;
     }
@@ -249,18 +249,18 @@ public:
         if(isTemporal(node_id)){
             const auto result = net.GetNode(node_id)->Value()->SetTemporalEvidence(time_slice,virtualEvidence);
             if(result<0) printf("ERROR: Set virtual evidence (t=%d) on node \"%s\" resulted in error", time_slice, node_name.c_str());
-            assert(result>=0);
+            if(!(result>=0)) throw std::runtime_error("!(result>=0)");
         }
         else{
             const auto result = net.GetNode(node_id)->Value()->SetVirtualEvidence(virtualEvidence);
             if(result<0) printf("ERROR: Set virtual evidence on node \"%s\" resulted in error", node_name.c_str());
-            assert(result>=0);
+            if(!(result>=0)) throw std::runtime_error("!(result>=0)");
         }
     }
 
     void setVirtualEvidence(std::string node_name, const std::map<std::string, double>& virtualEvidence){
         const auto num_outcomes = getNumberOfOutcomes(node_name);
-        assert(num_outcomes>0);
+        if(!(num_outcomes>0)) throw std::runtime_error("!(num_outcomes>0)");
         std::vector<double> virtual_evidence_vector(num_outcomes, 0.0);
         for(auto evidence:virtualEvidence){
             const auto outcome_id = getOutcomeId(node_name, evidence.first);
@@ -273,14 +273,14 @@ public:
         const auto number_of_time_slices = net.GetNumberOfSlices();
         const auto res = net.SetNumberOfSlices(number_of_time_slices+1);
         if(res<0) printf("ERROR: Increment time failed");
-        assert(res>=0);
+        if(!(res>=0)) throw std::runtime_error("!(res>=0)");
     }
 
     void decrementTime(){
         const auto number_of_time_slices = net.GetNumberOfSlices();
         const auto res = net.SetNumberOfSlices(number_of_time_slices-1);
         if(res<0) printf("ERROR: Decrement time failed");
-        assert(res>=0);
+        if(!(res>=0)) throw std::runtime_error("!(res>=0)");
     }
 
     auto evaluateStates(std::vector<std::string> node_names){
@@ -296,7 +296,7 @@ public:
             throw "Unable to update beliefs";
         } 
 
-        assert(update_res>=0);
+        if(!(update_res>=0)) throw std::runtime_error("!(update_res>=0)");
 
         std::map<std::string,std::map<std::string,double>> return_value;
         for(auto node_name:node_names){

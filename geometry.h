@@ -629,8 +629,8 @@ namespace INTENTION_INFERENCE
 			dist[i] = (instance_count_vec[i]/tot_sum);
 			dist_sum += dist[i];
 		}
-		if(sum<0.999 || sum>1.001 || !isfinite(sum)) printf("ERROR: Distribution sums to %f, should be 1", sum);
-        assert(sum>=0.999 && sum<=1.001 || isfinite(sum));
+		if(dist_sum<0.999 || dist_sum>1.001 || !isfinite(dist_sum)) printf("ERROR: Distribution sums to %f, should be 1", dist_sum);
+        if(!(dist_sum>=0.999 && dist_sum<=1.001 && isfinite(dist_sum))) throw std::runtime_error("!(dist_sum>=0.999 && dist_sum<=1.001 && isfinite(dist_sum))");
 
 		return dist;
 	}

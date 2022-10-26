@@ -25,7 +25,7 @@ namespace INTENTION_INFERENCE
                 ss << key << ", ";
             }
             std::cout << ss.str() << std::flush;
-            assert(false);
+            throw std::runtime_error("Trying to get nonexisting key");
         }
         return map.begin()->second;
     }
@@ -48,7 +48,7 @@ namespace INTENTION_INFERENCE
                 ss << key << ", ";
             }
             std::cout << ss.str() << std::flush;
-            assert(false);
+            throw std::runtime_error("Trying to get nonexisting key");
         }
         return map.begin()->second;
     }
