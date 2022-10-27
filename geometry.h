@@ -599,7 +599,6 @@ namespace INTENTION_INFERENCE
 		int num_intervals = n_bins; //want 30 intervals
 		double size_of_interval = (max - min) / num_intervals;  
 		double start_interval = min;
-		int sum = 0;
 		std::vector<int> instance_count_vec(num_intervals,0);
 
 		for(auto it = v.begin(); it<v.end(); ++it){

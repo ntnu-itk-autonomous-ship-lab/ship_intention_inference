@@ -208,7 +208,7 @@ public:
             int col = (*it).first;
             std::vector<double> inVect = (*it).second;
             if(col == col_sit){ //TODO instead iterate over distr_cpa_map.at(col_sit)
-                for(int i=0; i < CPT.GetSize()-1; ++i){
+                for(int i=0; i < CPT.GetSize(); ++i){
                     CPT[i]= inVect[i];
                     std::cout << CPT[i] << " " << std::flush;
                     sum += CPT[i];
@@ -232,7 +232,7 @@ public:
         std::cout << "\n Distribution added for ample time :\n"  << std::flush;
         double sum = 0;
         
-        for(int i=0; i < CPT.GetSize()-1; ++i){
+        for(int i=0; i < CPT.GetSize(); ++i){
                     CPT[i]= distr_ample_time_vec[i];
                     std::cout << CPT[i] << " " << std::flush;
                     sum += CPT[i];
