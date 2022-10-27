@@ -74,10 +74,12 @@ namespace INTENTION_INFERENCE
 			return false;
 		}
 
-		void evaluate_nodes(std::ofstream &intentionFile, double time, double x, double y){
+		void evaluate_nodes(std::ofstream &intentionFile, double time, double x, double y, double sog, double cog){
 			intentionFile << my_id << ",";
             intentionFile << x << ",";
             intentionFile << y << ","; 
+			intentionFile << sog << ",";
+			intentionFile << cog << ",";
             intentionFile << time << ",";
 
 			auto result = net.evaluateStates(all_node_names);
@@ -276,9 +278,10 @@ namespace INTENTION_INFERENCE
 			}
 		}
 
-		bool insertObservation(const IntentionModelParameters parameters, int &ot_en, const std::map<int, Eigen::Vector4d> ship_states, std::vector<int> currently_tracked_ships, bool is_changing_course, double time, double x, double y, std::ofstream &intentionFile)
+		bool insertObservation(const IntentionModelParameters parameters, int &ot_en, const std::map<int, Eigen::Vector4d> ship_states, std::vector<int> currently_tracked_ships, bool is_changing_course, double time, double x, double y, std::ofstream &intentionFile,std::ofstream &measurementFile)
 		{
-
+			measurementFile << my_id << ",";
+            measurementFile << time << ",";
 			bool did_save = false;
 
 			if (doSave(ship_states, time))
@@ -286,13 +289,19 @@ namespace INTENTION_INFERENCE
 				net.incrementTime();
 				did_save = true;
 			}
+			measurementFile << did_save << ",";
 			
 		
-			net.setEvidence("change_in_course", changeInCourseIdentifier(parameters, better_at(ship_states, my_id)[CHI], better_at(initial_ship_states, my_id)[CHI]));
+			auto change_in_course = changeInCourseIdentifier(parameters, better_at(ship_states, my_id)[CHI], better_at(initial_ship_states, my_id)[CHI]);
+			net.setEvidence("change_in_course", change_in_course);
+			measurementFile <<  better_at(ship_states, my_id)[CHI]-better_at(initial_ship_states, my_id)[CHI] << ",";
 
-			net.setEvidence("change_in_speed", changeInSpeedIdentifier(parameters, better_at(ship_states, my_id)[U], better_at(initial_ship_states, my_id)[U]));
+			auto change_in_speed = changeInSpeedIdentifier(parameters, better_at(ship_states, my_id)[U], better_at(initial_ship_states, my_id)[U]);
+			net.setEvidence("change_in_speed", change_in_speed);
+			measurementFile << better_at(ship_states, my_id)[U] - better_at(initial_ship_states, my_id)[U] << ",";
 
 			net.setEvidence("is_changing_course", is_changing_course);  
+			measurementFile << is_changing_course << ",";
 			
 
 			std::vector<std::string> handled_ship_names;
@@ -318,32 +327,39 @@ namespace INTENTION_INFERENCE
 
 
 					net.setEvidence("time_untill_closest_point_of_approach_towards_" + ship_name, timeIdentifier(parameters, cpa.time_untill_CPA));
+					measurementFile << cpa.time_untill_CPA << ",";
 
 					net.setEvidence("distance_at_cpa_towards_" + ship_name, highresCPADistanceIdentifier(parameters, cpa.distance_at_CPA));
 					net.setEvidence("lowres_distance_at_cpa_towards_" + ship_name, highresCPADistanceIdentifier(parameters, cpa.distance_at_CPA));
 					std::cout << "r_cpa: " << cpa.distance_at_CPA << std::endl << std::flush;
+					measurementFile <<  cpa.distance_at_CPA << ",";
 
 					double crossing_in_front_distance = crossingInFrontDistance(better_at(ship_states, my_id), ship_state);
 					net.setEvidence("crossing_distance_front_towards_" + ship_name, crossInFrontHighresIdentifier(parameters, crossing_in_front_distance));
 					net.setEvidence("lowres_crossing_distance_front_towards_" + ship_name, crossInFrontHighresIdentifier(parameters, crossing_in_front_distance));
+					measurementFile << crossing_in_front_distance << ",";
 
 					auto distanceToMidpointResult = distanceToMidpointCourse(better_at(ship_states, my_id), ship_state);
 				
 					net.setEvidence("two_times_distance_to_midpoint_at_cpa_to_" + ship_name, twotimesDistanceToMidpointIdentifier(parameters, distanceToMidpointResult.distance_to_midpoint));
+					measurementFile << distanceToMidpointResult.distance_to_midpoint << ",";
 					
 					net.setEvidence("crossing_with_midpoint_on_side_"+ship_name, crossingWithMidpointOnSideIdentifier(distanceToMidpointResult.crossing_with_midpoint_on_port_side));
+					measurementFile << distanceToMidpointResult.crossing_with_midpoint_on_port_side << ",";
 
 					net.setEvidence("aft_front_crossing_side_to_" + ship_name, frontAftIdentifier(cpa.passing_in_front));
 					//std::cout << "in front: " << cpa.passing_in_front << std::endl << std::flush;
+					measurementFile << cpa.passing_in_front << ",";
 
 					net.setEvidence("passed_" + ship_name, hasPassedIdentifier(cpa.time_untill_CPA));
 					std::cout << "passed: " << hasPassedIdentifier(cpa.time_untill_CPA) << std::endl << std::flush;
+					measurementFile << (hasPassedIdentifier(cpa.time_untill_CPA)=="true") << ",";
 
 					net.setEvidence("crossing_wiht_other_on_port_side_to_" + ship_name, crossing_port_starboard_identifier(cpa.bearing_relative_to_heading));
-					
+					measurementFile << (crossing_port_starboard_identifier(cpa.bearing_relative_to_heading)=="port") << ",";
 				}
 			}
-			
+			measurementFile << "\n";
 	
 			for (const auto ship_name1 : ship_names)
 			{
@@ -354,7 +370,7 @@ namespace INTENTION_INFERENCE
 			}
 
 			net.setEvidence(output_name, "true");
-			evaluate_nodes(intentionFile, time, x, y);
+			evaluate_nodes(intentionFile, time, x, y, better_at(ship_states, my_id)[CHI], better_at(ship_states, my_id)[U]);
 			
 			return did_save;
 			

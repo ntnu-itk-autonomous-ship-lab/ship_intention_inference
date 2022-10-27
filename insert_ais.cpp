@@ -129,9 +129,13 @@ int getShipListIndex(int mmsi, std::vector<int> ship_list){
 
 void writeIntentionToFile(int timestep, INTENTION_INFERENCE::IntentionModelParameters parameters, std::string filename, std::map<int, INTENTION_INFERENCE::IntentionModel> ship_intentions, std::vector<std::map<int, Eigen::Vector4d > > ship_state, std::vector<int> ship_list, std::vector<double> unique_time_vec, std::vector<double> x_vec, std::vector<double> y_vec){
     std::ofstream intentionFile;
+    std::ofstream measurementFile;
     std::string filename_intention = "intention_files/dist_intention_"+filename;
+    std::string filename_measurements = "intention_files/measurements_"+filename;
     intentionFile.open (filename_intention);
-    intentionFile << "mmsi,x,y,time,colreg_compliant,distance_risk_of_collision,distance_risk_of_collision_front,good_seamanship,unmodeled_behaviour,CR_PS,CR_SS,HO,OT_en,OT_ing,priority_lower,priority_similar,priority_higher,is_risk_of_collision\n"; //,CR_SS2,CR_PS2,OT_ing2,OT_en2,priority_lower2,priority_similar2,priority_higher2\n";
+    measurementFile.open(filename_measurements);
+    intentionFile << "mmsi,x,y,cog,sog,time,colreg_compliant,distance_risk_of_collision,distance_risk_of_collision_front,good_seamanship,unmodeled_behaviour,CR_PS,CR_SS,HO,OT_en,OT_ing,priority_lower,priority_similar,priority_higher,is_risk_of_collision\n"; //,CR_SS2,CR_PS2,OT_ing2,OT_en2,priority_lower2,priority_similar2,priority_higher2\n";
+    measurementFile << "mmsi,time,did_save,change_in_course,change_in_speed,is_changing_course,time_untill_CPA,distance_cpa,crossing_in_front_distance,distance_to_midpoint,crossing_with_midpoint_on_port_side,passing_in_front,hasPassed,crossing_with_other_on_port_side,\n";
     //intentionFile << "mmsi,x,y,time,colreg_compliant,good_seamanship,unmodeled_behaviour,CR_PS,CR_SS,HO,OT_en,OT_ing,priority_lower,priority_similar,priority_higher\n"; //,CR_SS2,CR_PS2,OT_ing2,OT_en2,priority_lower2,priority_similar2,priority_higher2\n";
 
     for(int i = timestep; i < unique_time_vec.size() ; i++){ //from 1 because first state might be NaN
@@ -140,10 +144,11 @@ void writeIntentionToFile(int timestep, INTENTION_INFERENCE::IntentionModelParam
         for(auto& [ship_id, current_ship_intention_model] : ship_intentions){
             std::cout << "ship_id" << ship_id << std::endl << std::flush;
             int j = getShipListIndex(ship_id,ship_list);
-            current_ship_intention_model.insertObservation(parameters,ot_en, ship_state[i], ship_list, false, unique_time_vec[i], x_vec[unique_time_vec.size()*j+i], y_vec[unique_time_vec.size()*j+i], intentionFile); //writes intantion variables to file as well
+            current_ship_intention_model.insertObservation(parameters,ot_en, ship_state[i], ship_list, false, unique_time_vec[i], x_vec[unique_time_vec.size()*j+i], y_vec[unique_time_vec.size()*j+i], intentionFile, measurementFile); //writes intantion variables to file as well
     }
    }
     intentionFile.close(); 
+    measurementFile.close();
     printf("Finished writing intentions to file \n");
 }
 
