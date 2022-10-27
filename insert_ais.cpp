@@ -138,15 +138,16 @@ void writeIntentionToFile(int timestep, INTENTION_INFERENCE::IntentionModelParam
     measurementFile << "mmsi,time,did_save,change_in_course,change_in_speed,is_changing_course,time_untill_CPA,distance_cpa,crossing_in_front_distance,distance_to_midpoint,crossing_with_midpoint_on_port_side,passing_in_front,hasPassed,crossing_with_other_on_port_side,\n";
     //intentionFile << "mmsi,x,y,time,colreg_compliant,good_seamanship,unmodeled_behaviour,CR_PS,CR_SS,HO,OT_en,OT_ing,priority_lower,priority_similar,priority_higher\n"; //,CR_SS2,CR_PS2,OT_ing2,OT_en2,priority_lower2,priority_similar2,priority_higher2\n";
 
-    for(int i = timestep; i < unique_time_vec.size() ; i++){ //from 1 because first state might be NaN
+    bool is_finished;
+    for(int i = timestep; !is_finished && i < unique_time_vec.size() ; i++){ //from 1 because first state might be NaN
         std::cout << "timestep: " << i << std::endl << std::flush;
         int ot_en = 0;
         for(auto& [ship_id, current_ship_intention_model] : ship_intentions){
             std::cout << "ship_id" << ship_id << std::endl << std::flush;
             int j = getShipListIndex(ship_id,ship_list);
-            current_ship_intention_model.insertObservation(parameters,ot_en, ship_state[i], ship_list, false, unique_time_vec[i], x_vec[unique_time_vec.size()*j+i], y_vec[unique_time_vec.size()*j+i], intentionFile, measurementFile); //writes intantion variables to file as well
+            is_finished = current_ship_intention_model.insertObservation(parameters,ot_en, ship_state[i], ship_list, false, unique_time_vec[i], x_vec[unique_time_vec.size()*j+i], y_vec[unique_time_vec.size()*j+i], intentionFile, measurementFile); //writes intantion variables to file as well
+        }
     }
-   }
     intentionFile.close(); 
     measurementFile.close();
     printf("Finished writing intentions to file \n");

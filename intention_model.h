@@ -354,6 +354,7 @@ namespace INTENTION_INFERENCE
 					net.setEvidence("passed_" + ship_name, hasPassedIdentifier(cpa.time_untill_CPA));
 					std::cout << "passed: " << hasPassedIdentifier(cpa.time_untill_CPA) << std::endl << std::flush;
 					measurementFile << (hasPassedIdentifier(cpa.time_untill_CPA)=="true") << ",";
+					has_passed = (hasPassedIdentifier(cpa.time_untill_CPA)=="true");
 
 					net.setEvidence("crossing_wiht_other_on_port_side_to_" + ship_name, crossing_port_starboard_identifier(cpa.bearing_relative_to_heading));
 					measurementFile << (crossing_port_starboard_identifier(cpa.bearing_relative_to_heading)=="port") << ",";
@@ -372,7 +373,7 @@ namespace INTENTION_INFERENCE
 			net.setEvidence(output_name, "true");
 			evaluate_nodes(intentionFile, time, x, y, better_at(ship_states, my_id)[CHI], better_at(ship_states, my_id)[U]);
 			
-			return did_save;
+			return has_passed;
 			
 		}
 
