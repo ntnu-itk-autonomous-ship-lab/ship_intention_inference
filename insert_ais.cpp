@@ -84,15 +84,22 @@ void vecsToShipStateVectorMap(std::vector<std::map<int, Eigen::Vector4d > > &shi
     std::string str;
 
 	for (int i = 0; i < time_vec.size()/num_ships; i++ ) {
+        bool skip_line = false;
         std::map<int, Eigen::Vector4d> current_ship_states;
         for (int c = 0; c < num_ships; c++){
             int index = c*time_vec.size()/num_ships + i;
+            if(isnan(x_vec[index]+y_vec[index]+cog_vec[index]+sog_vec[index])){
+                skip_line = true;
+                break;
+            }
             Eigen::Vector4d states(x_vec[index],y_vec[index],cog_vec[index],sog_vec[index]);
             std::map<int,Eigen::Vector4d>::iterator it = current_ship_states.end();
             current_ship_states.insert(it, std::pair<int, Eigen::Vector4d>(mmsi_vec[index],states));
         }
-        ship_state.push_back(current_ship_states);
-				unique_time_vec.push_back(time_vec[i]);
+        if(!skip_line){
+            ship_state.push_back(current_ship_states);
+            unique_time_vec.push_back(time_vec[i]);
+        }
     }
 }
 
