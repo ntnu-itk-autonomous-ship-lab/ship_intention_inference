@@ -304,6 +304,7 @@ namespace INTENTION_INFERENCE
 			measurementFile << is_changing_course << ",";
 			
 
+			bool has_passed = false;
 			std::vector<std::string> handled_ship_names;
 			for (auto const &ship_id : currently_tracked_ships)
 			{
