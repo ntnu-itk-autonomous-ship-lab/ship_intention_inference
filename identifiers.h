@@ -35,7 +35,15 @@ namespace INTENTION_INFERENCE
     }
     unsigned crossInFrontHighresIdentifier(const IntentionModelParameters &parameters, double distance_m)
     {
-        return discretizer(2 * distance_m, parameters.safe_distance_front_m.max, parameters.safe_distance_front_m.n_bins);
+        return discretizer(distance_m, parameters.safe_distance_front_m.max, parameters.safe_distance_front_m.n_bins);
+    }
+    unsigned lowresCPADistanceIdentifier(const IntentionModelParameters &parameters, double distance_m)
+    {
+        return discretizer(distance_m, parameters.risk_distance_m.max, parameters.risk_distance_m.n_bins);
+    }
+    unsigned crossInFrontLowresIdentifier(const IntentionModelParameters &parameters, double distance_m)
+    {
+        return discretizer(distance_m, parameters.risk_distance_front_m.max, parameters.risk_distance_front_m.n_bins);
     }
 
     //Side of other ship at CPA
