@@ -17,6 +17,20 @@ struct IntentionModelParameters{
         double min_course_change_rad;
         double min_speed_change_m_s;
     } expanding_dbn;
+
+    struct{
+        double mu;
+        double sigma;
+        double max;
+        unsigned n_bins;
+    }situation_start_distance;
+    struct{
+        double max;
+        unsigned n_bins;
+    }speed;
+    struct{
+        unsigned n_bins;
+    }course;
     struct{
         double mu;
         double sigma;
@@ -54,12 +68,6 @@ struct IntentionModelParameters{
         double max;
         unsigned n_bins;
     }risk_distance_front_m;
-    struct{
-        double minimal_change;
-    }change_in_course_rad;
-    struct{
-        double minimal_change;
-    }change_in_speed_m_s;
     struct{
         double HO_uncertainty_start;
         double HO_start;

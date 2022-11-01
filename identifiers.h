@@ -78,32 +78,20 @@ namespace INTENTION_INFERENCE
             return "starboard";
     }
 
-    std::string changeInCourseIdentifier(const IntentionModelParameters &parameters, double current_course, double initial_course)
+    uint currentDistanceIdentifier(const IntentionModelParameters &parameters, double distance_m)
     {
-        auto minimal_change = parameters.change_in_course_rad.minimal_change;
-        if (current_course - initial_course > minimal_change)
-        {
-            return "starboardwards";
-        }
-        else if (initial_course - current_course > minimal_change)
-        {
-            return "portwards";
-        }
-        return "none";
+        return discretizer(distance_m, parameters.situation_start_distance.max, parameters.situation_start_distance.n_bins);
     }
 
-    std::string changeInSpeedIdentifier(const IntentionModelParameters &parameters, double current_speed, double initial_speed)
+    int courseIdentifier(const IntentionModelParameters &parameters, double course)
     {
-        auto minimal_change = parameters.change_in_speed_m_s.minimal_change;
-        if (current_speed - initial_speed > minimal_change)
-        {
-            return "higher";
-        }
-        else if (initial_speed - current_speed > minimal_change)
-        {
-            return "lower";
-        }
-        return "similar";
+        wrapPI(&course);
+        return discretizer(std::floor((course * RAD2DEG + 180) / 10), 360, parameters.course.n_bins);
+    }
+
+    int speedIdentifier(const IntentionModelParameters &parameters, double speed)
+    {
+        return discretizer(speed,parameters.speed.max, parameters.speed.n_bins);
     }
 
     std::map<std::string, double> evaluateSitution(const IntentionModelParameters &parameters, const Eigen::Vector4d &ownship_state, const Eigen::Vector4d &obstacle_state)
