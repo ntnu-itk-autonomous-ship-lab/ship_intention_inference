@@ -78,8 +78,8 @@ namespace INTENTION_INFERENCE
 			intentionFile << my_id << ",";
             intentionFile << x << ",";
             intentionFile << y << ","; 
-			intentionFile << sog << ",";
 			intentionFile << cog << ",";
+			intentionFile << sog << ",";
             intentionFile << time << ",";
 
 			auto result = net.evaluateStates(all_node_names);
