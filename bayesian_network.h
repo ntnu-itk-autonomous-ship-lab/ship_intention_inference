@@ -221,10 +221,12 @@ public:
         std::cout << std::endl << std::flush;
     }
 
-    void setAmpleTimeDistribution(const std::string node_name, std::string filename, int ample_time_idx, int timestep, int n_bins, double min, double max){
+    void setAmpleTimeDistribution(const std::string node_name, std::string filename, int ample_time_idx, int n_bins, double min, double max, std::vector<double> temp_vec){
         std::vector<std::vector<std::string> > content = read_file(filename);
-        std::vector<double> ample_time_vec = ampleTimeVec(content, ample_time_idx, timestep);
-        std::vector<double> distr_ample_time_vec = find_distribution(ample_time_vec, n_bins, min, max);
+        //TODO: find out why exception for ample_time is thrown
+        //std::vector<double> ample_time_vec = ampleTimeVec(content, ample_time_idx);   //TODO! Something is wrong here
+        std::vector<double> distr_ample_time_vec = temp_vec;
+        //std::vector<double> distr_ample_time_vec = find_distribution(ample_time_vec, n_bins, min, max);
         const auto node_id = getNodeId(node_name);
         auto node_definition = net.GetNode(node_id)->Definition();
         DSL_doubleArray CPT(node_definition->GetMatrix()->GetSize());  //henter ut matrix i baysian network
@@ -237,8 +239,8 @@ public:
                     std::cout << CPT[i] << " " << std::flush;
                     sum += CPT[i];
             }
-        if(sum<0.999 || sum>1.001 || !isfinite(sum)) printf("ERROR: Prior distribution on \"%s\" sums to %f, should be 1", node_name.c_str(), sum);
-        if(!(sum>=0.999 && sum<=1.001 && isfinite(sum))) throw std::runtime_error("!(sum>=0.999 && sum<=1.001 && isfinite(sum))");
+        if(sum<0.98 || sum>1.001 || !isfinite(sum)) printf("ERROR: Prior distribution on \"%s\" sums to %f, should be 1", node_name.c_str(), sum);
+        if(!(sum>=0.98 && sum<=1.001 && isfinite(sum))) throw std::runtime_error("!(sum>=0.98 && sum<=1.001 && isfinite(sum))");
         setDefinition(node_name, CPT);
         std::cout << "\n" << std::flush;
     }

@@ -645,15 +645,14 @@ namespace INTENTION_INFERENCE
 		return distributionMap;
 	}
 
-	inline std::vector<double> ampleTimeVec(std::vector<std::vector<std::string> > content, int ample_time_idx, int timestep){
+	inline std::vector<double> ampleTimeVec(std::vector<std::vector<std::string> > content, int ample_time_idx){
 		std::vector<double> ample_time_cases;
 		
 		for(int i=1;i<content.size();i++){   //start at 1 to not include name 
-			
-			std::string ample_time_val = content[i][ample_time_idx];
-			double ample_time = stod(ample_time_val)*timestep;
+			//std::cout << content[i][ample_time_idx];
+			double ample_time = std::stod(content[i][ample_time_idx]);
 			ample_time_cases.push_back(ample_time);
-
+		
 		}
 		return ample_time_cases;
 	} 

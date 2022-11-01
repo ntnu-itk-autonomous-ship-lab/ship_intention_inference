@@ -251,9 +251,10 @@ namespace INTENTION_INFERENCE
 			}
 			else{
 				// MOVE LATER
-				int cpa_dist_idx = 6;
-				int colreg_idx = 7;
-				int cpa_ample_time_idx = 8;
+				int cpa_dist_idx = 0;
+				int colreg_idx = 1;
+				// TODO: Find indexes automatically
+				int ample_time_idx = 2;
 
 				int timestep = 60;
 				int multiply =1;
@@ -268,13 +269,19 @@ namespace INTENTION_INFERENCE
 				net.setPriorNormalDistribution("intention_distance_risk_of_collision_front", parameters.risk_distance_front_m.mu, parameters.risk_distance_front_m.sigma, parameters.risk_distance_front_m.max / parameters.risk_distance_front_m.n_bins);
 
 				// Cpa distance
-				net.setAisDistribution("intention_safe_distance_midpoint", "classified_west_5.csv", colreg_idx, cpa_dist_idx, multiply, parameters.safe_distance_midpoint_m.n_bins, head_on, 0, parameters.safe_distance_midpoint_m.max);
-				net.setAisDistribution("intention_safe_distance", "classified_west_5.csv", colreg_idx, cpa_dist_idx, multiply, parameters.safe_distance_m.n_bins, overtake,0, parameters.safe_distance_m.max);
+				net.setAisDistribution("intention_safe_distance_midpoint", "west_rel.csv", colreg_idx, cpa_dist_idx, multiply, parameters.safe_distance_midpoint_m.n_bins, head_on, 0, parameters.safe_distance_midpoint_m.max);
+				net.setAisDistribution("intention_safe_distance", "west_rel.csv", colreg_idx, cpa_dist_idx, multiply, parameters.safe_distance_m.n_bins, overtake,0, parameters.safe_distance_m.max);
 				net.setPriorNormalDistribution("intention_safe_distance_front", parameters.safe_distance_front_m.mu, parameters.safe_distance_front_m.sigma, parameters.safe_distance_front_m.max / parameters.safe_distance_front_m.n_bins);
 				//TODO: Set safe distance front based on the safe_distance distribution somehow
 				
 				// Cpa time, the model does NOT differ for the different situations
-				net.setAmpleTimeDistribution("intention_ample_time", "classified_west_5.csv", cpa_ample_time_idx, timestep, parameters.ample_time_s.n_bins, 0, parameters.ample_time_s.max);
+				//net.setPriorNormalDistribution("intention_ample_time", parameters.ample_time_s.mu, parameters.ample_time_s.sigma, parameters.ample_time_s.max / parameters.ample_time_s.n_bins);
+				//ample_time <800, found in python
+				std::vector<double> west_unfiltered = {0.1686746987951807, 0.321285140562249, 0.21686746987951808, 0.08433734939759036, 0.04618473895582329, 0.03614457831325301, 0.02610441767068273, 0.018072289156626505, 0.01606425702811245, 0.004016064257028112, 0.002008032128514056, 0.008032128514056224, 0.006024096385542169, 0.006024096385542169, 0.002008032128514056, 0.002008032128514056, 0.002008032128514056, 0.0, 0.002008032128514056, 0.0, 0.002008032128514056, 0.002008032128514056, 0.0, 0.002008032128514056, 0.002008032128514056, 0.0, 0.002008032128514056, 0.0, 0.0, 0.002008032128514056};
+				//ample_time < 400
+				std::vector<double> west_filtered = {0.09437751004016057, 0.10040160642570281, 0.1465863453815261, 0.14859437751004015, 0.13253012048192772, 0.10441767068273092, 0.04819277108433735, 0.04618473895582329, 0.02208835341365462, 0.02208835341365462, 0.014056224899598393, 0.02208835341365462, 0.01606425702811245, 0.01606425702811245, 0.004016064257028112, 0.012048192771084338, 0.006024096385542169, 0.010040160642570281, 0.006024096385542169, 0.0, 0.002008032128514056, 0.002008032128514056, 0.002008032128514056, 0.004016064257028112, 0.004016064257028112, 0.004016064257028112, 0.002008032128514056, 0.002008032128514056, 0.0, 0.006024096385542169};
+				
+				net.setAmpleTimeDistribution("intention_ample_time", "classified_west_5.csv", ample_time_idx, parameters.ample_time_s.n_bins, 0, parameters.ample_time_s.max, west_filtered);
 			}
 		}
 
