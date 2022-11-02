@@ -5,7 +5,7 @@
 		<cpt id="unmodelled_behaviour">
 			<state id="false" />
 			<state id="true" />
-			<probabilities>0.001 0.999</probabilities>
+			<probabilities>0.9999 0.0001</probabilities>
 		</cpt>
 		<cpt id="passed_ship0">
 			<state id="false" />
@@ -426,7 +426,7 @@
 		</equation>
 		<equation id="change_in_course_towards_ship0">
 			<parents>initial_course_towards_ship0 measured_course</parents>
-			<definition>change_in_course_towards_ship0=If(Or(And(measured_course-initial_course_towards_ship0-10&gt;0,measured_course-initial_course_towards_ship0-10&lt;180),And(measured_course-initial_course_towards_ship0-10+360&gt;0,measured_course-initial_course_towards_ship0-10+360&lt;180),And(measured_course-initial_course_towards_ship0-10-360&gt;0,measured_course-initial_course_towards_ship0-10-360&lt;180)),-1,If(Or(And(measured_course-initial_course_towards_ship0+10&lt;0,measured_course-initial_course_towards_ship0+10&gt;-180),And(measured_course-initial_course_towards_ship0+10+360&lt;0,measured_course-initial_course_towards_ship0+10+360&gt;-180),And(measured_course-initial_course_towards_ship0+10-360&lt;0,measured_course-initial_course_towards_ship0+10-360&gt;-180)),1,0))</definition>
+			<definition>change_in_course_towards_ship0=If(Or(And(measured_course-initial_course_towards_ship0-10&gt;0,measured_course-initial_course_towards_ship0-10&lt;180),And(measured_course-initial_course_towards_ship0-10+360&gt;0,measured_course-initial_course_towards_ship0-10+360&lt;180),And(measured_course-initial_course_towards_ship0-10-360&gt;0,measured_course-initial_course_towards_ship0-10-360&lt;180)),1,If(Or(And(measured_course-initial_course_towards_ship0+10&lt;0,measured_course-initial_course_towards_ship0+10&gt;-180),And(measured_course-initial_course_towards_ship0+10+360&lt;0,measured_course-initial_course_towards_ship0+10+360&gt;-180),And(measured_course-initial_course_towards_ship0+10-360&lt;0,measured_course-initial_course_towards_ship0+10-360&gt;-180)),-1,0))</definition>
 			<discretization>
 				<interval label="portwards" upper="-0.5" />
 				<interval label="none" upper="0.5" />
@@ -434,99 +434,99 @@
 			</discretization>
 		</equation>
 		<equation id="initial_speed_towards_ship_0_t_1">
-			<definition lower="0" upper="25">initial_speed_towards_ship_0_t_1=Uniform(0,5)</definition>
+			<definition lower="0" upper="18">initial_speed_towards_ship_0_t_1=Uniform(0,18)</definition>
 			<discretization>
-				<interval label="State1" upper="1" />
-				<interval label="State2" upper="2" />
-				<interval label="State3" upper="3" />
-				<interval label="State4" upper="4" />
-				<interval label="State5" upper="5" />
-				<interval label="State6" upper="6" />
-				<interval label="State7" upper="7" />
-				<interval label="State8" upper="8" />
-				<interval label="State9" upper="9" />
-				<interval label="State10" upper="10" />
-				<interval label="State11" upper="11" />
-				<interval label="State12" upper="12" />
-				<interval label="State13" upper="13" />
-				<interval label="State14" upper="14" />
-				<interval label="State15" upper="15" />
-				<interval label="State16" upper="16" />
-				<interval label="State17" upper="17" />
-				<interval label="State18" upper="18" />
-				<interval label="State19" upper="19" />
-				<interval label="State20" upper="20" />
-				<interval label="State21" upper="21" />
-				<interval label="State22" upper="22" />
-				<interval label="State23" upper="23" />
-				<interval label="State24" upper="24" />
-				<interval label="State25" upper="25" />
+				<interval label="State1" upper="0.72" />
+				<interval label="State2" upper="1.44" />
+				<interval label="State3" upper="2.16" />
+				<interval label="State4" upper="2.88" />
+				<interval label="State5" upper="3.6" />
+				<interval label="State6" upper="4.32" />
+				<interval label="State7" upper="5.04" />
+				<interval label="State8" upper="5.76" />
+				<interval label="State9" upper="6.48" />
+				<interval label="State10" upper="7.2" />
+				<interval label="State11" upper="7.92" />
+				<interval label="State12" upper="8.640000000000001" />
+				<interval label="State13" upper="9.359999999999999" />
+				<interval label="State14" upper="10.08" />
+				<interval label="State15" upper="10.8" />
+				<interval label="State16" upper="11.52" />
+				<interval label="State17" upper="12.24" />
+				<interval label="State18" upper="12.96" />
+				<interval label="State19" upper="13.68" />
+				<interval label="State20" upper="14.4" />
+				<interval label="State21" upper="15.12" />
+				<interval label="State22" upper="15.84" />
+				<interval label="State23" upper="16.56" />
+				<interval label="State24" upper="17.28" />
+				<interval label="State25" upper="18" />
 			</discretization>
 		</equation>
 		<equation id="measured_speed">
-			<definition lower="0" upper="25">measured_speed=Uniform(0,5)</definition>
+			<definition lower="0" upper="18">measured_speed=Uniform(0,18)</definition>
 			<discretization>
-				<interval label="State1" upper="1" />
-				<interval label="State2" upper="2" />
-				<interval label="State3" upper="3" />
-				<interval label="State4" upper="4" />
-				<interval label="State5" upper="5" />
-				<interval label="State6" upper="6" />
-				<interval label="State7" upper="7" />
-				<interval label="State8" upper="8" />
-				<interval label="State9" upper="9" />
-				<interval label="State10" upper="10" />
-				<interval label="State11" upper="11" />
-				<interval label="State12" upper="12" />
-				<interval label="State13" upper="13" />
-				<interval label="State14" upper="14" />
-				<interval label="State15" upper="15" />
-				<interval label="State16" upper="16" />
-				<interval label="State17" upper="17" />
-				<interval label="State18" upper="18" />
-				<interval label="State19" upper="19" />
-				<interval label="State20" upper="20" />
-				<interval label="State21" upper="21" />
-				<interval label="State22" upper="22" />
-				<interval label="State23" upper="23" />
-				<interval label="State24" upper="24" />
-				<interval label="State25" upper="25" />
+				<interval label="State1" upper="0.72" />
+				<interval label="State2" upper="1.44" />
+				<interval label="State3" upper="2.16" />
+				<interval label="State4" upper="2.88" />
+				<interval label="State5" upper="3.6" />
+				<interval label="State6" upper="4.32" />
+				<interval label="State7" upper="5.04" />
+				<interval label="State8" upper="5.76" />
+				<interval label="State9" upper="6.48" />
+				<interval label="State10" upper="7.2" />
+				<interval label="State11" upper="7.92" />
+				<interval label="State12" upper="8.640000000000001" />
+				<interval label="State13" upper="9.359999999999999" />
+				<interval label="State14" upper="10.08" />
+				<interval label="State15" upper="10.8" />
+				<interval label="State16" upper="11.52" />
+				<interval label="State17" upper="12.24" />
+				<interval label="State18" upper="12.96" />
+				<interval label="State19" upper="13.68" />
+				<interval label="State20" upper="14.4" />
+				<interval label="State21" upper="15.12" />
+				<interval label="State22" upper="15.84" />
+				<interval label="State23" upper="16.56" />
+				<interval label="State24" upper="17.28" />
+				<interval label="State25" upper="18" />
 			</discretization>
 		</equation>
 		<equation id="initial_speed_towards_ship0">
 			<parents>initial_speed_towards_ship_0_t_1 measured_speed situation_started_towards_ship0</parents>
-			<definition lower="0" upper="25">initial_speed_towards_ship0=If(situation_started_towards_ship0&gt;0.5,initial_speed_towards_ship_0_t_1,measured_speed)</definition>
+			<definition lower="0" upper="18">initial_speed_towards_ship0=If(situation_started_towards_ship0&gt;0.5,initial_speed_towards_ship_0_t_1,measured_speed)</definition>
 			<discretization>
-				<interval label="State1" upper="1" />
-				<interval label="State2" upper="2" />
-				<interval label="State3" upper="3" />
-				<interval label="State4" upper="4" />
-				<interval label="State5" upper="5" />
-				<interval label="State6" upper="6" />
-				<interval label="State7" upper="7" />
-				<interval label="State8" upper="8" />
-				<interval label="State9" upper="9" />
-				<interval label="State10" upper="10" />
-				<interval label="State11" upper="11" />
-				<interval label="State12" upper="12" />
-				<interval label="State13" upper="13" />
-				<interval label="State14" upper="14" />
-				<interval label="State15" upper="15" />
-				<interval label="State16" upper="16" />
-				<interval label="State17" upper="17" />
-				<interval label="State18" upper="18" />
-				<interval label="State19" upper="19" />
-				<interval label="State20" upper="20" />
-				<interval label="State21" upper="21" />
-				<interval label="State22" upper="22" />
-				<interval label="State23" upper="23" />
-				<interval label="State24" upper="24" />
-				<interval label="State25" upper="25" />
+				<interval label="State1" upper="0.72" />
+				<interval label="State2" upper="1.44" />
+				<interval label="State3" upper="2.16" />
+				<interval label="State4" upper="2.88" />
+				<interval label="State5" upper="3.6" />
+				<interval label="State6" upper="4.32" />
+				<interval label="State7" upper="5.04" />
+				<interval label="State8" upper="5.76" />
+				<interval label="State9" upper="6.48" />
+				<interval label="State10" upper="7.2" />
+				<interval label="State11" upper="7.92" />
+				<interval label="State12" upper="8.640000000000001" />
+				<interval label="State13" upper="9.359999999999999" />
+				<interval label="State14" upper="10.08" />
+				<interval label="State15" upper="10.8" />
+				<interval label="State16" upper="11.52" />
+				<interval label="State17" upper="12.24" />
+				<interval label="State18" upper="12.96" />
+				<interval label="State19" upper="13.68" />
+				<interval label="State20" upper="14.4" />
+				<interval label="State21" upper="15.12" />
+				<interval label="State22" upper="15.84" />
+				<interval label="State23" upper="16.56" />
+				<interval label="State24" upper="17.28" />
+				<interval label="State25" upper="18" />
 			</discretization>
 		</equation>
 		<equation id="change_in_speed_towards_ship0">
 			<parents>initial_speed_towards_ship0 measured_speed</parents>
-			<definition>change_in_speed_towards_ship0=If(measured_speed&gt;initial_speed_towards_ship0+1,1,If(measured_speed&lt;initial_speed_towards_ship0-1,-1,0))</definition>
+			<definition>change_in_speed_towards_ship0=If(measured_speed&gt;initial_speed_towards_ship0+1.5,1,If(measured_speed&lt;initial_speed_towards_ship0-1.5,-1,0))</definition>
 			<discretization>
 				<interval label="lower" upper="-0.5" />
 				<interval label="similar" upper="0.5" />
@@ -1036,7 +1036,7 @@
 		</equation>
 		<equation id="observation_applicable">
 			<parents>unmodelled_behaviour applicable_or_disabled_ship0</parents>
-			<definition lower="0" upper="1">observation_applicable=Or(unmodelled_behaviour&lt;0.5,applicable_or_disabled_ship0&gt;0.5)</definition>
+			<definition lower="0" upper="1">observation_applicable=Or(unmodelled_behaviour&gt;0.5,applicable_or_disabled_ship0&gt;0.5)</definition>
 			<discretization>
 				<interval label="false" upper="0.5" />
 				<interval label="true" upper="1" />
@@ -1076,7 +1076,7 @@
 		</equation>
 		<equation id="will_give_way_to_ship0">
 			<parents>safe_distance_acceptable safe_distance_front_acceptable safe_distance_midpoint_acceptable ample_time_acceptable unmodelled_behaviour role_towards_ship0 risk_of_collision_towards_ship0</parents>
-			<definition lower="0" upper="1">will_give_way_to_ship0=And(safe_distance_acceptable&gt;0.5,safe_distance_front_acceptable&gt;0.5,safe_distance_midpoint_acceptable&gt;0.5,unmodelled_behaviour&gt;0.5,ample_time_acceptable&gt;0.5,role_towards_ship0&lt;0.5,risk_of_collision_towards_ship0&gt;0.5)</definition>
+			<definition lower="0" upper="1">will_give_way_to_ship0=And(safe_distance_acceptable&gt;0.5,safe_distance_front_acceptable&gt;0.5,safe_distance_midpoint_acceptable&gt;0.5,unmodelled_behaviour&lt;0.5,ample_time_acceptable&gt;0.5,role_towards_ship0&lt;0.5,risk_of_collision_towards_ship0&gt;0.5)</definition>
 			<discretization>
 				<interval label="false" upper="0.5" />
 				<interval label="true" upper="1" />
@@ -1565,7 +1565,7 @@
 				<interior color="e5f6f7" />
 				<outline color="000080" />
 				<font color="000000" name="Arial" size="8" />
-				<position>1239 1043 1334 1102</position>
+				<position>1232 1055 1327 1114</position>
 				<barchart active="true" width="128" height="108" />
 			</node>
 			<node id="measured_speed">
@@ -1589,7 +1589,7 @@
 				<interior color="e5f6f7" />
 				<outline color="000080" />
 				<font color="000000" name="Arial" size="8" />
-				<position>1189 1264 1292 1328</position>
+				<position>1210 1268 1313 1332</position>
 				<barchart width="128" height="468" />
 			</node>
 			<node id="colav_situation_towards_ship0">

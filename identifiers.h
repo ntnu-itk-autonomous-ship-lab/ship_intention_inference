@@ -83,13 +83,13 @@ namespace INTENTION_INFERENCE
         return discretizer(distance_m, parameters.situation_start_distance.max, parameters.situation_start_distance.n_bins);
     }
 
-    int courseIdentifier(const IntentionModelParameters &parameters, double course)
+    unsigned courseIdentifier(const IntentionModelParameters &parameters, double course)
     {
         wrapPI(&course);
-        return discretizer(std::floor((course * RAD2DEG + 180) / 10), 360, parameters.course.n_bins);
+        return discretizer(course * RAD2DEG + 180, 360, parameters.course.n_bins);
     }
 
-    int speedIdentifier(const IntentionModelParameters &parameters, double speed)
+    unsigned speedIdentifier(const IntentionModelParameters &parameters, double speed)
     {
         return discretizer(speed,parameters.speed.max, parameters.speed.n_bins);
     }

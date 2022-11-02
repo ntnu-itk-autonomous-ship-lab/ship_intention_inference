@@ -52,4 +52,32 @@ namespace INTENTION_INFERENCE
         }
         return map.begin()->second;
     }
+
+    double mean(std::map<std::string,double> input){
+        int number_of_states = input.size();
+        double mean = 0;
+        double prob_sum = 0;
+        for(int i=1; i<=number_of_states; ++i){
+            mean+=i*input.at("State"+std::to_string(i));
+            prob_sum += input.at("State"+std::to_string(i));
+        }
+        if(prob_sum<0.98 || prob_sum > 1.02){
+            throw std::string("Probability sum does not sum to 1 when evaluating mean!");
+        }
+        return mean/number_of_states;
+    }
+
+    double max(std::map<std::string,double> input){
+        int number_of_states = input.size();
+        double max_index = 0;
+        double max_value = 0;
+        for(int i=1; i<=number_of_states; ++i){
+            double res = input.at("State"+std::to_string(i));
+            if(res > max_value){
+                max_index = i;
+                max_value = res;
+            }
+        }
+        return max_index/number_of_states;
+    }
 }
