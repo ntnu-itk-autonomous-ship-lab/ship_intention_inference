@@ -48,38 +48,38 @@
 			</discretization>
 		</equation>
 		<equation id="distance_at_cpa_towards_ship0">
-			<definition lower="0" upper="600">distance_at_cpa_towards_ship0=Uniform(0,600)</definition>
+			<definition lower="0" upper="45">distance_at_cpa_towards_ship0=Uniform(0,600)</definition>
 			<discretization>
-				<interval label="State1" upper="20" />
-				<interval label="State2" upper="40" />
-				<interval label="State3" upper="60" />
-				<interval label="State4" upper="80" />
-				<interval label="State5" upper="100" />
-				<interval label="State6" upper="120" />
-				<interval label="State7" upper="140" />
-				<interval label="State8" upper="160" />
-				<interval label="State9" upper="180" />
-				<interval label="State10" upper="200" />
-				<interval label="State11" upper="220" />
-				<interval label="State12" upper="240" />
-				<interval label="State13" upper="260" />
-				<interval label="State14" upper="280" />
-				<interval label="State15" upper="300" />
-				<interval label="State16" upper="320" />
-				<interval label="State17" upper="340" />
-				<interval label="State18" upper="360" />
-				<interval label="State19" upper="380" />
-				<interval label="State20" upper="400" />
-				<interval label="State21" upper="420" />
-				<interval label="State22" upper="440" />
-				<interval label="State23" upper="460" />
-				<interval label="State24" upper="480" />
-				<interval label="State25" upper="500" />
-				<interval label="State26" upper="520" />
-				<interval label="State27" upper="540" />
-				<interval label="State28" upper="560" />
-				<interval label="State29" upper="580" />
-				<interval label="State30" upper="600" />
+				<interval label="State1" upper="1.5" />
+				<interval label="State2" upper="3" />
+				<interval label="State3" upper="4.5" />
+				<interval label="State4" upper="6" />
+				<interval label="State5" upper="7.5" />
+				<interval label="State6" upper="9" />
+				<interval label="State7" upper="10.5" />
+				<interval label="State8" upper="12" />
+				<interval label="State9" upper="13.5" />
+				<interval label="State10" upper="15" />
+				<interval label="State11" upper="16.5" />
+				<interval label="State12" upper="18" />
+				<interval label="State13" upper="19.5" />
+				<interval label="State14" upper="21" />
+				<interval label="State15" upper="22.5" />
+				<interval label="State16" upper="24" />
+				<interval label="State17" upper="25.5" />
+				<interval label="State18" upper="27" />
+				<interval label="State19" upper="28.5" />
+				<interval label="State20" upper="30" />
+				<interval label="State21" upper="31.5" />
+				<interval label="State22" upper="33" />
+				<interval label="State23" upper="34.5" />
+				<interval label="State24" upper="36" />
+				<interval label="State25" upper="37.5" />
+				<interval label="State26" upper="39" />
+				<interval label="State27" upper="40.5" />
+				<interval label="State28" upper="42" />
+				<interval label="State29" upper="43.5" />
+				<interval label="State30" upper="45" />
 			</discretization>
 		</equation>
 		<equation id="safe_distance_at_CPA_towards_ship0">
@@ -91,38 +91,38 @@
 			</discretization>
 		</equation>
 		<equation id="crossing_distance_front_towards_ship0">
-			<definition lower="0" upper="900">crossing_distance_front_towards_ship0=Uniform(0,900)</definition>
+			<definition lower="0" upper="60">crossing_distance_front_towards_ship0=Uniform(0,900)</definition>
 			<discretization>
-				<interval label="State1" upper="30" />
-				<interval label="State2" upper="60" />
-				<interval label="State3" upper="90" />
-				<interval label="State4" upper="120" />
-				<interval label="State5" upper="150" />
-				<interval label="State6" upper="180" />
-				<interval label="State7" upper="210" />
-				<interval label="State8" upper="240" />
-				<interval label="State9" upper="270" />
-				<interval label="State10" upper="300" />
-				<interval label="State11" upper="330" />
-				<interval label="State12" upper="360" />
-				<interval label="State13" upper="390" />
-				<interval label="State14" upper="420" />
-				<interval label="State15" upper="450" />
-				<interval label="State16" upper="480" />
-				<interval label="State17" upper="510" />
-				<interval label="State18" upper="540" />
-				<interval label="State19" upper="570" />
-				<interval label="State20" upper="600" />
-				<interval label="State21" upper="630" />
-				<interval label="State22" upper="660" />
-				<interval label="State23" upper="690" />
-				<interval label="State24" upper="720" />
-				<interval label="State25" upper="750" />
-				<interval label="State26" upper="780" />
-				<interval label="State27" upper="810" />
-				<interval label="State28" upper="840" />
-				<interval label="State29" upper="870" />
-				<interval label="State30" upper="900" />
+				<interval label="State1" upper="2" />
+				<interval label="State2" upper="4" />
+				<interval label="State3" upper="6" />
+				<interval label="State4" upper="8" />
+				<interval label="State5" upper="10" />
+				<interval label="State6" upper="12" />
+				<interval label="State7" upper="14" />
+				<interval label="State8" upper="16" />
+				<interval label="State9" upper="18" />
+				<interval label="State10" upper="20" />
+				<interval label="State11" upper="22" />
+				<interval label="State12" upper="24" />
+				<interval label="State13" upper="26" />
+				<interval label="State14" upper="28" />
+				<interval label="State15" upper="30" />
+				<interval label="State16" upper="32" />
+				<interval label="State17" upper="34" />
+				<interval label="State18" upper="36" />
+				<interval label="State19" upper="38" />
+				<interval label="State20" upper="40" />
+				<interval label="State21" upper="42" />
+				<interval label="State22" upper="44" />
+				<interval label="State23" upper="46" />
+				<interval label="State24" upper="48" />
+				<interval label="State25" upper="50" />
+				<interval label="State26" upper="52" />
+				<interval label="State27" upper="54" />
+				<interval label="State28" upper="56" />
+				<interval label="State29" upper="58" />
+				<interval label="State30" upper="60" />
 			</discretization>
 		</equation>
 		<equation id="intention_safe_distance_front">
@@ -272,9 +272,173 @@
 				<interval label="true" upper="1" />
 			</discretization>
 		</equation>
+		<equation id="lowres_distance_at_cpa_towards_ship0">
+			<definition lower="0" upper="1500">lowres_distance_at_cpa_towards_ship0=Uniform(0,1500)</definition>
+			<discretization>
+				<interval label="State1" upper="50" />
+				<interval label="State2" upper="100" />
+				<interval label="State3" upper="150" />
+				<interval label="State4" upper="200" />
+				<interval label="State5" upper="250" />
+				<interval label="State6" upper="300" />
+				<interval label="State7" upper="350" />
+				<interval label="State8" upper="400" />
+				<interval label="State9" upper="450" />
+				<interval label="State10" upper="500" />
+				<interval label="State11" upper="550" />
+				<interval label="State12" upper="600" />
+				<interval label="State13" upper="650" />
+				<interval label="State14" upper="700" />
+				<interval label="State15" upper="750" />
+				<interval label="State16" upper="800" />
+				<interval label="State17" upper="850" />
+				<interval label="State18" upper="900" />
+				<interval label="State19" upper="950" />
+				<interval label="State20" upper="1000" />
+				<interval label="State21" upper="1050" />
+				<interval label="State22" upper="1100" />
+				<interval label="State23" upper="1150" />
+				<interval label="State24" upper="1200" />
+				<interval label="State25" upper="1250" />
+				<interval label="State26" upper="1300" />
+				<interval label="State27" upper="1350" />
+				<interval label="State28" upper="1400" />
+				<interval label="State29" upper="1450" />
+				<interval label="State30" upper="1500" />
+			</discretization>
+		</equation>
+		<equation id="intention_distance_risk_of_collision">
+			<definition lower="0" upper="1500">intention_distance_risk_of_collision=Min(TruncNormal(1000,175,0),1500)</definition>
+			<discretization>
+				<interval label="State1" upper="50" />
+				<interval label="State2" upper="100" />
+				<interval label="State3" upper="150" />
+				<interval label="State4" upper="200" />
+				<interval label="State5" upper="250" />
+				<interval label="State6" upper="300" />
+				<interval label="State7" upper="350" />
+				<interval label="State8" upper="400" />
+				<interval label="State9" upper="450" />
+				<interval label="State10" upper="500" />
+				<interval label="State11" upper="550" />
+				<interval label="State12" upper="600" />
+				<interval label="State13" upper="650" />
+				<interval label="State14" upper="700" />
+				<interval label="State15" upper="750" />
+				<interval label="State16" upper="800" />
+				<interval label="State17" upper="850" />
+				<interval label="State18" upper="900" />
+				<interval label="State19" upper="950" />
+				<interval label="State20" upper="1000" />
+				<interval label="State21" upper="1050" />
+				<interval label="State22" upper="1100" />
+				<interval label="State23" upper="1150" />
+				<interval label="State24" upper="1200" />
+				<interval label="State25" upper="1250" />
+				<interval label="State26" upper="1300" />
+				<interval label="State27" upper="1350" />
+				<interval label="State28" upper="1400" />
+				<interval label="State29" upper="1450" />
+				<interval label="State30" upper="1500" />
+			</discretization>
+		</equation>
+		<equation id="Current_risk_of_collision_CPA_towards_ship0">
+			<parents>lowres_distance_at_cpa_towards_ship0 intention_distance_risk_of_collision</parents>
+			<definition lower="0" upper="1">Current_risk_of_collision_CPA_towards_ship0=lowres_distance_at_cpa_towards_ship0&lt;intention_distance_risk_of_collision</definition>
+			<discretization>
+				<interval label="false" upper="0.5" />
+				<interval label="true" upper="1" />
+			</discretization>
+		</equation>
+		<equation id="lowres_crossing_distance_front_towards_ship0">
+			<definition lower="0" upper="2250">lowres_crossing_distance_front_towards_ship0=Uniform(0,2250)</definition>
+			<discretization>
+				<interval label="State1" upper="75" />
+				<interval label="State2" upper="150" />
+				<interval label="State3" upper="225" />
+				<interval label="State4" upper="300" />
+				<interval label="State5" upper="375" />
+				<interval label="State6" upper="450" />
+				<interval label="State7" upper="525" />
+				<interval label="State8" upper="600" />
+				<interval label="State9" upper="675" />
+				<interval label="State10" upper="750" />
+				<interval label="State11" upper="825" />
+				<interval label="State12" upper="900" />
+				<interval label="State13" upper="975" />
+				<interval label="State14" upper="1050" />
+				<interval label="State15" upper="1125" />
+				<interval label="State16" upper="1200" />
+				<interval label="State17" upper="1275" />
+				<interval label="State18" upper="1350" />
+				<interval label="State19" upper="1425" />
+				<interval label="State20" upper="1500" />
+				<interval label="State21" upper="1575" />
+				<interval label="State22" upper="1650" />
+				<interval label="State23" upper="1725" />
+				<interval label="State24" upper="1800" />
+				<interval label="State25" upper="1875" />
+				<interval label="State26" upper="1950" />
+				<interval label="State27" upper="2025" />
+				<interval label="State28" upper="2100" />
+				<interval label="State29" upper="2175" />
+				<interval label="State30" upper="2250" />
+			</discretization>
+		</equation>
+		<equation id="intention_distance_risk_of_collision_front">
+			<definition lower="0" upper="2250">intention_distance_risk_of_collision_front=Min(TruncNormal(1500,250,0),2250)</definition>
+			<discretization>
+				<interval label="State1" upper="75" />
+				<interval label="State2" upper="150" />
+				<interval label="State3" upper="225" />
+				<interval label="State4" upper="300" />
+				<interval label="State5" upper="375" />
+				<interval label="State6" upper="450" />
+				<interval label="State7" upper="525" />
+				<interval label="State8" upper="600" />
+				<interval label="State9" upper="675" />
+				<interval label="State10" upper="750" />
+				<interval label="State11" upper="825" />
+				<interval label="State12" upper="900" />
+				<interval label="State13" upper="975" />
+				<interval label="State14" upper="1050" />
+				<interval label="State15" upper="1125" />
+				<interval label="State16" upper="1200" />
+				<interval label="State17" upper="1275" />
+				<interval label="State18" upper="1350" />
+				<interval label="State19" upper="1425" />
+				<interval label="State20" upper="1500" />
+				<interval label="State21" upper="1575" />
+				<interval label="State22" upper="1650" />
+				<interval label="State23" upper="1725" />
+				<interval label="State24" upper="1800" />
+				<interval label="State25" upper="1875" />
+				<interval label="State26" upper="1950" />
+				<interval label="State27" upper="2025" />
+				<interval label="State28" upper="2100" />
+				<interval label="State29" upper="2175" />
+				<interval label="State30" upper="2250" />
+			</discretization>
+		</equation>
+		<equation id="Current_risk_of_collision_front_towards_ship0">
+			<parents>lowres_crossing_distance_front_towards_ship0 intention_distance_risk_of_collision_front</parents>
+			<definition lower="0" upper="1">Current_risk_of_collision_front_towards_ship0=lowres_crossing_distance_front_towards_ship0&lt;intention_distance_risk_of_collision_front</definition>
+			<discretization>
+				<interval label="false" upper="0.5" />
+				<interval label="true" upper="1" />
+			</discretization>
+		</equation>
+		<equation id="Current_risk_of_collision_towards_ship0">
+			<parents>Current_risk_of_collision_CPA_towards_ship0 Current_risk_of_collision_front_towards_ship0</parents>
+			<definition lower="0" upper="1">Current_risk_of_collision_towards_ship0=Or(Current_risk_of_collision_CPA_towards_ship0&gt;0.5,Current_risk_of_collision_front_towards_ship0&gt;0.5)</definition>
+			<discretization>
+				<interval label="false" upper="0.5" />
+				<interval label="true" upper="1" />
+			</discretization>
+		</equation>
 		<equation id="situation_started_towards_ship0">
-			<parents>situation_started_towards_ship_0_t_1 current_situation_started</parents>
-			<definition lower="0" upper="1">situation_started_towards_ship0=Or(situation_started_towards_ship_0_t_1=&quot;true&quot;,current_situation_started&gt;0.5)</definition>
+			<parents>situation_started_towards_ship_0_t_1 current_situation_started Current_risk_of_collision_towards_ship0</parents>
+			<definition lower="0" upper="1">situation_started_towards_ship0=Or(situation_started_towards_ship_0_t_1=&quot;true&quot;,And(current_situation_started&gt;0.5,Current_risk_of_collision_towards_ship0&gt;0.5))</definition>
 			<discretization>
 				<interval label="false" upper="0.5" />
 				<interval label="true" upper="1" />
@@ -564,38 +728,38 @@
 			</discretization>
 		</equation>
 		<equation id="two_times_distance_to_midpoint_at_cpa_to_ship0">
-			<definition lower="0" upper="600">two_times_distance_to_midpoint_at_cpa_to_ship0=Uniform(0,600)</definition>
+			<definition lower="0" upper="45">two_times_distance_to_midpoint_at_cpa_to_ship0=Uniform(0,600)</definition>
 			<discretization>
-				<interval label="State0" upper="20" />
-				<interval label="State1" upper="40" />
-				<interval label="State3" upper="60" />
-				<interval label="State4" upper="80" />
-				<interval label="State5" upper="100" />
-				<interval label="State6" upper="120" />
-				<interval label="State7" upper="140" />
-				<interval label="State8" upper="160" />
-				<interval label="State9" upper="180" />
-				<interval label="State10" upper="200" />
-				<interval label="State11" upper="220" />
-				<interval label="State12" upper="240" />
-				<interval label="State13" upper="260" />
-				<interval label="State14" upper="280" />
-				<interval label="State15" upper="300" />
-				<interval label="State16" upper="320" />
-				<interval label="State17" upper="340" />
-				<interval label="State18" upper="360" />
-				<interval label="State19" upper="380" />
-				<interval label="State20" upper="400" />
-				<interval label="State21" upper="420" />
-				<interval label="State22" upper="440" />
-				<interval label="State23" upper="460" />
-				<interval label="State24" upper="480" />
-				<interval label="State25" upper="500" />
-				<interval label="State26" upper="520" />
-				<interval label="State27" upper="540" />
-				<interval label="State28" upper="560" />
-				<interval label="State29" upper="580" />
-				<interval label="State30" upper="600" />
+				<interval label="State0" upper="1.5" />
+				<interval label="State1" upper="3" />
+				<interval label="State3" upper="4.5" />
+				<interval label="State4" upper="6" />
+				<interval label="State5" upper="7.5" />
+				<interval label="State6" upper="9" />
+				<interval label="State7" upper="10.5" />
+				<interval label="State8" upper="12" />
+				<interval label="State9" upper="13.5" />
+				<interval label="State10" upper="15" />
+				<interval label="State11" upper="16.5" />
+				<interval label="State12" upper="18" />
+				<interval label="State13" upper="19.5" />
+				<interval label="State14" upper="21" />
+				<interval label="State15" upper="22.5" />
+				<interval label="State16" upper="24" />
+				<interval label="State17" upper="25.5" />
+				<interval label="State18" upper="27" />
+				<interval label="State19" upper="28.5" />
+				<interval label="State20" upper="30" />
+				<interval label="State21" upper="31.5" />
+				<interval label="State22" upper="33" />
+				<interval label="State23" upper="34.5" />
+				<interval label="State24" upper="36" />
+				<interval label="State25" upper="37.5" />
+				<interval label="State26" upper="39" />
+				<interval label="State27" upper="40.5" />
+				<interval label="State28" upper="42" />
+				<interval label="State29" upper="43.5" />
+				<interval label="State30" upper="45" />
 			</discretization>
 		</equation>
 		<equation id="intention_safe_distance_midpoint">
@@ -740,38 +904,38 @@
 			</discretization>
 		</equation>
 		<equation id="time_untill_closest_point_of_approach_towards_ship0">
-			<definition lower="0" upper="600">time_untill_closest_point_of_approach_towards_ship0=Uniform(0,600)</definition>
+			<definition lower="0" upper="100">time_untill_closest_point_of_approach_towards_ship0=Uniform(0,600)</definition>
 			<discretization>
-				<interval label="State1" upper="20" />
-				<interval label="State2" upper="40" />
-				<interval label="State3" upper="60" />
-				<interval label="State4" upper="80" />
-				<interval label="State5" upper="100" />
-				<interval label="State6" upper="120" />
-				<interval label="State7" upper="140" />
-				<interval label="State8" upper="160" />
-				<interval label="State9" upper="180" />
-				<interval label="State10" upper="200" />
-				<interval label="State11" upper="220" />
-				<interval label="State12" upper="240" />
-				<interval label="State13" upper="260" />
-				<interval label="State14" upper="280" />
-				<interval label="State15" upper="300" />
-				<interval label="State16" upper="320" />
-				<interval label="State17" upper="340" />
-				<interval label="State18" upper="360" />
-				<interval label="State19" upper="380" />
-				<interval label="State20" upper="400" />
-				<interval label="State21" upper="420" />
-				<interval label="State22" upper="440" />
-				<interval label="State23" upper="460" />
-				<interval label="State24" upper="480" />
-				<interval label="State25" upper="500" />
-				<interval label="State26" upper="520" />
-				<interval label="State27" upper="540" />
-				<interval label="State28" upper="560" />
-				<interval label="State29" upper="580" />
-				<interval label="State30" upper="600" />
+				<interval label="State1" upper="3.333333333333" />
+				<interval label="State2" upper="6.666666666667" />
+				<interval label="State3" upper="10" />
+				<interval label="State4" upper="13.33333333333" />
+				<interval label="State5" upper="16.66666666667" />
+				<interval label="State6" upper="20" />
+				<interval label="State7" upper="23.33333333333" />
+				<interval label="State8" upper="26.66666666667" />
+				<interval label="State9" upper="30" />
+				<interval label="State10" upper="33.33333333333" />
+				<interval label="State11" upper="36.66666666667" />
+				<interval label="State12" upper="40" />
+				<interval label="State13" upper="43.33333333333" />
+				<interval label="State14" upper="46.66666666667" />
+				<interval label="State15" upper="50" />
+				<interval label="State16" upper="53.33333333333" />
+				<interval label="State17" upper="56.66666666667" />
+				<interval label="State18" upper="60" />
+				<interval label="State19" upper="63.33333333333" />
+				<interval label="State20" upper="66.66666666667" />
+				<interval label="State21" upper="70" />
+				<interval label="State22" upper="73.33333333333" />
+				<interval label="State23" upper="76.66666666667" />
+				<interval label="State24" upper="80" />
+				<interval label="State25" upper="83.33333333333" />
+				<interval label="State26" upper="86.66666666667" />
+				<interval label="State27" upper="90" />
+				<interval label="State28" upper="93.33333333333" />
+				<interval label="State29" upper="96.66666666667" />
+				<interval label="State30" upper="100" />
 			</discretization>
 		</equation>
 		<equation id="is_pre_ample_time_to_ship0">
@@ -820,17 +984,25 @@
 			<state id="true" />
 			<probabilities>0.5 0.5</probabilities>
 		</cpt>
+		<equation id="safe_uncompliant_avoidance_action">
+			<parents>intention_colregs_compliant safe_distance_to_ship0</parents>
+			<definition lower="0" upper="1">safe_uncompliant_avoidance_action=And(intention_colregs_compliant&lt;0.5,safe_distance_to_ship0&gt;0.5)</definition>
+			<discretization>
+				<interval label="false" upper="0.5" />
+				<interval label="true" upper="1" />
+			</discretization>
+		</equation>
 		<equation id="GWC_or_pre_ample_time_towards_ship0">
-			<parents>gives_way_correct_towards_ship0 is_pre_ample_time_to_ship0 stands_on_correct_towards_or_forced_to_give_way is_changing_course</parents>
-			<definition lower="0" upper="1">GWC_or_pre_ample_time_towards_ship0=Or(gives_way_correct_towards_ship0&gt;0.5,And(is_pre_ample_time_to_ship0&gt;0.5,stands_on_correct_towards_or_forced_to_give_way&gt;0.5),is_changing_course=&quot;true&quot;)</definition>
+			<parents>gives_way_correct_towards_ship0 is_pre_ample_time_to_ship0 stands_on_correct_towards_or_forced_to_give_way is_changing_course safe_uncompliant_avoidance_action</parents>
+			<definition lower="0" upper="1">GWC_or_pre_ample_time_towards_ship0=Or(gives_way_correct_towards_ship0&gt;0.5,safe_uncompliant_avoidance_action&gt;0.5,And(is_pre_ample_time_to_ship0&gt;0.5,stands_on_correct_towards_or_forced_to_give_way&gt;0.5),is_changing_course=&quot;true&quot;)</definition>
 			<discretization>
 				<interval label="false" upper="0.5" />
 				<interval label="true" upper="1" />
 			</discretization>
 		</equation>
 		<equation id="Observation_applicable_wrt_colregs_towards_ship0">
-			<parents>stands_on_correct_towards_or_forced_to_give_way role_towards_ship0 GWC_or_pre_ample_time_towards_ship0 intention_colregs_compliant safe_distance_to_ship0 good_seamanship_to_ship0</parents>
-			<definition lower="0" upper="1">Observation_applicable_wrt_colregs_towards_ship0=Or(And(role_towards_ship0&gt;0.5,stands_on_correct_towards_or_forced_to_give_way&gt;0.5),And(role_towards_ship0&lt;0.5,GWC_or_pre_ample_time_towards_ship0&gt;0.5,good_seamanship_to_ship0&gt;0.5),And(intention_colregs_compliant&lt;0.5,safe_distance_to_ship0&gt;0.5,good_seamanship_to_ship0&gt;0.5))</definition>
+			<parents>stands_on_correct_towards_or_forced_to_give_way role_towards_ship0 GWC_or_pre_ample_time_towards_ship0 good_seamanship_to_ship0</parents>
+			<definition lower="0" upper="1">Observation_applicable_wrt_colregs_towards_ship0=Or(And(role_towards_ship0&gt;0.5,stands_on_correct_towards_or_forced_to_give_way&gt;0.5),And(role_towards_ship0&lt;0.5,GWC_or_pre_ample_time_towards_ship0&gt;0.5,good_seamanship_to_ship0&gt;0.5))</definition>
 			<discretization>
 				<interval label="false" upper="0.5" />
 				<interval label="true" upper="1" />
@@ -846,170 +1018,6 @@
 			<state id="true" />
 			<probabilities>1 0</probabilities>
 		</cpt>
-		<equation id="lowres_distance_at_cpa_towards_ship0">
-			<definition lower="0" upper="1500">lowres_distance_at_cpa_towards_ship0=Uniform(0,1500)</definition>
-			<discretization>
-				<interval label="State1" upper="50" />
-				<interval label="State2" upper="100" />
-				<interval label="State3" upper="150" />
-				<interval label="State4" upper="200" />
-				<interval label="State5" upper="250" />
-				<interval label="State6" upper="300" />
-				<interval label="State7" upper="350" />
-				<interval label="State8" upper="400" />
-				<interval label="State9" upper="450" />
-				<interval label="State10" upper="500" />
-				<interval label="State11" upper="550" />
-				<interval label="State12" upper="600" />
-				<interval label="State13" upper="650" />
-				<interval label="State14" upper="700" />
-				<interval label="State15" upper="750" />
-				<interval label="State16" upper="800" />
-				<interval label="State17" upper="850" />
-				<interval label="State18" upper="900" />
-				<interval label="State19" upper="950" />
-				<interval label="State20" upper="1000" />
-				<interval label="State21" upper="1050" />
-				<interval label="State22" upper="1100" />
-				<interval label="State23" upper="1150" />
-				<interval label="State24" upper="1200" />
-				<interval label="State25" upper="1250" />
-				<interval label="State26" upper="1300" />
-				<interval label="State27" upper="1350" />
-				<interval label="State28" upper="1400" />
-				<interval label="State29" upper="1450" />
-				<interval label="State30" upper="1500" />
-			</discretization>
-		</equation>
-		<equation id="intention_distance_risk_of_collision">
-			<definition lower="0" upper="1500">intention_distance_risk_of_collision=Min(TruncNormal(1000,175,0),1500)</definition>
-			<discretization>
-				<interval label="State1" upper="50" />
-				<interval label="State2" upper="100" />
-				<interval label="State3" upper="150" />
-				<interval label="State4" upper="200" />
-				<interval label="State5" upper="250" />
-				<interval label="State6" upper="300" />
-				<interval label="State7" upper="350" />
-				<interval label="State8" upper="400" />
-				<interval label="State9" upper="450" />
-				<interval label="State10" upper="500" />
-				<interval label="State11" upper="550" />
-				<interval label="State12" upper="600" />
-				<interval label="State13" upper="650" />
-				<interval label="State14" upper="700" />
-				<interval label="State15" upper="750" />
-				<interval label="State16" upper="800" />
-				<interval label="State17" upper="850" />
-				<interval label="State18" upper="900" />
-				<interval label="State19" upper="950" />
-				<interval label="State20" upper="1000" />
-				<interval label="State21" upper="1050" />
-				<interval label="State22" upper="1100" />
-				<interval label="State23" upper="1150" />
-				<interval label="State24" upper="1200" />
-				<interval label="State25" upper="1250" />
-				<interval label="State26" upper="1300" />
-				<interval label="State27" upper="1350" />
-				<interval label="State28" upper="1400" />
-				<interval label="State29" upper="1450" />
-				<interval label="State30" upper="1500" />
-			</discretization>
-		</equation>
-		<equation id="Current_risk_of_collision_CPA_towards_ship0">
-			<parents>lowres_distance_at_cpa_towards_ship0 intention_distance_risk_of_collision</parents>
-			<definition lower="0" upper="1">Current_risk_of_collision_CPA_towards_ship0=lowres_distance_at_cpa_towards_ship0&lt;intention_distance_risk_of_collision</definition>
-			<discretization>
-				<interval label="false" upper="0.5" />
-				<interval label="true" upper="1" />
-			</discretization>
-		</equation>
-		<equation id="lowres_crossing_distance_front_towards_ship0">
-			<definition lower="0" upper="2250">lowres_crossing_distance_front_towards_ship0=Uniform(0,2250)</definition>
-			<discretization>
-				<interval label="State1" upper="75" />
-				<interval label="State2" upper="150" />
-				<interval label="State3" upper="225" />
-				<interval label="State4" upper="300" />
-				<interval label="State5" upper="375" />
-				<interval label="State6" upper="450" />
-				<interval label="State7" upper="525" />
-				<interval label="State8" upper="600" />
-				<interval label="State9" upper="675" />
-				<interval label="State10" upper="750" />
-				<interval label="State11" upper="825" />
-				<interval label="State12" upper="900" />
-				<interval label="State13" upper="975" />
-				<interval label="State14" upper="1050" />
-				<interval label="State15" upper="1125" />
-				<interval label="State16" upper="1200" />
-				<interval label="State17" upper="1275" />
-				<interval label="State18" upper="1350" />
-				<interval label="State19" upper="1425" />
-				<interval label="State20" upper="1500" />
-				<interval label="State21" upper="1575" />
-				<interval label="State22" upper="1650" />
-				<interval label="State23" upper="1725" />
-				<interval label="State24" upper="1800" />
-				<interval label="State25" upper="1875" />
-				<interval label="State26" upper="1950" />
-				<interval label="State27" upper="2025" />
-				<interval label="State28" upper="2100" />
-				<interval label="State29" upper="2175" />
-				<interval label="State30" upper="2250" />
-			</discretization>
-		</equation>
-		<equation id="intention_distance_risk_of_collision_front">
-			<definition lower="0" upper="2250">intention_distance_risk_of_collision_front=Min(TruncNormal(1500,250,0),2250)</definition>
-			<discretization>
-				<interval label="State1" upper="75" />
-				<interval label="State2" upper="150" />
-				<interval label="State3" upper="225" />
-				<interval label="State4" upper="300" />
-				<interval label="State5" upper="375" />
-				<interval label="State6" upper="450" />
-				<interval label="State7" upper="525" />
-				<interval label="State8" upper="600" />
-				<interval label="State9" upper="675" />
-				<interval label="State10" upper="750" />
-				<interval label="State11" upper="825" />
-				<interval label="State12" upper="900" />
-				<interval label="State13" upper="975" />
-				<interval label="State14" upper="1050" />
-				<interval label="State15" upper="1125" />
-				<interval label="State16" upper="1200" />
-				<interval label="State17" upper="1275" />
-				<interval label="State18" upper="1350" />
-				<interval label="State19" upper="1425" />
-				<interval label="State20" upper="1500" />
-				<interval label="State21" upper="1575" />
-				<interval label="State22" upper="1650" />
-				<interval label="State23" upper="1725" />
-				<interval label="State24" upper="1800" />
-				<interval label="State25" upper="1875" />
-				<interval label="State26" upper="1950" />
-				<interval label="State27" upper="2025" />
-				<interval label="State28" upper="2100" />
-				<interval label="State29" upper="2175" />
-				<interval label="State30" upper="2250" />
-			</discretization>
-		</equation>
-		<equation id="Current_risk_of_collision_front_towards_ship0">
-			<parents>lowres_crossing_distance_front_towards_ship0 intention_distance_risk_of_collision_front</parents>
-			<definition lower="0" upper="1">Current_risk_of_collision_front_towards_ship0=lowres_crossing_distance_front_towards_ship0&lt;intention_distance_risk_of_collision_front</definition>
-			<discretization>
-				<interval label="false" upper="0.5" />
-				<interval label="true" upper="1" />
-			</discretization>
-		</equation>
-		<equation id="Current_risk_of_collision_towards_ship0">
-			<parents>Current_risk_of_collision_CPA_towards_ship0 Current_risk_of_collision_front_towards_ship0</parents>
-			<definition lower="0" upper="1">Current_risk_of_collision_towards_ship0=Or(Current_risk_of_collision_CPA_towards_ship0&gt;0.5,Current_risk_of_collision_front_towards_ship0&gt;0.5)</definition>
-			<discretization>
-				<interval label="false" upper="0.5" />
-				<interval label="true" upper="1" />
-			</discretization>
-		</equation>
 		<equation id="risk_of_collision_towards_ship0">
 			<parents>risk_of_collision_towards_ship0_t_1 Current_risk_of_collision_towards_ship0 situation_started_towards_ship0</parents>
 			<definition lower="0" upper="1">risk_of_collision_towards_ship0=If(situation_started_towards_ship0&gt;0.5,Or(risk_of_collision_towards_ship0_t_1=&quot;true&quot;,Current_risk_of_collision_towards_ship0&gt;0.5),Current_risk_of_collision_towards_ship0&gt;0.5)</definition>
@@ -1090,7 +1098,7 @@
 				<interior color="e5f6f7" />
 				<outline color="000080" />
 				<font color="000000" name="Arial" size="8" />
-				<position>888 346 971 397</position>
+				<position>899 327 982 378</position>
 				<barchart active="true" width="128" height="108" />
 			</node>
 			<node id="safely_passed_ship0">
@@ -1226,7 +1234,7 @@
 				<interior color="e5f6f7" />
 				<outline color="000080" />
 				<font color="000000" name="Arial" size="8" />
-				<position>1087 327 1195 394</position>
+				<position>1075 330 1183 397</position>
 				<barchart active="true" width="128" height="108" />
 			</node>
 			<node id="intention_ample_time">
@@ -1391,7 +1399,7 @@
 				<interior color="339966" />
 				<outline color="003300" />
 				<font color="000000" name="Arial" size="8" />
-				<position>1180 200 1288 267</position>
+				<position>1254 189 1362 256</position>
 			</node>
 			<node id="risk_of_collision_towards_ship0">
 				<name>risk of collision towards ship0</name>
@@ -1643,6 +1651,13 @@
 				<font color="000000" name="Arial" size="8" />
 				<position>1731 1185 1807 1232</position>
 				<barchart active="true" width="128" height="64" />
+			</node>
+			<node id="safe_uncompliant_avoidance_action">
+				<name>safe uncompliant avoidance action</name>
+				<interior color="e5f6f7" />
+				<outline color="000080" />
+				<font color="000000" name="Arial" size="8" />
+				<position>1068 226 1210 286</position>
 			</node>
 		</genie>
 	</extensions>
