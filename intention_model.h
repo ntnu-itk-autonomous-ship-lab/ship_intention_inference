@@ -29,11 +29,11 @@ namespace INTENTION_INFERENCE
 		std::map<int, std::string> ship_name_map;
 		std::vector<std::string> ship_names;
 		const std::vector<std::string> intention_node_names_ship_specific = {"colav_situation_towards_", "priority_intention_to_", "disable_"};
-		const std::vector<std::string> intention_node_names_general = {"intention_colregs_compliant", "intention_good_seamanship", "intention_safe_distance", "intention_safe_distance_front", "intention_safe_distance_midpoint", "intention_ample_time", "intention_ignoring_safety", "unmodelled_behaviour","intention_distance_risk_of_collision","intention_distance_risk_of_collision_front","intention_situation_start_distance"};
+		const std::vector<std::string> intention_node_names_general = {"intention_colregs_compliant", "intention_good_seamanship", "intention_safe_distance", "intention_safe_distance_front", "intention_safe_distance_midpoint", "intention_ample_time", "unmodelled_behaviour","intention_distance_risk_of_collision","intention_distance_risk_of_collision_front","intention_situation_start_distance"};
 		//const std::vector<std::string> intention_node_names_general = {"intention_colregs_compliant", "intention_good_seamanship", "intention_safe_distance", "intention_safe_distance_front", "intention_safe_distance_midpoint", "intention_ample_time", "intention_ignoring_safety", "unmodelled_behaviour"};
 		const std::vector<std::string> intermediate_node_names_ship_specific = {"is_pre_ample_time_to_", "safe_distance_at_CPA_towards_", "safe_crossing_front_towards_", "safe_distance_to_", "safe_distance_to_midpoint_", "gives_way_correct_towards_", "Observation_applicable_towards_", "role_towards_", "good_seamanship_to_","lowres_distance_at_cpa_towards_","lowres_crossing_distance_front_towards_","risk_of_collision_towards_","situation_started_towards_","will_give_way_to_","safely_passed_", "change_in_course_towards_", "change_in_speed_towards_","initial_course_towards_","initial_speed_towards_"};
 		//const std::vector<std::string> intermediate_node_names_ship_specific = {"is_pre_ample_time_to_", "safe_distance_at_CPA_towards_", "safe_crossing_front_towards_", "safe_distance_to_", "safe_distance_to_midpoint_", "gives_way_correct_towards_", "Observation_applicable_towards_", "role_towards_", "good_seamanship_to_"};
-		std::vector<std::string> intermediate_node_names_general = {"has_turned_portwards", "has_turned_starboardwards", "observation_applicable", "stands_on_correct"};
+		std::vector<std::string> intermediate_node_names_general = {"has_turned_portwards", "has_turned_starboardwards", "observation_applicable", "stands_on_correct","ample_time_acceptable","safe_distance_front_acceptable","safe_distance_acceptable","safe_distance_midpoint_acceptable"};
 		std::vector<std::string> all_node_names;
 		const std::string output_name = "observation_applicable";
 
@@ -107,6 +107,15 @@ namespace INTENTION_INFERENCE
 			auto stands_on_correct = better_at(better_at(result, "stands_on_correct"), "true");
 			intentionFile << stands_on_correct << ",";
 			auto observation_applicable = better_at(better_at(result, "observation_applicable"), "true");
+
+			auto ample_time_acceptable = better_at(better_at(result, "ample_time_acceptable"), "true");
+			intentionFile << ample_time_acceptable << ",";
+			auto safe_distance_front_acceptable = better_at(better_at(result, "safe_distance_front_acceptable"), "true");
+			intentionFile << safe_distance_front_acceptable << ",";
+			auto safe_distance_acceptable = better_at(better_at(result, "safe_distance_acceptable"), "true");
+			intentionFile << safe_distance_acceptable << ",";
+			auto safe_distance_midpoint_acceptable = better_at(better_at(result, "safe_distance_midpoint_acceptable"), "true");
+			intentionFile << safe_distance_midpoint_acceptable << ",";
 			
 
 
