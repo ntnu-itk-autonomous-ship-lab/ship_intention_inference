@@ -58,7 +58,7 @@ namespace INTENTION_INFERENCE
         double mean = 0;
         double prob_sum = 0;
         for(int i=1; i<=number_of_states; ++i){
-            mean+=i*input.at("State"+std::to_string(i));
+            mean+=(i-0.5)*input.at("State"+std::to_string(i));
             prob_sum += input.at("State"+std::to_string(i));
         }
         if(prob_sum<0.98 || prob_sum > 1.02){
@@ -74,7 +74,7 @@ namespace INTENTION_INFERENCE
         for(int i=1; i<=number_of_states; ++i){
             double res = input.at("State"+std::to_string(i));
             if(res > max_value){
-                max_index = i;
+                max_index = i-0.5;
                 max_value = res;
             }
         }
