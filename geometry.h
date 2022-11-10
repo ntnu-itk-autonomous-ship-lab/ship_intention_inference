@@ -572,25 +572,11 @@ namespace INTENTION_INFERENCE
 		return max;
 	}
 
-	inline std::map<int, std::vector<double> > aisMap(std::vector<std::vector<std::string> > content, int colreg_idx, int cpa_idx, int timestep){
-		std::map<int, std::vector<double> > ais_cases;
+	inline std::vector<double> aisMap(std::vector<std::vector<std::string> > content, int colreg_idx, int cpa_idx, int timestep){
+		std::vector<double> ais_cases;
 	
 		for(int i=1;i<content.size();i++){   //start at 1 to not include name 
-			std::string colreg_situation = content[i][colreg_idx];
-			int col = stoi(colreg_situation);
-			std::string cpa_val = content[i][cpa_idx];
-			if(col == -2){
-				double cpa_OTGW = stod(cpa_val)*timestep;
-				ais_cases[-2].push_back(cpa_OTGW);
-			}
-			else if(col == -1){
-				double cpa_CRGW = stod(cpa_val)*timestep;
-				ais_cases[-1].push_back(cpa_CRGW);
-			}
-			else{
-				double cpa_HO = stod(cpa_val)*timestep;
-				ais_cases[3].push_back(cpa_HO);
-			}
+			ais_cases.push_back(stod(content[i][cpa_idx])*timestep);
 		}
 		return ais_cases;
 	} 
@@ -650,6 +636,7 @@ namespace INTENTION_INFERENCE
 		
 		for(int i=1;i<content.size();i++){   //start at 1 to not include name 
 			//std::cout << content[i][ample_time_idx];
+			const auto str = content[i][ample_time_idx];
 			double ample_time = std::stod(content[i][ample_time_idx]);
 			ample_time_cases.push_back(ample_time);
 		

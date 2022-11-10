@@ -206,26 +206,21 @@ public:
     }
 
     //TODO rename from AIS to safe distance
-    void setAisDistribution(const std::string node_name, std::string filename, int colreg_idx, int cpa_dist_idx, int multiply, int n_bins, int col_sit, double min, double max){
+    void setAisDistribution(const std::string node_name, std::string filename, int colreg_idx, int cpa_dist_idx, int multiply, int n_bins, double min, double max){
         std::vector<std::vector<std::string> > content = read_file(filename);
-        std::map<int, std::vector<double> > ais_cpa_map = aisMap(content, colreg_idx, cpa_dist_idx, multiply); //vector over all cpa_dist cases for different colregs situations
-        std::map<int, std::vector<double> > distr_cpa_map = distributionMap(ais_cpa_map, n_bins, min, max); //vector over cpa_dist discretized distribution  for different clregs situtaions 
+        std::vector<double> ais_cpa = aisMap(content, colreg_idx, cpa_dist_idx, multiply); //vector over all cpa_dist cases for different colregs situations
+        std::vector<double> distr_cpa = find_distribution(ais_cpa, n_bins, min, max); //vector over cpa_dist discretized distribution  for different clregs situtaions 
         const auto node_id = getNodeId(node_name);
         auto node_definition = net.GetNode(node_id)->Definition();
         DSL_doubleArray CPT(node_definition->GetMatrix()->GetSize());  //henter ut matrix i baysian network
         // CPT = distr_map[-2];
-        std::cout << "\n Distribution added for colreg sit (" <<col_sit<<") :\n"  << std::flush;
+        //std::cout << "\n Distribution added for colreg sit (" <<col_sit<<") :\n"  << std::flush;
+        std::cout << "\n Distribution added for "<< node_name<<"\n"  << std::flush;
         double sum = 0;
-        for(std::map<int, std::vector<double> >::iterator it=distr_cpa_map.begin(); it != distr_cpa_map.end(); ++it){
-            int col = (*it).first;
-            std::vector<double> inVect = (*it).second;
-            if(col == col_sit){ //TODO instead iterate over distr_cpa_map.at(col_sit)
-                for(int i=0; i < CPT.GetSize(); ++i){
-                    CPT[i]= inVect[i];
-                    std::cout << CPT[i] << " " << std::flush;
-                    sum += CPT[i];
-                }
-            }
+        for(int i=0; i < CPT.GetSize(); ++i){
+            CPT[i]= distr_cpa[i];
+            std::cout << CPT[i] << " " << std::flush;
+            sum += CPT[i];
         }
         if(sum<0.999 || sum>1.001 || !isfinite(sum)) printf("ERROR: Prior distribution on \"%s\" sums to %f, should be 1", node_name.c_str(), sum);
         if(!(sum>=0.999 && sum<=1.001 && isfinite(sum))) throw std::runtime_error("!(sum>=0.999 && sum<=1.001 && isfinite(sum))");
@@ -236,9 +231,9 @@ public:
     void setAmpleTimeDistribution(const std::string node_name, std::string filename, int ample_time_idx, int n_bins, double min, double max, std::vector<double> temp_vec){
         std::vector<std::vector<std::string> > content = read_file(filename);
         //TODO: find out why exception for ample_time is thrown
-        //std::vector<double> ample_time_vec = ampleTimeVec(content, ample_time_idx);   //TODO! Something is wrong here
-        std::vector<double> distr_ample_time_vec = temp_vec;
-        //std::vector<double> distr_ample_time_vec = find_distribution(ample_time_vec, n_bins, min, max);
+        std::vector<double> ample_time_vec = ampleTimeVec(content, ample_time_idx);   //TODO! Something is wrong here
+        //std::vector<double> distr_ample_time_vec = temp_vec;
+        std::vector<double> distr_ample_time_vec = find_distribution(ample_time_vec, n_bins, min, max);
         const auto node_id = getNodeId(node_name);
         auto node_definition = net.GetNode(node_id)->Definition();
         DSL_doubleArray CPT(node_definition->GetMatrix()->GetSize());  //henter ut matrix i baysian network
