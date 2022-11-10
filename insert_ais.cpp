@@ -178,15 +178,15 @@ INTENTION_INFERENCE::IntentionModelParameters setModelParameters(int num_ships){
     param.number_of_network_evaluation_samples = 100000;
 	param.max_number_of_obstacles = num_ships-1; //must be set to num_ships-1 or else segmantation fault
 	param.time_into_trajectory = 10;
-    param.starting_distance =7000;
+    param.starting_distance =13000;
 	param.expanding_dbn.min_time_s = 10;
 	param.expanding_dbn.max_time_s = 200;
 	param.expanding_dbn.min_course_change_rad = 0.10;
 	param.expanding_dbn.min_speed_change_m_s = 1;
-    param.situation_start_distance.mu = 5500;
-    param.situation_start_distance.sigma = 500;
+    param.situation_start_distance.mu = 9000;
+    param.situation_start_distance.sigma = 1000;
     param.situation_start_distance.n_bins = 30;
-    param.situation_start_distance.max = 7000;
+    param.situation_start_distance.max = 13000;
     param.speed.max = 18;
     param.speed.n_bins = 25;
     param.course.n_bins = 36;
@@ -195,22 +195,22 @@ INTENTION_INFERENCE::IntentionModelParameters setModelParameters(int num_ships){
     param.ample_time_s.max = 450;
 	//param.ample_time_s.max = 120;
 	param.ample_time_s.n_bins = 30; // this value must match the bayesian network
-	param.ample_time_s.minimal_accepted_by_ownship = 250;
+	param.ample_time_s.minimal_accepted_by_ownship = 100;
     //param.safe_distance_m.mu = 200;
 	//param.safe_distance_m.sigma = 5;
 	param.safe_distance_m.max = 1000;
 	param.safe_distance_m.n_bins = 30; // this value must match the bayesian network
-    param.safe_distance_m.minimal_accepted_by_ownship = 250;
+    param.safe_distance_m.minimal_accepted_by_ownship = 100;
 	//param.safe_distance_midpoint_m.mu = 600;
 	//param.safe_distance_midpoint_m.sigma = 20;
 	param.safe_distance_midpoint_m.max = 1000;
 	param.safe_distance_midpoint_m.n_bins = 30; // this value must match the bayesian network
-    param.safe_distance_midpoint_m.minimal_accepted_by_ownship = 250;
+    param.safe_distance_midpoint_m.minimal_accepted_by_ownship = 100;
 	//param.safe_distance_front_m.mu = 200;
 	//param.safe_distance_front_m.sigma = 10;
 	param.safe_distance_front_m.max = 1000;
 	param.safe_distance_front_m.n_bins = 30; // this value must match the bayesian network
-    param.safe_distance_front_m.minimal_accepted_by_ownship = 50;
+    param.safe_distance_front_m.minimal_accepted_by_ownship = 100;
 	param.risk_distance_m.mu = 1500;
 	param.risk_distance_m.sigma = 250;
 	param.risk_distance_m.max = 2500;
@@ -269,8 +269,38 @@ int main(){
     //std::string filename = "new_Case - 05-26-2019, 20-39-57 - 60GEW-60-sec.csv";
     //CR hvor den ene svinger feil vei. Noe surr på starten som må ryddes vekk som situasjonen ikke startet
 
+    
     //SOuth cases:
-    std::string filename = "new_Case - 05-26-2019, 20-39-57 - 60GEW-60-sec.csv";
+
+    //std::string filename  = "new_Case - 09-09-2018, 14-12-01 - A2WI5-60-sec.csv";
+    //HO eller CR, rett oppførsel.
+
+    //std::string filename  = "new_Case - 08-19-2018, 13-13-05 - 3447E-60-sec.csv";
+    //HO den ene svinger helt sjukt av
+
+    //std::string filename  = "new_Case - 03-09-2018, 18-36-52 - 06LIG-60-sec.csv";
+    //HO. Alt rett
+
+    //std::string filename  = "new_Case - 07-10-2019, 00-43-06 - 7VK7W-60-sec.csv";
+    //HO feil vei. Ikke CC
+
+    //std::string filename = "new_Case - 06-01-2018, 15-09-18 - CXOPP-60-sec.csv";
+    //HO feil vei. Ikke ROC.
+
+    //std::string filename = "new_Case - 02-25-2019, 03-47-32 - LGJOO-60-sec.csv";
+    //CR, litt komplisert men ble rett
+
+    //std::string filename = "new_Case - 02-04-2019, 20-56-55 - OTFKY-60-sec.csv";
+    // ??? her skjer noe rart på slutten. Men er ikke noe unnamanøver, så w/e
+
+
+    //std::string filename = "new_Case - 05-25-2018, 03-24-54 - 0PQWV-60-sec.csv";
+    //CR, litt sen manøver. Er et datapunkt midt i manøveren
+
+    std::string filename = "new_Case - 07-09-2019, 21-03-39 - FQSTF-60-sec.csv";
+    //
+
+    
 
     std::string intentionModelFilename = "intention_model_combined_discretized.xdsl";
 
