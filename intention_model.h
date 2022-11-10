@@ -96,7 +96,6 @@ namespace INTENTION_INFERENCE
 			std::cout << "intention_distance_risk_of_collision_front: " << intention_distance_risk_of_collision_front << std::endl << std::flush;*/
 			intentionFile << "0,0,";
 
-			auto intention_ignoring_safety = better_at(better_at(result, "intention_ignoring_safety"), "true");
 			auto intention_good_seamanship = better_at(better_at(result, "intention_good_seamanship"), "true");
 			intentionFile << intention_good_seamanship << ",";
 			auto intention_unmodeled_behaviour = better_at(better_at(result, "unmodelled_behaviour"), "true");
@@ -264,7 +263,6 @@ namespace INTENTION_INFERENCE
 				}
 			}*/
 
-			net.setBinaryPriors("intention_ignoring_safety", parameters.ignoring_safety_probability);
 			net.setBinaryPriors("intention_colregs_compliant", parameters.colregs_compliance_probability);
 			net.setBinaryPriors("intention_good_seamanship", parameters.good_seamanship_probability);
 			net.setBinaryPriors("unmodelled_behaviour", parameters.unmodeled_behaviour);
