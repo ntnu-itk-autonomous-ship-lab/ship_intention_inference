@@ -152,11 +152,18 @@ void writeIntentionToFile(int timestep, INTENTION_INFERENCE::IntentionModelParam
     bool is_finished;
     for(int i = timestep; !is_finished && i < unique_time_vec.size() ; i++){ //from 1 because first state might be NaN
         std::cout << "timestep: " << i << std::endl << std::flush;
-        int ot_en = 0;
         for(auto& [ship_id, current_ship_intention_model] : ship_intentions){
+            bool is_changing_course = false;
+            if(i>timestep){
+                double change_in_course = INTENTION_INFERENCE::better_at(ship_state[i],ship_id)[INTENTION_INFERENCE::CHI] - INTENTION_INFERENCE::better_at(ship_state[i-1],ship_id)[INTENTION_INFERENCE::CHI];
+                is_changing_course = std::abs(change_in_course) > (10*INTENTION_INFERENCE::DEG2RAD);
+                if(is_changing_course) {
+                    std::cout << "CHANGING COURSE!" << std::endl << std::flush;
+                }
+            }
             std::cout << "ship_id" << ship_id << std::endl << std::flush;
             int j = getShipListIndex(ship_id,ship_list);
-            is_finished = current_ship_intention_model.insertObservation(parameters,ot_en, ship_state[i], ship_list, false, unique_time_vec[i], intentionFile, measurementFile, measurementIdentifiersFile); //writes intantion variables to file as well
+            is_finished = current_ship_intention_model.insertObservation(parameters, ship_state[i], ship_list, is_changing_course, unique_time_vec[i], intentionFile, measurementFile, measurementIdentifiersFile); //writes intantion variables to file as well
         }
     }
     intentionFile.close(); 

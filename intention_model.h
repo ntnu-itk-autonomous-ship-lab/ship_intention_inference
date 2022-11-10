@@ -337,7 +337,7 @@ namespace INTENTION_INFERENCE
 			net.save_network("modified_network.xdsl");
 		}
 
-		bool insertObservation(const IntentionModelParameters parameters, int &ot_en, const std::map<int, Eigen::Vector4d> ship_states, std::vector<int> currently_tracked_ships, bool is_changing_course, double time, std::ofstream &intentionFile,std::ofstream &measurementFile, std::ofstream &measurementIdentifiersFile)
+		bool insertObservation(const IntentionModelParameters parameters, const std::map<int, Eigen::Vector4d> ship_states, std::vector<int> currently_tracked_ships, bool is_changing_course, double time, std::ofstream &intentionFile,std::ofstream &measurementFile, std::ofstream &measurementIdentifiersFile)
 		{
 			measurementFile << my_id << ",";
 			measurementIdentifiersFile << my_id << ",";
