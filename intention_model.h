@@ -312,9 +312,10 @@ namespace INTENTION_INFERENCE
 				net.setPriorNormalDistribution("intention_distance_risk_of_collision_front", parameters.risk_distance_front_m.mu, parameters.risk_distance_front_m.sigma, parameters.risk_distance_front_m.max / parameters.risk_distance_front_m.n_bins);
 
 				// Cpa distance
-				net.setAisDistribution("intention_safe_distance_midpoint", "west_rel.csv", colreg_idx, cpa_dist_idx, multiply, parameters.safe_distance_midpoint_m.n_bins, head_on, 0, parameters.safe_distance_midpoint_m.max);
-				net.setAisDistribution("intention_safe_distance", "west_rel.csv", colreg_idx, cpa_dist_idx, multiply, parameters.safe_distance_m.n_bins, overtake,0, parameters.safe_distance_m.max);
-				net.setPriorNormalDistribution("intention_safe_distance_front", parameters.safe_distance_front_m.mu, parameters.safe_distance_front_m.sigma, parameters.safe_distance_front_m.max / parameters.safe_distance_front_m.n_bins);
+				net.setAisDistribution("intention_safe_distance_midpoint", "west_rel.csv", colreg_idx, cpa_dist_idx, multiply, parameters.safe_distance_midpoint_m.n_bins, 0, parameters.safe_distance_midpoint_m.max);
+				net.setAisDistribution("intention_safe_distance", "west_rel.csv", colreg_idx, cpa_dist_idx, multiply, parameters.safe_distance_m.n_bins,0, parameters.safe_distance_m.max);
+				net.setAisDistribution("intention_safe_distance_front", "west_rel.csv", colreg_idx, cpa_dist_idx, multiply, parameters.safe_distance_front_m.n_bins,0, parameters.safe_distance_m.max);
+				//net.setPriorNormalDistribution("intention_safe_distance_front", parameters.safe_distance_front_m.mu, parameters.safe_distance_front_m.sigma, parameters.safe_distance_front_m.max / parameters.safe_distance_front_m.n_bins);
 				//TODO: Set safe distance front based on the safe_distance distribution somehow
 				
 				// Cpa time, the model does NOT differ for the different situations
@@ -324,8 +325,9 @@ namespace INTENTION_INFERENCE
 				//ample_time < 400
 				std::vector<double> west_filtered = {0.09437751004016057, 0.10040160642570281, 0.1465863453815261, 0.14859437751004015, 0.13253012048192772, 0.10441767068273092, 0.04819277108433735, 0.04618473895582329, 0.02208835341365462, 0.02208835341365462, 0.014056224899598393, 0.02208835341365462, 0.01606425702811245, 0.01606425702811245, 0.004016064257028112, 0.012048192771084338, 0.006024096385542169, 0.010040160642570281, 0.006024096385542169, 0.0, 0.002008032128514056, 0.002008032128514056, 0.002008032128514056, 0.004016064257028112, 0.004016064257028112, 0.004016064257028112, 0.002008032128514056, 0.002008032128514056, 0.0, 0.006024096385542169};
 				
-				net.setAmpleTimeDistribution("intention_ample_time", "classified_west_5.csv", ample_time_idx, parameters.ample_time_s.n_bins, 0, parameters.ample_time_s.max, west_filtered);
+				net.setAmpleTimeDistribution("intention_ample_time", "west_rel.csv", ample_time_idx, parameters.ample_time_s.n_bins, 0, parameters.ample_time_s.max, west_filtered);
 			}
+			net.save_network("modified_network.xdsl");
 		}
 
 		bool insertObservation(const IntentionModelParameters parameters, int &ot_en, const std::map<int, Eigen::Vector4d> ship_states, std::vector<int> currently_tracked_ships, bool is_changing_course, double time, std::ofstream &intentionFile,std::ofstream &measurementFile, std::ofstream &measurementIdentifiersFile)
