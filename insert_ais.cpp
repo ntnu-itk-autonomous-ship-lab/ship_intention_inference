@@ -190,9 +190,10 @@ INTENTION_INFERENCE::IntentionModelParameters setModelParameters(int num_ships){
     param.speed.max = 18;
     param.speed.n_bins = 25;
     param.course.n_bins = 36;
-	//param.ample_time_s.mu = 100;
-	//param.ample_time_s.sigma = 25;
-	param.ample_time_s.max = 120;
+	param.ample_time_s.mu = 300;
+	param.ample_time_s.sigma = 50;
+    param.ample_time_s.max = 450;
+	//param.ample_time_s.max = 120;
 	param.ample_time_s.n_bins = 30; // this value must match the bayesian network
 	param.ample_time_s.minimal_accepted_by_ownship = 250;
     //param.safe_distance_m.mu = 200;

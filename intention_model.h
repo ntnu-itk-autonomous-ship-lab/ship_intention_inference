@@ -332,7 +332,8 @@ namespace INTENTION_INFERENCE
 				//ample_time < 400
 				std::vector<double> west_filtered = {0.09437751004016057, 0.10040160642570281, 0.1465863453815261, 0.14859437751004015, 0.13253012048192772, 0.10441767068273092, 0.04819277108433735, 0.04618473895582329, 0.02208835341365462, 0.02208835341365462, 0.014056224899598393, 0.02208835341365462, 0.01606425702811245, 0.01606425702811245, 0.004016064257028112, 0.012048192771084338, 0.006024096385542169, 0.010040160642570281, 0.006024096385542169, 0.0, 0.002008032128514056, 0.002008032128514056, 0.002008032128514056, 0.004016064257028112, 0.004016064257028112, 0.004016064257028112, 0.002008032128514056, 0.002008032128514056, 0.0, 0.006024096385542169};
 				
-				net.setAmpleTimeDistribution("intention_ample_time", "west_rel.csv", ample_time_idx, parameters.ample_time_s.n_bins, 0, parameters.ample_time_s.max, west_filtered);
+				//net.setAmpleTimeDistribution("intention_ample_time", "west_rel.csv", ample_time_idx, parameters.ample_time_s.n_bins, 0, parameters.ample_time_s.max, west_filtered);
+				net.setPriorNormalDistribution("intention_ample_time", parameters.ample_time_s.mu, parameters.ample_time_s.sigma, parameters.ample_time_s.max / parameters.ample_time_s.n_bins);
 			}
 			net.save_network("modified_network.xdsl");
 		}
