@@ -266,13 +266,10 @@ int main(){
     //std::string filename = "new_case_2ZC9Z-60-sec-two-ships.csv"; //head on
     //En tidlig bevegelse feil vei på ship1, så endrer det til at begge skipene oppfører seg rett
 
-    //std::string filename = "new_Case - 01-08-2021, 08-21-29 - AQ5VM-60-sec-two-ships.csv"; //overtaking must start at timestep 4
+    std::string filename = "new_Case - 01-08-2021, 08-21-29 - AQ5VM-60-sec-two-ships.csv"; //overtaking must start at timestep 4
     //Noe rart i starten, så svinger ship2 mot kollisjon egentlig og ship1 svinger unna
 
-    //std::string filename = "new_Case - 01-15-2020, 09-05-49 - VATEN-60-sec-two-ships.csv"; //overtaking
-    //Funker dårlig, ship1 har allerde startet å gjøre en unnamanøver når dataen starter
-
-    //std::string filename = "new_Case - 01-09-2018, 01-11-37 - RT3LY-60-sec-two-ships-filled.csv"; //head-on
+//    std::string filename = "new_Case - 01-09-2018, 01-11-37 - RT3LY-60-sec-two-ships-filled.csv"; //head-on
     //HO, rett oppførsel men egentlig ikke noe risiko for kollisjon i det hele tatt. 
 
     //std::string filename = "new_Case - 01-09-2018, 01-45-02 - 19JNJ-60-sec-two-ships.csv";
@@ -282,7 +279,7 @@ int main(){
     //En CR/OT situasjon som ikke egentlig gir mening, skjønner ikke hva båtene gjør...
 
     //std::string filename  = "new_Case - 05-09-2018, 10-05-48 - 9PNLJ-60-sec.csv";
-    //HO hvor den ene svinger feil vei, den andre holder stø kurs
+    //HO hvor ingen gjør noe til tross for at de er nære
 
     //std::string filename = "new_Case - 05-26-2019, 20-39-57 - 60GEW-60-sec.csv";
     //CR hvor den ene svinger feil vei. Noe surr på starten som må ryddes vekk som situasjonen ikke startet
@@ -308,18 +305,26 @@ int main(){
     //std::string filename = "new_Case - 02-25-2019, 03-47-32 - LGJOO-60-sec.csv";
     //CR, litt komplisert men ble rett
 
-    //std::string filename = "new_Case - 02-04-2019, 20-56-55 - OTFKY-60-sec.csv";
-    // ??? her skjer noe rart på slutten. Men er ikke noe unnamanøver, så w/e
-
-
     //std::string filename = "new_Case - 05-25-2018, 03-24-54 - 0PQWV-60-sec.csv";
     //CR, litt sen manøver. Er et datapunkt midt i manøveren
 
-    std::string filename = "new_Case - 07-09-2019, 21-03-39 - FQSTF-60-sec.csv";
-    //
+    //std::string filename = "new_Case - 07-09-2019, 21-03-39 - FQSTF-60-sec.csv";
+    //CR utydelig dårlig oppførsel ss eller cc er mulige årsaker
+
+    //std::string filename = "new_Case - 02-17-2019, 04-07-49 - FTOY7-60-sec.csv";
+    //Feil båt svinger av etter reglene, men veldig tidlig. SÅ det kan væer før SS, eventuelt prioritet. 
+
+    //std::string filename = "new_Case - 05-26-2018, 04-09-49 - 73XO8-60-sec.csv";
+    //Ingen ROC i det hele tatt
+
+    //std::string filename = "new_Case - 02-17-2019, 02-40-45 - VFVHD-60-sec.csv";
+    //Feil svinger, det plukkes opp, men blir litt U også, som er teit. Noe surr på SO skipet pga diskretisering av kurs tror jeg. U gir mening da den scinger vldig sakte til siden, hadde den svingt rakst hadde det funka bedre
+
+    //std::string filename = "new_Case - 08-26-2019, 04-43-15 - E0ICH-60-sec.csv";
+    //HO, er noen små endringer men ikke nok
 
     
-
+    std::cout << filename << std::endl << std::flush;
     std::string intentionModelFilename = "intention_model_combined_discretized.xdsl";
 
     std::vector<std::map<int, Eigen::Vector4d> > ship_state;
