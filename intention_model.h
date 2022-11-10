@@ -269,6 +269,11 @@ namespace INTENTION_INFERENCE
 			net.setBinaryPriors("intention_good_seamanship", parameters.good_seamanship_probability);
 			net.setBinaryPriors("unmodelled_behaviour", parameters.unmodeled_behaviour);
 
+			net.setHardLimitBinaryOutcomePriors("ample_time_acceptable", parameters.ample_time_s.minimal_accepted_by_ownship, parameters.ample_time_s.max);
+			net.setHardLimitBinaryOutcomePriors("safe_distance_front_acceptable", parameters.safe_distance_front_m.minimal_accepted_by_ownship, parameters.safe_distance_front_m.max);
+			net.setHardLimitBinaryOutcomePriors("safe_distance_acceptable", parameters.safe_distance_m.minimal_accepted_by_ownship, parameters.safe_distance_m.max);
+			net.setHardLimitBinaryOutcomePriors("safe_distance_midpoint_acceptable", parameters.safe_distance_midpoint_m.minimal_accepted_by_ownship, parameters.safe_distance_midpoint_m.max);
+
 			for (auto [ship_id, ship_name] : ship_name_map)
 			{
 				if (ship_id != my_id)

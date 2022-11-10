@@ -176,37 +176,40 @@ INTENTION_INFERENCE::IntentionModelParameters setModelParameters(int num_ships){
 	param.expanding_dbn.max_time_s = 200;
 	param.expanding_dbn.min_course_change_rad = 0.10;
 	param.expanding_dbn.min_speed_change_m_s = 1;
-    param.situation_start_distance.mu = 5000;
-    param.situation_start_distance.sigma = 300;
+    param.situation_start_distance.mu = 5500;
+    param.situation_start_distance.sigma = 500;
     param.situation_start_distance.n_bins = 30;
-    param.situation_start_distance.max = 6000;
+    param.situation_start_distance.max = 7000;
     param.speed.max = 18;
     param.speed.n_bins = 25;
     param.course.n_bins = 36;
-	param.ample_time_s.mu = 100;
-	param.ample_time_s.sigma = 25;
-	param.ample_time_s.max = 300;
+	//param.ample_time_s.mu = 100;
+	//param.ample_time_s.sigma = 25;
+	param.ample_time_s.max = 120;
 	param.ample_time_s.n_bins = 30; // this value must match the bayesian network
-	param.ample_time_s.minimal_accepted_by_ownship = 20;
-    param.safe_distance_m.mu = 200;
-	param.safe_distance_m.sigma = 5;
+	param.ample_time_s.minimal_accepted_by_ownship = 250;
+    //param.safe_distance_m.mu = 200;
+	//param.safe_distance_m.sigma = 5;
 	param.safe_distance_m.max = 1000;
 	param.safe_distance_m.n_bins = 30; // this value must match the bayesian network
-	param.safe_distance_midpoint_m.mu = 600;
-	param.safe_distance_midpoint_m.sigma = 20;
-	param.safe_distance_midpoint_m.max = 2500;
+    param.safe_distance_m.minimal_accepted_by_ownship = 250;
+	//param.safe_distance_midpoint_m.mu = 600;
+	//param.safe_distance_midpoint_m.sigma = 20;
+	param.safe_distance_midpoint_m.max = 1000;
 	param.safe_distance_midpoint_m.n_bins = 30; // this value must match the bayesian network
-	param.safe_distance_front_m.mu = 200;
-	param.safe_distance_front_m.sigma = 10;
+    param.safe_distance_midpoint_m.minimal_accepted_by_ownship = 250;
+	//param.safe_distance_front_m.mu = 200;
+	//param.safe_distance_front_m.sigma = 10;
 	param.safe_distance_front_m.max = 1000;
 	param.safe_distance_front_m.n_bins = 30; // this value must match the bayesian network
-	param.risk_distance_m.mu = 3000;
-	param.risk_distance_m.sigma = 100;
-	param.risk_distance_m.max = 3000;
+    param.safe_distance_front_m.minimal_accepted_by_ownship = 50;
+	param.risk_distance_m.mu = 1500;
+	param.risk_distance_m.sigma = 250;
+	param.risk_distance_m.max = 2500;
     param.risk_distance_m.n_bins = 30; // this value must match the bayesian network
-    param.risk_distance_front_m.mu = 3000;
-	param.risk_distance_front_m.sigma = 100;
-	param.risk_distance_front_m.max = 3000;
+    param.risk_distance_front_m.mu = 1500;
+	param.risk_distance_front_m.sigma = 250;
+	param.risk_distance_front_m.max = 2500;
     param.risk_distance_front_m.n_bins = 30;  // this value must match the bayesian network
 	param.colregs_situation_borders_rad.HO_uncertainty_start = 2.79;
 	param.colregs_situation_borders_rad.HO_start = 2.96;
@@ -219,7 +222,7 @@ INTENTION_INFERENCE::IntentionModelParameters setModelParameters(int num_ships){
 	param.ignoring_safety_probability = 0;
 	param.colregs_compliance_probability = 0.98;
     param.good_seamanship_probability = 0.99;
-	param.unmodeled_behaviour = 0.00001;
+	param.unmodeled_behaviour = 0.001;
 	param.priority_probability["lower"] = 0.05;
 	param.priority_probability["similar"] = 0.9;
 	param.priority_probability["higher"] = 0.05;
@@ -232,14 +235,34 @@ int main(){
     
 	int num_ships = 2;
     //std::string filename = "new_case_LQLVS-60-sec.csv"; //crossing
+    //Korrekt oppførsel, potensielt litt sen action
+
     //std::string filename = "new_case_2ZC9Z-60-sec-two-ships.csv"; //head on
+    //En tidlig bevegelse feil vei på ship1, så endrer det til at begge skipene oppfører seg rett
+
     //std::string filename = "new_Case - 01-08-2021, 08-21-29 - AQ5VM-60-sec-two-ships.csv"; //overtaking must start at timestep 4
+    //Noe rart i starten, så svinger ship2 mot kollisjon egentlig og ship1 svinger unna
+
     //std::string filename = "new_Case - 01-15-2020, 09-05-49 - VATEN-60-sec-two-ships.csv"; //overtaking
+    //Funker dårlig, ship1 har allerde startet å gjøre en unnamanøver når dataen starter
+
     //std::string filename = "new_Case - 01-09-2018, 01-11-37 - RT3LY-60-sec-two-ships-filled.csv"; //head-on
+    //HO, rett oppførsel men egentlig ikke noe risiko for kollisjon i det hele tatt. 
+
     //std::string filename = "new_Case - 01-09-2018, 01-45-02 - 19JNJ-60-sec-two-ships.csv";
-    std::string filename  = "new_Case - 01-11-2019, 02-30-00 - LP84U-60-sec.csv";
+    //HO ingenting spennende
+
+    //std::string filename  = "new_Case - 01-11-2019, 02-30-00 - LP84U-60-sec.csv";
+    //En CR/OT situasjon som ikke egentlig gir mening, skjønner ikke hva båtene gjør...
+
     //std::string filename  = "new_Case - 05-09-2018, 10-05-48 - 9PNLJ-60-sec.csv";
+    //HO hvor den ene svinger feil vei, den andre holder stø kurs
+
     //std::string filename = "new_Case - 05-26-2019, 20-39-57 - 60GEW-60-sec.csv";
+    //CR hvor den ene svinger feil vei. Noe surr på starten som må ryddes vekk som situasjonen ikke startet
+
+    //SOuth cases:
+    std::string filename = "new_Case - 05-26-2019, 20-39-57 - 60GEW-60-sec.csv";
 
     std::string intentionModelFilename = "intention_model_combined_discretized.xdsl";
 

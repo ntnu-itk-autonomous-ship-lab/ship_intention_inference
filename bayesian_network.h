@@ -46,13 +46,13 @@ class BayesianNetwork{
     }
 
     void setDefinition(std::string node_name, DSL_doubleArray& CPT){
-        double sum=0;
+        /*double sum=0;
         for(int i=0; i<CPT.GetSize(); ++i){
             sum += CPT[i];
         }
         //if(sum<0.9999 || sum>1.00001 || !isfinite(sum)) printf("ERROR: Prior distribution on \"%s\" sums to %f, should be 1", node_name.c_str(), sum);
         if(sum<0.999 || sum>1.001 || !isfinite(sum)) printf("ERROR: Prior distribution on \"%s\" sums to %f, should be 1", node_name.c_str(), sum);
-        if(!(sum>=0.999 && sum<=1.001 && isfinite(sum))) throw std::runtime_error("!(sum>=0.999 && sum<=1.001 && isfinite(sum))");
+        if(!(sum>=0.999 && sum<=1.001 && isfinite(sum))) throw std::runtime_error("!(sum>=0.999 && sum<=1.001 && isfinite(sum))");*/
         const auto node_id = getNodeId(node_name);
         auto result =  net.GetNode(node_id)->Definition()->SetDefinition(CPT);
         if(result<0) printf("ERROR: Setting priors failed on node \"%s\"", node_name.c_str());
@@ -178,6 +178,18 @@ public:
 
     void setBinaryPriors(std::string node_name, double probablity_of_true){
         setPriors(node_name, {{"false", 1-probablity_of_true},{"true", probablity_of_true}});
+    }
+
+    void setHardLimitBinaryOutcomePriors(std::string node_name, double limit, double max){
+        const auto node_id = getNodeId(node_name);
+        auto node_definition = net.GetNode(node_id)->Definition();
+        DSL_doubleArray CPT(node_definition->GetMatrix()->GetSize());
+        const auto n_bins = CPT.GetSize()/2;
+        for(auto i=0; i<n_bins; ++i){
+            CPT[2*i] = limit >= i*(max/n_bins); //the lower end of the bin must be higher than the limit
+            CPT[2*i+1] = limit < i*(max/n_bins); //the lower end of the bin must be higher than the limit
+        }
+        setDefinition(node_name, CPT);
     }
 
     // for e<ach elemeent 
