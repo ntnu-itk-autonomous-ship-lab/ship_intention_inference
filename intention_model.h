@@ -74,7 +74,7 @@ namespace INTENTION_INFERENCE
 			return false;
 		}
 
-		void evaluate_nodes(std::ofstream &intentionFile, double time, double x, double y, double sog, double cog){
+		bool evaluate_nodes(std::ofstream &intentionFile, double time, double x, double y, double sog, double cog){
 			intentionFile << my_id << ",";
             intentionFile << x << ",";
             intentionFile << y << ","; 
@@ -83,6 +83,7 @@ namespace INTENTION_INFERENCE
             intentionFile << time << ",";
 
 			auto result = net.evaluateStates(all_node_names);
+			bool has_started = true;
 
 			auto intention_colregs_compliant = better_at(better_at(result, "intention_colregs_compliant"), "true");
 			intentionFile << intention_colregs_compliant << ",";
@@ -153,6 +154,7 @@ namespace INTENTION_INFERENCE
 					intentionFile << intention_is_risk_of_colision << ",";
 					auto situation_started = better_at(better_at(result, "situation_started_towards_"+ ship_name), "true");
 					intentionFile << situation_started << ",";
+					has_started = has_started && (situation_started>0.98);
 					std::cout << "Situation started: " << situation_started << std::endl << std::flush;
 					auto will_give_way = better_at(better_at(result, "will_give_way_to_"+ ship_name), "true");
 					intentionFile << will_give_way << ",";
@@ -190,7 +192,7 @@ namespace INTENTION_INFERENCE
 			}
 
 			intentionFile << "\n";
-
+			return has_started;
 		}
 
 
@@ -348,7 +350,7 @@ namespace INTENTION_INFERENCE
 			net.setEvidence("is_changing_course", is_changing_course);  
 			measurementFile << is_changing_course << ",";
 			
-			bool has_passed = false;
+			bool has_passed = true;
 			std::vector<std::string> handled_ship_names;
 			for (auto const &ship_id : currently_tracked_ships)
 			{
@@ -403,7 +405,7 @@ namespace INTENTION_INFERENCE
 
 					net.setEvidence("passed_" + ship_name, hasPassedIdentifier(cpa.time_untill_CPA));
 					measurementFile << (hasPassedIdentifier(cpa.time_untill_CPA)=="true") << ",";
-					has_passed = (hasPassedIdentifier(cpa.time_untill_CPA)=="true");
+					has_passed = has_passed && (hasPassedIdentifier(cpa.time_untill_CPA)=="true");
 
 
 					net.setEvidence("crossing_wiht_other_on_port_side_to_" + ship_name, crossing_port_starboard_identifier(cpa.bearing_relative_to_heading));
@@ -422,9 +424,9 @@ namespace INTENTION_INFERENCE
 			}
 
 			net.setEvidence(output_name, "true");
-			evaluate_nodes(intentionFile, time, better_at(ship_states, my_id)[PX], better_at(ship_states, my_id)[PY], better_at(ship_states, my_id)[U], better_at(ship_states, my_id)[CHI]);
+			bool has_started = evaluate_nodes(intentionFile, time, better_at(ship_states, my_id)[PX], better_at(ship_states, my_id)[PY], better_at(ship_states, my_id)[U], better_at(ship_states, my_id)[CHI]);
 			
-			return has_passed;
+			return has_started && has_passed;
 			
 		}
 
