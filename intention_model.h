@@ -210,7 +210,7 @@ namespace INTENTION_INFERENCE
 				if (ship_id != my_id)
 				{
 					std::string ship_name = better_at(ship_name_map, ship_id);
-					const auto situation = evaluateSitution(parameters, better_at(ship_states, my_id), ship_state);
+					const auto situation = evaluateRelativeSituation2(parameters, better_at(ship_states, my_id), ship_state);
 					net.setPriors("colav_situation_towards_" + ship_name, situation);
 
 					std::stringstream situation_ss;
@@ -286,7 +286,7 @@ namespace INTENTION_INFERENCE
             		intentionFile << y << ","; 
             		intentionFile << time << ",";
 					const auto ship_state = better_at(ship_states, ship_id);
-					const auto situation = evaluateRelativeSituation(parameters, better_at(ship_states, my_id), ship_state);
+					const auto situation = evaluateRelativeSituation2(parameters, better_at(ship_states, my_id), ship_state);
 					for (const auto &[name, value] : situation){
 						std::cout << name << "=" << value << ", ";
 						if (name == "OT_ing") {
@@ -312,11 +312,16 @@ namespace INTENTION_INFERENCE
 				net.incrementTime();
 				did_save = true;
 			}
-			
+			Eigen::Vector4d new_initial_ship_states = better_at(initial_ship_states, my_id);
+			const auto ship_state = better_at(ship_states, my_id);
+			CPA cpa = evaluateCPA(better_at(ship_states, my_id), ship_state);
+			if (cpa.time_untill_CPA>300){
+				new_initial_ship_states = newInitialStatesIdentifier(better_at(ship_states, my_id), better_at(initial_ship_states, my_id), time);
+			}
 		
-			net.setEvidence("change_in_course", changeInCourseIdentifier(parameters, better_at(ship_states, my_id)[CHI], better_at(initial_ship_states, my_id)[CHI]));
+			net.setEvidence("change_in_course", changeInCourseIdentifier(parameters, better_at(ship_states, my_id)[CHI], new_initial_ship_states[CHI]));
 
-			net.setEvidence("change_in_speed", changeInSpeedIdentifier(parameters, better_at(ship_states, my_id)[U], better_at(initial_ship_states, my_id)[U]));
+			net.setEvidence("change_in_speed", changeInSpeedIdentifier(parameters, better_at(ship_states, my_id)[U], new_initial_ship_states[U]));
 
 			net.setEvidence("is_changing_course", is_changing_course);  
 			
@@ -337,7 +342,7 @@ namespace INTENTION_INFERENCE
 
 					std::cout << "time to cpa: " << cpa.time_untill_CPA << std::endl;
 					
-					const auto situation = evaluateSitution(parameters, better_at(ship_states, my_id), ship_state);
+					const auto situation = evaluateRelativeSituation2(parameters, better_at(ship_states, my_id), ship_state);
 					for (const auto &[name, value] : situation){
 						std::cout << name << "=" << value << ", ";
 					}

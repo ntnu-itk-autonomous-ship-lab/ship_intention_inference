@@ -238,7 +238,7 @@ int main(){
             std::cout<< "dist: " << dist << std::endl;
             auto CPA = evaluateCPA(INTENTION_INFERENCE::better_at(ship_state[timestep], ship_list[1]), INTENTION_INFERENCE::better_at(ship_state[timestep], ship_list[2]));
             std::cout<< "CPA dist: " << CPA.distance_at_CPA << std::endl;
-            if ((dist < parameters.starting_distance) && (sog_vec[timestep]>1) && (sog_vec[unique_time_vec.size()+timestep]>1)){ // && (CPA.distance_at_CPA < parameters.starting_cpa_distance) ){ //only checks the speed for two ships
+            if ((dist < parameters.starting_distance) && (sog_vec[timestep]>0.5) && (sog_vec[unique_time_vec.size()+timestep]>0.5)){ // && (CPA.distance_at_CPA < parameters.starting_cpa_distance) ){ //only checks the speed for two ships
             ship_intentions.insert(std::pair<int, INTENTION_INFERENCE::IntentionModel>(ship_list[i], INTENTION_INFERENCE::IntentionModel(intentionModelFilename,parameters,ship_list[i],ship_state[timestep]))); //ship_state[1] as initial as first state might be NaN
             inserted = true;
             }
@@ -257,11 +257,11 @@ int main(){
         std::cout << "y: " << y_vec[i] << std::endl;
         std::cout << "sog: " << sog_vec[i] << std::endl;
         std::cout << "cog: " << cog_vec[i] << std::endl;
-    } 
+    } */
     for (int i = 0; i < 5; i++){
             for(auto it = ship_state[i].cbegin(); it != ship_state[i].cend(); ++it){
             std::cout << it->first << " -> " << it->second << std::endl;
             std::cout << " time: " << unique_time_vec[i] << std::endl;
         }
-    } */
+    } 
 }
