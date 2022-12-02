@@ -205,11 +205,12 @@ public:
         setDefinition(node_name, CPT);
     }
 
-    //TODO rename from AIS to safe distance
+    /*//TODO rename from AIS to safe distance
     void setAisDistribution(const std::string node_name, std::string filename, int colreg_idx, int cpa_dist_idx, int multiply, int n_bins, double min, double max){
-        std::vector<std::vector<std::string> > content = read_file(filename);
-        std::vector<double> ais_cpa = aisMap(content, colreg_idx, cpa_dist_idx, multiply); //vector over all cpa_dist cases for different colregs situations
-        std::vector<double> distr_cpa = find_distribution(ais_cpa, n_bins, min, max); //vector over cpa_dist discretized distribution  for different clregs situtaions 
+        //std::vector<std::vector<std::string> > content = read_file(filename);
+        //std::vector<double> ais_cpa = aisMap(content, colreg_idx, cpa_dist_idx, multiply); //vector over all cpa_dist cases for different colregs situations
+        //std::vector<double> distr_cpa = find_distribution(ais_cpa, n_bins, min, max); //vector over cpa_dist discretized distribution  for different clregs situtaions 
+        std::vector<double> distr_cpa = [0.0, 0.01053864168618267, 0.00702576112412178, 0.03629976580796253, 0.04918032786885246, 0.07728337236533958, 0.06088992974238876, 0.08899297423887588, 0.06557377049180328, 0.06791569086651054, 0.0468384074941452, 0.06206088992974239, 0.03747072599531616, 0.03629976580796253, 0.04449648711943794, 0.02459016393442623, 0.03161592505854801, 0.03278688524590164, 0.02107728337236534, 0.02107728337236534, 0.02107728337236534, 0.01522248243559719, 0.01756440281030445, 0.01873536299765808, 0.01990632318501171, 0.02927400468384075, 0.01756440281030445, 0.01639344262295082, 0.00936768149882904, 0.01288056206088993];
         const auto node_id = getNodeId(node_name);
         auto node_definition = net.GetNode(node_id)->Definition();
         DSL_doubleArray CPT(node_definition->GetMatrix()->GetSize());  //henter ut matrix i baysian network
@@ -228,12 +229,13 @@ public:
         std::cout << std::endl << std::flush;
     }
 
-    void setAmpleTimeDistribution(const std::string node_name, std::string filename, int ample_time_idx, int n_bins, double min, double max, std::vector<double> temp_vec){
-        std::vector<std::vector<std::string> > content = read_file(filename);
+    void setAmpleTimeDistribution(const std::string node_name, std::string filename, int ample_time_idx, int n_bins, double min, double max){
+        //std::vector<std::vector<std::string> > content = read_file(filename);
         //TODO: find out why exception for ample_time is thrown
-        std::vector<double> ample_time_vec = ampleTimeVec(content, ample_time_idx);   //TODO! Something is wrong here
+        //std::vector<double> ample_time_vec = ampleTimeVec(content, ample_time_idx);   //TODO! Something is wrong here
         //std::vector<double> distr_ample_time_vec = temp_vec;
-        std::vector<double> distr_ample_time_vec = find_distribution(ample_time_vec, n_bins, min, max);
+        //std::vector<double> distr_ample_time_vec = find_distribution(ample_time_vec, n_bins, min, max);
+        std::vector<double> distr_ample_time_vec
         const auto node_id = getNodeId(node_name);
         auto node_definition = net.GetNode(node_id)->Definition();
         DSL_doubleArray CPT(node_definition->GetMatrix()->GetSize());  //henter ut matrix i baysian network
@@ -243,6 +245,24 @@ public:
         
         for(int i=0; i < CPT.GetSize(); ++i){
                     CPT[i]= distr_ample_time_vec[i];
+                    std::cout << CPT[i] << " " << std::flush;
+                    sum += CPT[i];
+            }
+        if(sum<0.98 || sum>1.001 || !isfinite(sum)) printf("ERROR: Prior distribution on \"%s\" sums to %f, should be 1", node_name.c_str(), sum);
+        if(!(sum>=0.98 && sum<=1.001 && isfinite(sum))) throw std::runtime_error("!(sum>=0.98 && sum<=1.001 && isfinite(sum))");
+        setDefinition(node_name, CPT);
+        std::cout << "\n" << std::flush;
+    }*/
+
+    void setDistribution(const std::string node_name, std::vector<double> distribution){
+        const auto node_id = getNodeId(node_name);
+        auto node_definition = net.GetNode(node_id)->Definition();
+        DSL_doubleArray CPT(node_definition->GetMatrix()->GetSize());  //henter ut matrix i baysian network
+        double sum = 0;
+        std::cout << "Setting distribution for: " << node_name << std::flush;
+        
+        for(int i=0; i < CPT.GetSize(); ++i){
+                    CPT[i]= distribution[i];
                     std::cout << CPT[i] << " " << std::flush;
                     sum += CPT[i];
             }

@@ -178,8 +178,6 @@ INTENTION_INFERENCE::IntentionModelParameters setModelParameters(int num_ships){
     param.number_of_network_evaluation_samples = 100000;
 	param.max_number_of_obstacles = num_ships-1; //must be set to num_ships-1 or else segmantation fault
 	param.time_into_trajectory = 10;
-    param.starting_distance =7000;
-    //param.starting_distance =5000;
 	param.expanding_dbn.min_time_s = 10;
 	param.expanding_dbn.max_time_s = 120;
 	param.expanding_dbn.min_course_change_rad = 0.10;
@@ -191,7 +189,7 @@ INTENTION_INFERENCE::IntentionModelParameters setModelParameters(int num_ships){
     param.situation_start_distance.mu = 5000;
     param.situation_start_distance.sigma = 750;
     param.situation_start_distance.n_bins = 30;
-    param.situation_start_distance.max = 7000;
+    param.situation_start_distance.max = 8000;
     /*param.situation_start_distance.mu = 7000;
     param.situation_start_distance.sigma = 750;
     param.situation_start_distance.n_bins = 30;
@@ -203,30 +201,30 @@ INTENTION_INFERENCE::IntentionModelParameters setModelParameters(int num_ships){
     param.speed.max = 18;
     param.speed.n_bins = 25;
     param.course.n_bins = 36;
-	param.ample_time_s.mu = 400;
-	param.ample_time_s.sigma = 75;
-    param.ample_time_s.max = 600;
+	//param.ample_time_s.mu = 400;
+	//param.ample_time_s.sigma = 75;
+    //param.ample_time_s.max = 200;
     //param.ample_time_s.mu = 300;
 	//param.ample_time_s.sigma = 50;
     //param.ample_time_s.max = 450;
-    /*param.ample_time_s.mu = 600;
-	param.ample_time_s.sigma = 100;
-    param.ample_time_s.max = 800;*/
+    //param.ample_time_s.mu = 500;
+	//param.ample_time_s.sigma = 100;
+    param.ample_time_s.max = 1800;
 	param.ample_time_s.n_bins = 30; // this value must match the bayesian network
 	param.ample_time_s.minimal_accepted_by_ownship = 100;
-    param.safe_distance_m.mu = 800;
-	param.safe_distance_m.sigma = 300;
-	param.safe_distance_m.max = 2000;
+    //param.safe_distance_m.mu = 800;
+	//param.safe_distance_m.sigma = 300;
+	param.safe_distance_m.max = 1500;
 	param.safe_distance_m.n_bins = 30; // this value must match the bayesian network
     param.safe_distance_m.minimal_accepted_by_ownship = 100;
 	//param.safe_distance_midpoint_m.mu = 600;
 	//param.safe_distance_midpoint_m.sigma = 20;
-	param.safe_distance_midpoint_m.max = 1000;
+	param.safe_distance_midpoint_m.max = 1500;
 	param.safe_distance_midpoint_m.n_bins = 30; // this value must match the bayesian network
     param.safe_distance_midpoint_m.minimal_accepted_by_ownship = 100;
 	//param.safe_distance_front_m.mu = 200;
 	//param.safe_distance_front_m.sigma = 10;
-	param.safe_distance_front_m.max = 1000;
+	param.safe_distance_front_m.max = 1500;
 	param.safe_distance_front_m.n_bins = 30; // this value must match the bayesian network
     param.safe_distance_front_m.minimal_accepted_by_ownship = 100;
 	param.risk_distance_m.mu = 1500;
@@ -237,14 +235,22 @@ INTENTION_INFERENCE::IntentionModelParameters setModelParameters(int num_ships){
 	param.risk_distance_front_m.sigma = 250;
 	param.risk_distance_front_m.max = 2500;
     param.risk_distance_front_m.n_bins = 30;  // this value must match the bayesian network
-	param.colregs_situation_borders_rad.HO_uncertainty_start = 2.79;
+	/*param.colregs_situation_borders_rad.HO_uncertainty_start = 2.79;
 	param.colregs_situation_borders_rad.HO_start = 2.96;
 	param.colregs_situation_borders_rad.HO_stop = -2.96;
 	param.colregs_situation_borders_rad.HO_uncertainty_stop = -2.79;
 	param.colregs_situation_borders_rad.OT_uncertainty_start = 1.614;
 	param.colregs_situation_borders_rad.OT_start = 2.3126;
 	param.colregs_situation_borders_rad.OT_stop = -2.3126;
-	param.colregs_situation_borders_rad.OT_uncertainty_stop = -1.614;
+	param.colregs_situation_borders_rad.OT_uncertainty_stop = -1.614;*/
+    param.colregs_situation_borders_rad.HO_uncertainty_start = 165*INTENTION_INFERENCE::DEG2RAD;
+	param.colregs_situation_borders_rad.HO_start = 175*INTENTION_INFERENCE::DEG2RAD;
+	param.colregs_situation_borders_rad.HO_stop = -175*INTENTION_INFERENCE::DEG2RAD;
+	param.colregs_situation_borders_rad.HO_uncertainty_stop = -165*INTENTION_INFERENCE::DEG2RAD;
+	param.colregs_situation_borders_rad.OT_uncertainty_start = 100*INTENTION_INFERENCE::DEG2RAD;
+	param.colregs_situation_borders_rad.OT_start = 125*INTENTION_INFERENCE::DEG2RAD;
+	param.colregs_situation_borders_rad.OT_stop = -125*INTENTION_INFERENCE::DEG2RAD;
+	param.colregs_situation_borders_rad.OT_uncertainty_stop = -100*INTENTION_INFERENCE::DEG2RAD;;
 	param.ignoring_safety_probability = 0;
 	param.colregs_compliance_probability = 0.99;
     param.good_seamanship_probability = 0.99;
@@ -266,7 +272,7 @@ int main(){
     //std::string filename = "new_case_2ZC9Z-60-sec-two-ships.csv"; //head on
     //En tidlig bevegelse feil vei på ship1, så endrer det til at begge skipene oppfører seg rett
 
-    std::string filename = "new_Case - 01-08-2021, 08-21-29 - AQ5VM-60-sec-two-ships.csv"; //overtaking must start at timestep 4
+    //std::string filename = "new_Case - 01-08-2021, 08-21-29 - AQ5VM-60-sec-two-ships.csv"; //overtaking must start at timestep 4
     //Noe rart i starten, så svinger ship2 mot kollisjon egentlig og ship1 svinger unna
 
 //    std::string filename = "new_Case - 01-09-2018, 01-11-37 - RT3LY-60-sec-two-ships-filled.csv"; //head-on
@@ -323,9 +329,20 @@ int main(){
     //std::string filename = "new_Case - 08-26-2019, 04-43-15 - E0ICH-60-sec.csv";
     //HO, er noen små endringer men ikke nok
 
+    //std::string filename = "new_Case - 01-09-2018, 01-45-02 - 19JNJ-60-sec-two-ships.csv";
+
+    //std::string filename = "new_Case - 05-25-2018, 03-24-54 - 0PQWV-60-sec.csv";
+    //std::string filename = "new_Case - 02-17-2019, 02-40-45 - VFVHD-60-sec.csv";
+    //std::string filename  = "new_Case - 09-09-2018, 14-12-01 - A2WI5-60-sec.csv";
+    //std::string filename  = "new_Case - 05-09-2018, 10-05-48 - 9PNLJ-60-sec.csv";
+    //std::string filename = "new_Case - 06-01-2018, 15-09-18 - CXOPP-60-sec.csv";
+    //std::string filename  = "new_Case - 07-10-2019, 00-43-06 - 7VK7W-60-sec.csv";
+    std::string filename = "new_Case - 05-26-2019, 20-39-57 - 60GEW-60-sec.csv";
+
     
     std::cout << filename << std::endl << std::flush;
-    std::string intentionModelFilename = "intention_model_combined_discretized.xdsl";
+    //std::string intentionModelFilename = "intention_model_combined_discretized.xdsl";
+    std::string intentionModelFilename = "intention_model_combined_discretized_old_colreg_complinat.xdsl";
 
     std::vector<std::map<int, Eigen::Vector4d> > ship_state;
     std::vector<double> unique_time_vec;
@@ -352,7 +369,7 @@ int main(){
             std::cout<< INTENTION_INFERENCE::better_at(ship_state[timestep], ship_list[1])[INTENTION_INFERENCE::PX]- INTENTION_INFERENCE::better_at(ship_state[timestep], ship_list[2])[INTENTION_INFERENCE::PX] << std::endl << std::flush;
             double dist = evaluateDistance(INTENTION_INFERENCE::better_at(ship_state[timestep], ship_list[1])[INTENTION_INFERENCE::PX] - INTENTION_INFERENCE::better_at(ship_state[timestep], ship_list[2])[INTENTION_INFERENCE::PX], INTENTION_INFERENCE::better_at(ship_state[timestep], ship_list[1])[INTENTION_INFERENCE::PY] - INTENTION_INFERENCE::better_at(ship_state[timestep], ship_list[2])[INTENTION_INFERENCE::PY]);
             std::cout<< "dist: " << dist << std::endl << std::flush;
-            if ((dist < parameters.starting_distance) && (better_at(ship_state[timestep],mmsi_vec[0])[U]>1) && (better_at(ship_state[timestep],mmsi_vec[1])[U]>1)){ //only checks the speed for two ships
+            if ((dist < parameters.situation_start_distance.max) && (better_at(ship_state[timestep],mmsi_vec[0])[U]>1) && (better_at(ship_state[timestep],mmsi_vec[1])[U]>1)){ //only checks the speed for two ships
                 ship_intentions.insert(std::pair<int, INTENTION_INFERENCE::IntentionModel>(ship_list[i], INTENTION_INFERENCE::IntentionModel(intentionModelFilename,parameters,ship_list[i],ship_state[timestep]))); //ship_state[1] as initial as first state might be NaN
             inserted = true;
             }

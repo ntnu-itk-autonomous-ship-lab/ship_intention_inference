@@ -318,22 +318,25 @@ namespace INTENTION_INFERENCE
 				net.setPriorNormalDistribution("intention_distance_risk_of_collision", parameters.risk_distance_m.mu, parameters.risk_distance_m.sigma, parameters.risk_distance_m.max / parameters.risk_distance_m.n_bins);
 				net.setPriorNormalDistribution("intention_distance_risk_of_collision_front", parameters.risk_distance_front_m.mu, parameters.risk_distance_front_m.sigma, parameters.risk_distance_front_m.max / parameters.risk_distance_front_m.n_bins);
 
+
+				std::vector<double> safe_distance_dist{ 0, 0.00868975717983483, 0.00579317145322322, 0.0299313858416533, 0.0405522001725626, 0.0637248859854555, 0.0502074859279346, 0.0733801717408275, 0.0540696002300834, 0.0560006573811578, 0.0386211430214882, 0.0511730145034718, 0.0308969144171905, 0.0299313858416533, 0.0366900858704137, 0.0202761000862813, 0.0260692715395045, 0.0270348001150417, 0.0173795143596697, 0.0173795143596697, 0.0173795143596697, 0.0125518714819836, 0.0144829286330581, 0.0154484572085953, 0.0164139857841325, 0.0241382143884301, 0.0144829286330581, 0.0135174000575209, 0.00772422860429763, 0.186059410822137 };
+				std::vector<double> ample_time_dist{ 0, 0, 0, 0, 0, 0.00414062500000000, 0.0155273437500000, 0.0269140625000000, 0.0248437500000000, 0.0403710937500000, 0.0414062500000000, 0.0600390625000000, 0.0486523437500000, 0.0610742187500000, 0.0641796875000000, 0.0527929687500000, 0.0817773437500000, 0.0538281250000000, 0.0362304687500000, 0.0300195312500000, 0.0258789062500000, 0.00828125000000000, 0.00724609375000000, 0.00414062500000000, 0.00931640625000000, 0.00724609375000000, 0.0103515625000000, 0.0113867187500000, 0.0103515625000000, 0.264003906250000};
+				net.setDistribution("intention_safe_distance_midpoint",safe_distance_dist);
+				net.setDistribution("intention_safe_distance",safe_distance_dist);
+				net.setDistribution("intention_safe_distance_front",safe_distance_dist);
+				net.setDistribution("intention_ample_time",ample_time_dist);
+
 				// Cpa distance
-				net.setAisDistribution("intention_safe_distance_midpoint", "west_rel.csv", colreg_idx, cpa_dist_idx, multiply, parameters.safe_distance_midpoint_m.n_bins, 0, parameters.safe_distance_midpoint_m.max);
-				net.setAisDistribution("intention_safe_distance", "west_rel.csv", colreg_idx, cpa_dist_idx, multiply, parameters.safe_distance_m.n_bins,0, parameters.safe_distance_m.max);
-				net.setAisDistribution("intention_safe_distance_front", "west_rel.csv", colreg_idx, cpa_dist_idx, multiply, parameters.safe_distance_front_m.n_bins,0, parameters.safe_distance_m.max);
+				//net.setAisDistribution("intention_safe_distance_midpoint", "west_rel.csv", colreg_idx, cpa_dist_idx, multiply, parameters.safe_distance_midpoint_m.n_bins, 0, parameters.safe_distance_midpoint_m.max);
+				//net.setAisDistribution("intention_safe_distance", "west_rel.csv", colreg_idx, cpa_dist_idx, multiply, parameters.safe_distance_m.n_bins,0, parameters.safe_distance_m.max);
+				//net.setAisDistribution("intention_safe_distance_front", "west_rel.csv", colreg_idx, cpa_dist_idx, multiply, parameters.safe_distance_front_m.n_bins,0, parameters.safe_distance_m.max);
 				//net.setPriorNormalDistribution("intention_safe_distance_front", parameters.safe_distance_front_m.mu, parameters.safe_distance_front_m.sigma, parameters.safe_distance_front_m.max / parameters.safe_distance_front_m.n_bins);
 				//TODO: Set safe distance front based on the safe_distance distribution somehow
 				
 				// Cpa time, the model does NOT differ for the different situations
 				//net.setPriorNormalDistribution("intention_ample_time", parameters.ample_time_s.mu, parameters.ample_time_s.sigma, parameters.ample_time_s.max / parameters.ample_time_s.n_bins);
-				//ample_time <800, found in python
-				std::vector<double> west_unfiltered = {0.1686746987951807, 0.321285140562249, 0.21686746987951808, 0.08433734939759036, 0.04618473895582329, 0.03614457831325301, 0.02610441767068273, 0.018072289156626505, 0.01606425702811245, 0.004016064257028112, 0.002008032128514056, 0.008032128514056224, 0.006024096385542169, 0.006024096385542169, 0.002008032128514056, 0.002008032128514056, 0.002008032128514056, 0.0, 0.002008032128514056, 0.0, 0.002008032128514056, 0.002008032128514056, 0.0, 0.002008032128514056, 0.002008032128514056, 0.0, 0.002008032128514056, 0.0, 0.0, 0.002008032128514056};
-				//ample_time < 400
-				std::vector<double> west_filtered = {0.09437751004016057, 0.10040160642570281, 0.1465863453815261, 0.14859437751004015, 0.13253012048192772, 0.10441767068273092, 0.04819277108433735, 0.04618473895582329, 0.02208835341365462, 0.02208835341365462, 0.014056224899598393, 0.02208835341365462, 0.01606425702811245, 0.01606425702811245, 0.004016064257028112, 0.012048192771084338, 0.006024096385542169, 0.010040160642570281, 0.006024096385542169, 0.0, 0.002008032128514056, 0.002008032128514056, 0.002008032128514056, 0.004016064257028112, 0.004016064257028112, 0.004016064257028112, 0.002008032128514056, 0.002008032128514056, 0.0, 0.006024096385542169};
-				
-				//net.setAmpleTimeDistribution("intention_ample_time", "west_rel.csv", ample_time_idx, parameters.ample_time_s.n_bins, 0, parameters.ample_time_s.max, west_filtered);
-				net.setPriorNormalDistribution("intention_ample_time", parameters.ample_time_s.mu, parameters.ample_time_s.sigma, parameters.ample_time_s.max / parameters.ample_time_s.n_bins);
+				//net.setAmpleTimeDistribution("intention_ample_time", "west_rel.csv", ample_time_idx, parameters.ample_time_s.n_bins, 0, parameters.ample_time_s.max);
+				//net.setPriorNormalDistribution("intention_ample_time", parameters.ample_time_s.mu, parameters.ample_time_s.sigma, parameters.ample_time_s.max / parameters.ample_time_s.n_bins);
 			}
 			net.save_network("modified_network.xdsl");
 		}
