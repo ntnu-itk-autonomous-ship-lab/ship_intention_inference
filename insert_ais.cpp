@@ -92,7 +92,8 @@ void vecsToShipStateVectorMap(std::vector<std::map<int, Eigen::Vector4d > > &shi
                 skip_line = true;
                 break;
             }
-            Eigen::Vector4d states(x_vec[index],y_vec[index],cog_vec[index],sog_vec[index]);
+            constexpr double knot_to_m_per_s = 0.5144;
+            Eigen::Vector4d states(x_vec[index],y_vec[index],cog_vec[index],sog_vec[index]*knot_to_m_per_s);
             std::map<int,Eigen::Vector4d>::iterator it = current_ship_states.end();
             current_ship_states.insert(it, std::pair<int, Eigen::Vector4d>(mmsi_vec[index],states));
         }
