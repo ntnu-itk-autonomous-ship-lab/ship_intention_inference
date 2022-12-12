@@ -154,7 +154,7 @@
 		<cpt id="intention_ignoring_safety">
 			<state id="false" />
 			<state id="true" />
-			<probabilities>0.99 0.01</probabilities>
+			<probabilities>1 0.00</probabilities>
 		</cpt>
 		<cpt id="safe_distance_to_ship0" dynamic="plate">
 			<state id="false" />

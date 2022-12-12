@@ -110,8 +110,8 @@ namespace INTENTION_INFERENCE
 			auto observation_applicable = better_at(better_at(result, "observation_applicable"), "true");
 			
 
-
-			/*// Convert from map to vector
+			/*
+			// Convert from map to vector
 			std::transform(better_at(result, "intention_ample_time").begin(), better_at(result, "intention_ample_time").end(), std::back_inserter(node_state_msg->intention_ample_time), [](std::pair<std::string, double> v)
 						   { return (float)v.second; });
 			std::transform(better_at(result, "intention_safe_distance_front").begin(), better_at(result, "intention_safe_distance_front").end(), std::back_inserter(node_state_msg->intention_safe_distance_front), [](std::pair<std::string, double> v)
