@@ -134,6 +134,19 @@ void writeIntentionToFile(int timestep, INTENTION_INFERENCE::IntentionModelParam
     //intentionFile << "mmsi,x,y,time,colreg_compliant,distance_risk_of_collision,distance_risk_of_collision_front,good_seamanship,unmodeled_behaviour,CR_PS,CR_SS,HO,OT_en,OT_ing,priority_lower,priority_similar,priority_higher\n"; //,CR_SS2,CR_PS2,OT_ing2,OT_en2,priority_lower2,priority_similar2,priority_higher2\n";
     //intentionFile << "mmsi,x,y,time,colreg_compliant,good_seamanship,unmodeled_behaviour,CR_PS,CR_SS,HO,OT_en,OT_ing,priority_lower,priority_similar,priority_higher\n"; //,CR_SS2,CR_PS2,OT_ing2,OT_en2,priority_lower2,priority_similar2,priority_higher2\n";
     intentionFile << "mmsi,x,y,time,CR_PS,CR_SS,HO,OT_en,OT_ing\n";
+    std::map<std::string, double> result_0;
+        			result_0["HO"] = 0;
+        			result_0["CR_PS"] = 0;
+        			result_0["CR_SS"] = 0;
+        			result_0["OT_en"] = 0;
+        			result_0["OT_ing"] = 0;
+
+    std::map<std::string, double> result_1;
+        			result_1["HO"] = 0;
+        			result_1["CR_PS"] = 0;
+        			result_1["CR_SS"] = 0;
+        			result_1["OT_en"] = 0;
+        			result_1["OT_ing"] = 0;
     for(int i = timestep; i < unique_time_vec.size() ; i++){ //from 1 because first state might be NaN
         std::cout << "timestep: " << i << std::endl;
         int ot_en = 0;
@@ -141,7 +154,12 @@ void writeIntentionToFile(int timestep, INTENTION_INFERENCE::IntentionModelParam
             std::cout << "ship_id: " << ship_id << std::endl;
             int j = getShipListIndex(ship_id,ship_list);
             //current_ship_intention_model.insertObservation(parameters,ot_en, ship_state[i], ship_list, false, unique_time_vec[i], x_vec[unique_time_vec.size()*j+i], y_vec[unique_time_vec.size()*j+i], intentionFile); //writes intantion variables to file as well
-            current_ship_intention_model.insertObservationRelativeSituation(parameters,ot_en, ship_state[i], ship_list, false, unique_time_vec[i], x_vec[unique_time_vec.size()*j+i], y_vec[unique_time_vec.size()*j+i], intentionFile);
+            if (j == 0){
+                result_0 = current_ship_intention_model.insertObservationRelativeSituation(result_0, parameters,ot_en, ship_state[i], ship_list, false, unique_time_vec[i], x_vec[unique_time_vec.size()*j+i], y_vec[unique_time_vec.size()*j+i], intentionFile);
+            }
+            if (j == 1){
+                result_1 = current_ship_intention_model.insertObservationRelativeSituation(result_1, parameters,ot_en, ship_state[i], ship_list, false, unique_time_vec[i], x_vec[unique_time_vec.size()*j+i], y_vec[unique_time_vec.size()*j+i], intentionFile);
+            }
     }
    }
     intentionFile.close(); 
@@ -202,12 +220,12 @@ int main(){
     using namespace INTENTION_INFERENCE;
     
 	int num_ships = 2;
-    std::string filename = "new_Case_LQLVS-60-sec.csv"; //crossing
+    //std::string filename = "new_Case_LQLVS-60-sec.csv"; //crossing
     //std::string filename = "new_case_2ZC9Z-60-sec-two-ships.csv"; //head on
     //std::string filename = "new_Case - 01-08-2021, 08-21-29 - AQ5VM-60-sec-two-ships.csv"; //overtaking must start at timestep 4
     //std::string filename = "new_Case - 01-15-2020, 09-05-49 - VATEN-60-sec-two-ships.csv"; //overtaking
     //std::string filename  = "new_Case - 01-17-2018, 06-26-20 - W4H51-60-sec.csv";
-    //std::string filename = "new_Case - 05-26-2019, 20-39-57 - 60GEW-60-sec.csv";
+    std::string filename = "new_Case - 05-26-2019, 20-39-57 - 60GEW-60-sec.csv";
 
     //std::string intentionModelFilename = "intention_model_with_risk_of_collision.xdsl";
     std::string intentionModelFilename = "intention_model_two_ships.xdsl";

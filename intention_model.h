@@ -205,12 +205,14 @@ namespace INTENTION_INFERENCE
 			net.setEvidence(priors);
 
 			// Initiate colregs situation
+			const auto ship_state = better_at(ship_states, my_id);
+			CPA cpa = evaluateCPA(better_at(ship_states, my_id), ship_state);
 			for (auto const &[ship_id, ship_state] : ship_states)
 			{
 				if (ship_id != my_id)
 				{
 					std::string ship_name = better_at(ship_name_map, ship_id);
-					const auto situation = evaluateRelativeSituation2(parameters, better_at(ship_states, my_id), ship_state);
+					const auto situation = evaluateRelativeSituation2(parameters, better_at(ship_states, my_id), ship_state, cpa.time_untill_CPA);
 					net.setPriors("colav_situation_towards_" + ship_name, situation);
 
 					std::stringstream situation_ss;
@@ -274,8 +276,9 @@ namespace INTENTION_INFERENCE
 			net.setAmpleTimeDistribution("intention_ample_time", "classified_west_5.csv", cpa_ample_time_idx, timestep, n_bins);
 		}
 
-		void insertObservationRelativeSituation(const IntentionModelParameters parameters, int &ot_en, const std::map<int, Eigen::Vector4d> ship_states, std::vector<int> currently_tracked_ships, bool is_changing_course, double time, double x, double y, std::ofstream &intentionFile)
+		std::map<std::string, double> insertObservationRelativeSituation(std::map<std::string, double> result, const IntentionModelParameters parameters, int &ot_en, const std::map<int, Eigen::Vector4d> ship_states, std::vector<int> currently_tracked_ships, bool is_changing_course, double time, double x, double y, std::ofstream &intentionFile)
 		{
+			std::map<std::string, double> situation;
 			
 			for (auto const &ship_id : currently_tracked_ships)
 			{
@@ -286,7 +289,10 @@ namespace INTENTION_INFERENCE
             		intentionFile << y << ","; 
             		intentionFile << time << ",";
 					const auto ship_state = better_at(ship_states, ship_id);
-					const auto situation = evaluateRelativeSituation2(parameters, better_at(ship_states, my_id), ship_state);
+					CPA cpa = evaluateCPA(better_at(ship_states, my_id), ship_state);
+					
+					situation = evaluateRelativeSituation1(parameters, better_at(ship_states, my_id), ship_state, cpa.time_untill_CPA);
+					std::cout << "time to cpa: " << cpa.time_untill_CPA << std::endl;
 					for (const auto &[name, value] : situation){
 						std::cout << name << "=" << value << ", ";
 						if (name == "OT_ing") {
@@ -300,6 +306,7 @@ namespace INTENTION_INFERENCE
 					intentionFile << "\n";
 				}
 			}
+			return situation;
 		}
 
 		bool insertObservation(const IntentionModelParameters parameters, int &ot_en, const std::map<int, Eigen::Vector4d> ship_states, std::vector<int> currently_tracked_ships, bool is_changing_course, double time, double x, double y, std::ofstream &intentionFile)
@@ -314,7 +321,7 @@ namespace INTENTION_INFERENCE
 			}
 			Eigen::Vector4d new_initial_ship_states = better_at(initial_ship_states, my_id);
 			const auto ship_state = better_at(ship_states, my_id);
-			CPA cpa = evaluateCPA(better_at(ship_states, my_id), ship_state);
+			CPA cpa = evaluateCPA(better_at(ship_states, my_id), ship_state); //not working here, always inf
 			if (cpa.time_untill_CPA>300){
 				new_initial_ship_states = newInitialStatesIdentifier(better_at(ship_states, my_id), better_at(initial_ship_states, my_id), time);
 			}
@@ -342,7 +349,7 @@ namespace INTENTION_INFERENCE
 
 					std::cout << "time to cpa: " << cpa.time_untill_CPA << std::endl;
 					
-					const auto situation = evaluateRelativeSituation2(parameters, better_at(ship_states, my_id), ship_state);
+					const auto situation = evaluateRelativeSituation2(parameters, better_at(ship_states, my_id), ship_state, cpa.time_untill_CPA);
 					for (const auto &[name, value] : situation){
 						std::cout << name << "=" << value << ", ";
 					}
