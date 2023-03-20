@@ -228,14 +228,14 @@ namespace INTENTION_INFERENCE
 
         double CR = 0; //crossing is added to the results later di be ble to distinguish between CR_PS adn CR_SS
         
-        /*if (time_to_cpa <= 0){
+        if (time_to_cpa <= 0){
             result["HO"] = 0;
         result["CR_PS"] = 0;
         result["CR_SS"] = 0;
         result["OT_en"] = 0;
         result["OT_ing"] = 0;
         }
-        else {*/
+        else {
         if ((relative_heading > M_PI-theta1 || relative_heading < -M_PI+theta1) && (bearing_relative_to_ownship_heading <= theta2 && bearing_relative_to_ownship_heading >= -theta2)) // must add relative bearing
         {
             result.at("HO") = 1;
@@ -314,9 +314,10 @@ namespace INTENTION_INFERENCE
             result.at("CR_SS") = CR/2;
             result.at("CR_PS") = CR/2;
         }
-        
+        }
         return result;
     }
+    
 
 
     std::map<std::string, double> evaluateRelativeSituation2(const IntentionModelParameters &parameters, const Eigen::Vector4d &ownship_state, const Eigen::Vector4d &obstacle_state, double time_to_cpa) //method Emil
@@ -343,20 +344,24 @@ namespace INTENTION_INFERENCE
         double theta2 = 5*M_PI/8;
         double theta3 = 112.5*M_PI/180;
         double uncertainty = 0.2;
-        if (time_to_cpa <= 0){
+        /*if (time_to_cpa <= 0){
             result["HO"] = 0;
         result["CR_PS"] = 0;
         result["CR_SS"] = 0;
         result["OT_en"] = 0;
         result["OT_ing"] = 0;
-        }
-         else if (bearing_relative_to_ownship_heading < theta1 && bearing_relative_to_ownship_heading > -theta1){
+        }*/
+
+        std::cout<< "relative heading: " << relative_heading;
+        std::cout<< "\n relative bearing: " << bearing_relative_to_ownship_heading << std::endl;
+         if (bearing_relative_to_ownship_heading < theta1 && bearing_relative_to_ownship_heading > -theta1){
             if (relative_heading > M_PI-theta1+uncertainty+bearing_relative_to_ownship_heading || relative_heading< -M_PI+theta1-uncertainty+bearing_relative_to_ownship_heading){
                 result.at("HO") = 1;
             }
             else if (relative_heading > M_PI-theta1-uncertainty+bearing_relative_to_ownship_heading){
-                result.at("HO") = ((M_PI-theta1+bearing_relative_to_ownship_heading+uncertainty)- relative_heading) / (uncertainty);
-                result.at("CR_PS") = (relative_heading - (M_PI-theta1+bearing_relative_to_ownship_heading)) / (uncertainty);
+                result.at("HO") = -((M_PI-theta1+bearing_relative_to_ownship_heading-uncertainty)- relative_heading) / (uncertainty);
+                result.at("CR_PS") = -(relative_heading - (M_PI-theta1+bearing_relative_to_ownship_heading)) / (uncertainty);
+            std::cout << "hei\n";
             }
             else if (relative_heading > M_PI-theta2+bearing_relative_to_ownship_heading+uncertainty){
                 result.at("CR_PS") = 1;
@@ -400,8 +405,8 @@ namespace INTENTION_INFERENCE
                 result.at("CR_SS") = 1;
             }
             else if (relative_heading< -M_PI+theta2+bearing_relative_to_ownship_heading+uncertainty){
-                result.at("CR_SS") = (relative_heading-(-M_PI+theta2+bearing_relative_to_ownship_heading-uncertainty)) / (uncertainty);
-                result.at("OT_ing") = ((-M_PI+theta2+bearing_relative_to_ownship_heading)-relative_heading) / (uncertainty);
+                result.at("CR_SS") = (-relative_heading+(-M_PI+theta2+bearing_relative_to_ownship_heading+uncertainty)) / (uncertainty);
+                result.at("OT_ing") = (-(-M_PI+theta2+bearing_relative_to_ownship_heading)+relative_heading) / (uncertainty);
             }
             else if (relative_heading < M_PI-theta2+bearing_relative_to_ownship_heading-uncertainty && relative_heading> -M_PI+theta2+bearing_relative_to_ownship_heading+uncertainty){
                 result.at("OT_ing") = 1;
@@ -478,6 +483,7 @@ namespace INTENTION_INFERENCE
             else if (relative_heading< -M_PI+theta1+bearing_relative_to_ownship_heading+uncertainty){
                 result.at("CR_PS") = ((-M_PI+theta1+bearing_relative_to_ownship_heading+uncertainty)-relative_heading) / (uncertainty);
                 result.at("HO") = (relative_heading - (-M_PI+theta1+bearing_relative_to_ownship_heading)) / (uncertainty);
+                std::cout << "hei2\n";
             }
             else if (relative_heading < M_PI-theta2+bearing_relative_to_ownship_heading-uncertainty && relative_heading> -M_PI+theta2+bearing_relative_to_ownship_heading+uncertainty){
                 result.at("OT_ing") = 1;

@@ -20,6 +20,10 @@ namespace INTENTION_INFERENCE
 class BayesianNetwork{
     private:
     DSL_network net;
+    std::deque<std::map<int, int>> temporal_evidence_; // que over timesteps, map <node_id, evidence_id>
+    std::deque<std::map<int, std::vector<double>>> temporal_virtual_evidence_;
+    std::map<int, int> evidence_;
+    std::map<int, std::vector<double>> virtual_evidence_;
 
     auto getNodeId(std::string name) const{
         const auto node_id = net.FindNode(name.c_str());
@@ -105,6 +109,52 @@ class BayesianNetwork{
         return return_value;
     }
 
+    void apply_evidence()
+    {
+        net.ClearAllEvidence();
+
+        // normal evidence
+        for (const auto &[node_id, outcome_id] : evidence_)
+        {
+            const auto res = net.GetNode(node_id)->Value()->SetEvidence(outcome_id);
+            if (res < 0)
+                printf("ERROR: Set evidence (outcome_id=%d) on node \"%d\" resulted in error", outcome_id, node_id);
+            assert(res >= 0);
+        }
+        for (const auto &[node_id, evidence_vec] : virtual_evidence_)
+        {
+            const auto res = net.GetNode(node_id)->Value()->SetVirtualEvidence(evidence_vec);
+            if (res < 0)
+                printf("ERROR: Set virtual evidence on node \"%d\" resulted in error", node_id);
+            assert(res >= 0);
+        }
+        int i = 0;
+        for (auto evidence : temporal_evidence_)
+        {
+            for (const auto &[node_id, outcome_id] : evidence)
+            {
+                const auto res = net.GetNode(node_id)->Value()->SetTemporalEvidence(i, outcome_id);
+                if (res < 0)
+                    printf("ERROR: Set temporal evidence (slice=%d, outcome_id=%d) on node \"%d\" resulted in error", i, outcome_id, node_id);
+                assert(res >= 0);
+            }
+            ++i;
+            
+        }
+        i = 0;
+        for (auto virtual_evidence : temporal_virtual_evidence_)
+        {
+            for (const auto &[node_id, evidence_vec] : virtual_evidence)
+            {
+                const auto res = net.GetNode(node_id)->Value()->SetTemporalEvidence(i, evidence_vec);
+                if (res < 0)
+                    printf("ERROR: Set temporal evidence (slice=%d) on node \"%d\" resulted in error", i, node_id);
+                assert(res >= 0);
+            }
+            ++i;
+        }
+    }
+
 public:
     BayesianNetwork(){}
 
@@ -125,6 +175,9 @@ public:
         const auto return_set_samples = net.SetNumberOfSamples(num_network_evaluation_samples);
         if(return_set_samples<0) printf("ERROR: Illigal number of samples set: %d", num_network_evaluation_samples);
         assert(return_set_samples>=0);
+
+        temporal_evidence_.push_back(std::map<int, int>{});
+        temporal_virtual_evidence_.push_back(std::map<int, std::vector<double>>{});
     }
 
     void save_network(std::string file_name){
@@ -135,15 +188,24 @@ public:
         printf("Network saved to %s", full_path.c_str());
     }
 
+    void add_to_dequeue(){
+        temporal_evidence_.push_back(std::map<int, int>{});
+        temporal_virtual_evidence_.push_back(std::map<int, std::vector<double>>{});
+    }
+
     void setEvidence(std::string node_name, int outcome_id,int time_slice=-1){
         wrapTimeSlice(&time_slice);
         const auto node_id = getNodeId(node_name);
         if(isTemporal(node_id)){
+            temporal_evidence_.back()[node_id] = outcome_id;
+            //std::map<int, int> new_temporal_evidence { { node_id, outcome_id} };
+            //temporal_evidence_.push_back(new_temporal_evidence);
             const auto res = net.GetNode(node_id)->Value()->SetTemporalEvidence(time_slice,outcome_id);
             if(res<0) printf("ERROR: Set temporal evidence (t=%d, outcome_id=%d) on node \"%s\" resulted in error",time_slice, outcome_id, node_name.c_str());
             assert(res>=0);
         }
         else{
+            evidence_[node_id] = outcome_id;
             const auto res = net.GetNode(node_id)->Value()->SetEvidence(outcome_id);
             if(res<0) printf("ERROR: Set evidence (outcome_id=%d) on node \"%s\" resulted in error",outcome_id,node_name.c_str());
             assert(res>=0);
@@ -157,6 +219,13 @@ public:
 
     //Input <node_name, observation>
     void setEvidence(const std::map<std::string,std::string>&  evidence){
+        for(auto e : evidence){
+            setEvidence(e.first,e.second);
+        }
+    }
+    
+
+    void setEvidence(std::string node_name, const std::map<std::string,std::string>&  evidence){
         for(auto e : evidence){
             setEvidence(e.first,e.second);
         }
@@ -247,11 +316,15 @@ public:
         wrapTimeSlice(&time_slice);
         const auto node_id = getNodeId(node_name);
         if(isTemporal(node_id)){
+            temporal_virtual_evidence_.back()[node_id] = virtualEvidence;
+            //std::map<int, std::vector<double>> new_temporal_virtual_evidence { { node_id, virtualEvidence} };
+            //temporal_virtual_evidence_.push_back(new_temporal_virtual_evidence);
             const auto result = net.GetNode(node_id)->Value()->SetTemporalEvidence(time_slice,virtualEvidence);
             if(result<0) printf("ERROR: Set virtual evidence (t=%d) on node \"%s\" resulted in error", time_slice, node_name.c_str());
             assert(result>=0);
         }
         else{
+            virtual_evidence_[node_id] = virtualEvidence;
             const auto result = net.GetNode(node_id)->Value()->SetVirtualEvidence(virtualEvidence);
             if(result<0) printf("ERROR: Set virtual evidence on node \"%s\" resulted in error", node_name.c_str());
             assert(result>=0);
@@ -303,6 +376,37 @@ public:
             return_value[node_name] = getOutcome(node_name,current_time_slice);
         }
         return return_value;
+    }
+
+    void removeEarlyTimeSteps(int min_number_of_timesteps_)
+    {
+        const auto number_of_time_slices = net.GetNumberOfSlices();
+        auto node_id = getNodeId("unmodelled_behaviour");
+        if (min_number_of_timesteps_ < 0 || temporal_evidence_.size() < min_number_of_timesteps_)
+        {
+            const auto res = net.SetNumberOfSlices(number_of_time_slices + 1);
+            if (res < 0)
+                printf("ERROR: Increment time failed");
+            assert(res >= 0);
+        }
+        else
+        {
+            int num_pop = 0;
+            std::cout << "Else \n";
+            while (num_pop<10){
+                std::cout << "while \n";
+                std::cout << "Before: " << temporal_evidence_.size();
+                temporal_evidence_.pop_front();
+                std::cout << " After pop: " << temporal_evidence_.size();
+                temporal_virtual_evidence_.pop_front();
+                num_pop ++;
+            }
+            apply_evidence();
+            std::cout << " After apply: " << temporal_evidence_.size();
+        }
+        //temporal_evidence_.push_back(std::map<int, int>{});
+        std::cout << " After push: " << temporal_evidence_.size() << std::endl;
+        //temporal_virtual_evidence_.push_back(std::map<int, std::vector<double>>{});
     }
 
     auto getNumberOfTimeSteps()const{

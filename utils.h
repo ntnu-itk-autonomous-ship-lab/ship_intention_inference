@@ -48,7 +48,7 @@ namespace INTENTION_INFERENCE
                 (void)value;
                 ss << key << ", ";
             }
-            //ROS_ERROR("%s", ss.str().c_str());
+            //printf("ERROR: %s", ss.str().c_str());
             assert(false);
         }
         return map.begin()->second;

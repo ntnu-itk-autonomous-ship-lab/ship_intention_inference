@@ -129,37 +129,24 @@ int getShipListIndex(int mmsi, std::vector<int> ship_list){
 
 void writeIntentionToFile(int timestep, INTENTION_INFERENCE::IntentionModelParameters parameters, std::string filename, std::map<int, INTENTION_INFERENCE::IntentionModel> ship_intentions, std::vector<std::map<int, Eigen::Vector4d > > ship_state, std::vector<int> ship_list, std::vector<double> unique_time_vec, std::vector<double> x_vec, std::vector<double> y_vec){
     std::ofstream intentionFile;
-    std::string filename_intention = "intention_files/Relative_intention_"+filename;
+    std::string filename_intention = "intention_files/nostart_intention_"+filename;
     intentionFile.open (filename_intention);
     //intentionFile << "mmsi,x,y,time,colreg_compliant,distance_risk_of_collision,distance_risk_of_collision_front,good_seamanship,unmodeled_behaviour,CR_PS,CR_SS,HO,OT_en,OT_ing,priority_lower,priority_similar,priority_higher\n"; //,CR_SS2,CR_PS2,OT_ing2,OT_en2,priority_lower2,priority_similar2,priority_higher2\n";
-    //intentionFile << "mmsi,x,y,time,colreg_compliant,good_seamanship,unmodeled_behaviour,CR_PS,CR_SS,HO,OT_en,OT_ing,priority_lower,priority_similar,priority_higher\n"; //,CR_SS2,CR_PS2,OT_ing2,OT_en2,priority_lower2,priority_similar2,priority_higher2\n";
-    intentionFile << "mmsi,x,y,time,CR_PS,CR_SS,HO,OT_en,OT_ing\n";
-    std::map<std::string, double> result_0;
-        			result_0["HO"] = 0;
-        			result_0["CR_PS"] = 0;
-        			result_0["CR_SS"] = 0;
-        			result_0["OT_en"] = 0;
-        			result_0["OT_ing"] = 0;
+    intentionFile << "mmsi,x,y,time,colreg_compliant,good_seamanship,unmodeled_behaviour,CR_PS,CR_SS,HO,OT_en,OT_ing,priority_lower,priority_similar,priority_higher\n"; //,CR_SS2,CR_PS2,OT_ing2,OT_en2,priority_lower2,priority_similar2,priority_higher2\n";
+    //intentionFile << "mmsi,x,y,time,CR_PS,CR_SS,HO,OT_en,OT_ing\n";
+  
 
-    std::map<std::string, double> result_1;
-        			result_1["HO"] = 0;
-        			result_1["CR_PS"] = 0;
-        			result_1["CR_SS"] = 0;
-        			result_1["OT_en"] = 0;
-        			result_1["OT_ing"] = 0;
-    for(int i = timestep; i < unique_time_vec.size() ; i++){ //from 1 because first state might be NaN
+    std::map<int, Eigen::Vector4d> old_ship_states;
+    for(int i = timestep; i < unique_time_vec.size() ; i++){ 
         std::cout << "timestep: " << i << std::endl;
         int ot_en = 0;
         for(auto& [ship_id, current_ship_intention_model] : ship_intentions){
             std::cout << "ship_id: " << ship_id << std::endl;
             int j = getShipListIndex(ship_id,ship_list);
-            //current_ship_intention_model.insertObservation(parameters,ot_en, ship_state[i], ship_list, false, unique_time_vec[i], x_vec[unique_time_vec.size()*j+i], y_vec[unique_time_vec.size()*j+i], intentionFile); //writes intantion variables to file as well
-            if (j == 0){
-                result_0 = current_ship_intention_model.insertObservationRelativeSituation(result_0, parameters,ot_en, ship_state[i], ship_list, false, unique_time_vec[i], x_vec[unique_time_vec.size()*j+i], y_vec[unique_time_vec.size()*j+i], intentionFile);
-            }
-            if (j == 1){
-                result_1 = current_ship_intention_model.insertObservationRelativeSituation(result_1, parameters,ot_en, ship_state[i], ship_list, false, unique_time_vec[i], x_vec[unique_time_vec.size()*j+i], y_vec[unique_time_vec.size()*j+i], intentionFile);
-            }
+            auto CPA = INTENTION_INFERENCE::evaluateCPA(INTENTION_INFERENCE::better_at(ship_state[i], ship_list[1]), INTENTION_INFERENCE::better_at(ship_state[i], ship_list[2]));
+            current_ship_intention_model.insertObservation(parameters,ot_en, ship_state[i],old_ship_states, ship_list, false, unique_time_vec[i], x_vec[unique_time_vec.size()*j+i], y_vec[unique_time_vec.size()*j+i], intentionFile); //writes intantion variables to file as well
+            //current_ship_intention_model.insertObservationRelativeSituation(parameters,ot_en,ship_state[i],ship_list, false, unique_time_vec[i], x_vec[unique_time_vec.size()*j+i], y_vec[unique_time_vec.size()*j+i], intentionFile);
+            
     }
    }
     intentionFile.close(); 
@@ -176,7 +163,7 @@ INTENTION_INFERENCE::IntentionModelParameters setModelParameters(int num_ships){
     param.starting_cpa_distance = 10000;
 	param.expanding_dbn.min_time_s = 10;
 	param.expanding_dbn.max_time_s = 1200;
-	param.expanding_dbn.min_course_change_rad = 0.13;
+	param.expanding_dbn.min_course_change_rad = 0.22;
 	param.expanding_dbn.min_speed_change_m_s = 0.5;
 	param.ample_time_s.mu = 200;
 	param.ample_time_s.sigma = 100;
@@ -195,7 +182,7 @@ INTENTION_INFERENCE::IntentionModelParameters setModelParameters(int num_ships){
 	param.safe_distance_front_m.sigma = 20;
 	param.safe_distance_front_m.max = 1000;
 	param.safe_distance_front_m.n_bins = 30; // this value must match the bayesian network
-	param.change_in_course_rad.minimal_change = 0.13;
+	param.change_in_course_rad.minimal_change = 0.22;
 	param.change_in_speed_m_s.minimal_change = 1;
 	param.colregs_situation_borders_rad.HO_uncertainty_start = 2.79;
 	param.colregs_situation_borders_rad.HO_start = 2.96;
@@ -225,10 +212,21 @@ int main(){
     //std::string filename = "new_Case - 01-08-2021, 08-21-29 - AQ5VM-60-sec-two-ships.csv"; //overtaking must start at timestep 4
     //std::string filename = "new_Case - 01-15-2020, 09-05-49 - VATEN-60-sec-two-ships.csv"; //overtaking
     //std::string filename  = "new_Case - 01-17-2018, 06-26-20 - W4H51-60-sec.csv";
-    std::string filename = "new_Case - 05-26-2019, 20-39-57 - 60GEW-60-sec.csv";
+    //std::string filename = "new_Case - 05-26-2019, 20-39-57 - 60GEW-60-sec.csv";
+    //std::string filename = "new_Case - 01-04-2020, 15-34-37 - 7SWX4-60-sec.csv"; //overtake
+    //std::string filename = "new_Case - 02-01-2018, 15-50-25 - C1401-60-sec.csv"; //head-on corr
+    //std::string filename = "new_Case - 01-09-2018, 03-55-18 - QZPS3-60-sec.csv"; //ho wr
+    //std::string filename = "new_1_Case - 07-09-2019, 05-52-22 - O7LU9-60-sec.csv"; //weird start
+    std::string filename = "new_1_Case - 08-09-2018, 19-12-24 - 4XJ3B-60-sec.csv"; //not unmodeled
+    //std::string filename = "new_1_Case - 06-25-2019, 14-22-43 - OO430-60-sec.csv"; //not unmodeled
+    //std::string filename = "new_1_Case - 12-02-2018, 20-10-07 - PW6UL-60-sec.csv"; //unmodeled
+    //std::string filename = "new_1_Case - 07-18-2019, 05-46-19 - W6ZUC-60-sec.csv";
+    //std::string filename = "new_1_Case - 09-17-2018, 18-24-32 - 0URFX-60-sec.csv";
 
-    //std::string intentionModelFilename = "intention_model_with_risk_of_collision.xdsl";
-    std::string intentionModelFilename = "intention_model_two_ships.xdsl";
+
+    std::string intentionModelFilename = "intention_model_with_risk_of_collision.xdsl";
+    //std::string intentionModelFilename = "intention_model_two_ships.xdsl";
+    //std::string intentionModelFilename = "intention_model_with_risk_of_collision_no_startpoint.xdsl";
 
     std::vector<std::map<int, Eigen::Vector4d> > ship_state;
     std::vector<int> mmsi_vec;
@@ -256,8 +254,8 @@ int main(){
             std::cout<< "dist: " << dist << std::endl;
             auto CPA = evaluateCPA(INTENTION_INFERENCE::better_at(ship_state[timestep], ship_list[1]), INTENTION_INFERENCE::better_at(ship_state[timestep], ship_list[2]));
             std::cout<< "CPA dist: " << CPA.distance_at_CPA << std::endl;
-            if ((dist < parameters.starting_distance) && (sog_vec[timestep]>0.5) && (sog_vec[unique_time_vec.size()+timestep]>0.5)){ // && (CPA.distance_at_CPA < parameters.starting_cpa_distance) ){ //only checks the speed for two ships
-            ship_intentions.insert(std::pair<int, INTENTION_INFERENCE::IntentionModel>(ship_list[i], INTENTION_INFERENCE::IntentionModel(intentionModelFilename,parameters,ship_list[i],ship_state[timestep]))); //ship_state[1] as initial as first state might be NaN
+            if ((dist < parameters.starting_distance) && (sog_vec[timestep]>0.1) && (sog_vec[unique_time_vec.size()+timestep]>0.1) && timestep>1){ // && (CPA.distance_at_CPA < parameters.starting_cpa_distance) ){ //only checks the speed for two ships
+            ship_intentions.insert(std::pair<int, INTENTION_INFERENCE::IntentionModel>(ship_list[i], INTENTION_INFERENCE::IntentionModel(intentionModelFilename,parameters,ship_list[i],ship_state[timestep]))); 
             inserted = true;
             }
         }
