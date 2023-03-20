@@ -224,9 +224,9 @@ int main(){
     //std::string filename = "new_1_Case - 09-17-2018, 18-24-32 - 0URFX-60-sec.csv";
 
 
-    std::string intentionModelFilename = "intention_model_with_risk_of_collision.xdsl";
+    //std::string intentionModelFilename = "intention_model_with_risk_of_collision.xdsl";
     //std::string intentionModelFilename = "intention_model_two_ships.xdsl";
-    //std::string intentionModelFilename = "intention_model_with_risk_of_collision_no_startpoint.xdsl";
+    std::string intentionModelFilename = "intention_model_with_risk_of_collision_no_startpoint.xdsl";
 
     std::vector<std::map<int, Eigen::Vector4d> > ship_state;
     std::vector<int> mmsi_vec;
@@ -254,7 +254,7 @@ int main(){
             std::cout<< "dist: " << dist << std::endl;
             auto CPA = evaluateCPA(INTENTION_INFERENCE::better_at(ship_state[timestep], ship_list[1]), INTENTION_INFERENCE::better_at(ship_state[timestep], ship_list[2]));
             std::cout<< "CPA dist: " << CPA.distance_at_CPA << std::endl;
-            if ((dist < parameters.starting_distance) && (sog_vec[timestep]>0.1) && (sog_vec[unique_time_vec.size()+timestep]>0.1) && timestep>1){ // && (CPA.distance_at_CPA < parameters.starting_cpa_distance) ){ //only checks the speed for two ships
+            if ((dist < parameters.starting_distance) && (sog_vec[timestep]>0.1) && (sog_vec[unique_time_vec.size()+timestep]>0.1) && timestep>8){ // && (CPA.distance_at_CPA < parameters.starting_cpa_distance) ){ //only checks the speed for two ships
             ship_intentions.insert(std::pair<int, INTENTION_INFERENCE::IntentionModel>(ship_list[i], INTENTION_INFERENCE::IntentionModel(intentionModelFilename,parameters,ship_list[i],ship_state[timestep]))); 
             inserted = true;
             }
