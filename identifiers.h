@@ -16,9 +16,9 @@ namespace INTENTION_INFERENCE
     unsigned discretizer(double input, int max, int n_bins)
     {
         if (!std::isfinite(input) || std::floor(input * n_bins / max) > INT_MAX)
-            return n_bins - 1;
+            return n_bins-1;
         else
-            return std::clamp(int(std::floor(input * n_bins / max)), 0, n_bins - 1);
+            return std::clamp(int(std::floor(input * n_bins / max)), 0, n_bins-1);
     }
 
     unsigned timeIdentifier(const IntentionModelParameters &parameters, double time_s)
@@ -29,6 +29,11 @@ namespace INTENTION_INFERENCE
     {
         return discretizer(distance_m, parameters.safe_distance_m.max, parameters.safe_distance_m.n_bins);
     }
+    unsigned lowresCPADistanceIdentifier(const IntentionModelParameters &parameters, double distance_m)
+    {
+        std::cout << "In lowres bin: " << discretizer(distance_m, parameters.risk_distance_m.max, parameters.risk_distance_m.n_bins) << "\n";
+        return discretizer(distance_m, parameters.risk_distance_m.max, parameters.risk_distance_m.n_bins);
+    }
     unsigned twotimesDistanceToMidpointIdentifier(const IntentionModelParameters &parameters, double distance_to_midpoint_m)
     {
         return discretizer(2 * distance_to_midpoint_m, parameters.safe_distance_midpoint_m.max, parameters.safe_distance_midpoint_m.n_bins);
@@ -36,6 +41,11 @@ namespace INTENTION_INFERENCE
     unsigned crossInFrontHighresIdentifier(const IntentionModelParameters &parameters, double distance_m)
     {
         return discretizer(2 * distance_m, parameters.safe_distance_front_m.max, parameters.safe_distance_front_m.n_bins);
+    }
+    unsigned crossInFrontLowresIdentifier(const IntentionModelParameters &parameters, double distance_m)
+    {
+        std::cout << "In front bin: " << discretizer(2 * distance_m, parameters.risk_distance_front_m.max, parameters.risk_distance_front_m.n_bins) << "\n";
+        return discretizer(2 * distance_m, parameters.risk_distance_front_m.max, parameters.risk_distance_front_m.n_bins);
     }
 
     //Side of other ship at CPA

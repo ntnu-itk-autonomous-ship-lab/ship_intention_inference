@@ -252,8 +252,11 @@ public:
         auto node_definition = net.GetNode(node_id)->Definition();
         DSL_doubleArray CPT(node_definition->GetMatrix()->GetSize());
         CPT[0] = evaluateBinProbability(-INFINITY, bin_width, mu, sigma); //First bin takes everything below 0 aswell
+        std::cout << "\n Distribution added for colreg sit (" <<node_name<<") :\n" ;
+        std::cout << "CPT0: " << CPT[0] << "\n";
         for(auto i=1; i<CPT.GetSize()-1; ++i){
             CPT[i] = evaluateBinProbability(i*bin_width, (i+1)*bin_width, mu, sigma);
+            std::cout << CPT[i] << " ";
         }
         CPT[CPT.GetSize()-1] = evaluateBinProbability((CPT.GetSize()-1)*bin_width, INFINITY, mu, sigma); //Last bin takes everything above max
         setDefinition(node_name, CPT);
@@ -356,6 +359,12 @@ public:
         assert(res>=0);
     }
 
+    void restartTime(){
+        const auto number_of_time_slices = 0;
+        const auto res = net.SetNumberOfSlices(number_of_time_slices);
+        assert(res>=0);
+    }
+
     auto evaluateStates(std::vector<std::string> node_names){
         const auto current_time_slice = net.GetNumberOfSlices()-1;
 
@@ -378,7 +387,7 @@ public:
         return return_value;
     }
 
-    void removeEarlyTimeSteps(int min_number_of_timesteps_)
+    void removeEarlyTimeSteps(int min_number_of_timesteps_) //must decrement time equal times to number of pop front of evidence
     {
         const auto number_of_time_slices = net.GetNumberOfSlices();
         auto node_id = getNodeId("unmodelled_behaviour");
@@ -407,6 +416,10 @@ public:
         //temporal_evidence_.push_back(std::map<int, int>{});
         std::cout << " After push: " << temporal_evidence_.size() << std::endl;
         //temporal_virtual_evidence_.push_back(std::map<int, std::vector<double>>{});
+    }
+
+    void clearEvidence(){
+        net.ClearAllEvidence();
     }
 
     auto getNumberOfTimeSteps()const{
