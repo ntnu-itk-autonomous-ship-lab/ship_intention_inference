@@ -599,8 +599,8 @@
 		<cpt id="Current_risk_of_collision_towards_ship0" dynamic="plate">
 			<state id="false" />
 			<state id="true" />
-			<parents>Current_risk_of_collision_CPA_towards_ship0 Current_risk_of_collision_front_towards_ship0</parents>
-			<probabilities>1 0 0 1 0 1 0 1</probabilities>
+			<parents>Current_risk_of_collision_CPA_towards_ship0</parents>
+			<probabilities>1 0 0 1</probabilities>
 		</cpt>
 		<cpt id="risk_of_collision_towards_ship_0" dynamic="plate">
 			<state id="false" />

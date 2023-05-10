@@ -37,13 +37,14 @@ namespace INTENTION_INFERENCE
 		//const std::vector<std::string> intention_node_names_general = {"intention_colregs_compliant", "intention_good_seamanship", "intention_safe_distance", "intention_safe_distance_front", "intention_safe_distance_midpoint", "intention_ample_time", "intention_ignoring_safety", "unmodelled_behaviour"};
 		const std::vector<std::string> intermediate_node_names_ship_specific = {"risk_of_collision_towards_", "is_pre_ample_time_to_", "safe_distance_at_CPA_towards_", "safe_crossing_front_towards_", "safe_distance_to_", "safe_distance_to_midpoint_", "gives_way_correct_towards_", "Observation_applicable_towards_", "role_towards_", "good_seamanship_to_", "Current_risk_of_collision_CPA_towards_", "Current_risk_of_collision_front_towards_", "Current_risk_of_collision_towards_"};
 		//const std::vector<std::string> intermediate_node_names_ship_specific = {"is_pre_ample_time_to_", "safe_distance_at_CPA_towards_", "safe_crossing_front_towards_", "safe_distance_to_", "safe_distance_to_midpoint_", "gives_way_correct_towards_", "Observation_applicable_towards_", "role_towards_", "good_seamanship_to_"};
-		std::vector<std::string> intermediate_node_names_general = {"has_turned_portwards", "has_turned_starboardwards", "observation_applicable", "stands_on_correct", "change_in_speed"};
+		std::vector<std::string> intermediate_node_names_general = {"has_turned_portwards", "has_turned_starboardwards", "observation_applicable", "stands_on_correct", "change_in_speed", "is_changing_course"};
 		std::vector<std::string> all_node_names;
 		const std::string output_name = "observation_applicable";
 
 		const std::map<int, Eigen::Vector4d> initial_ship_states;
 		std::map<int, Eigen::Vector4d> previously_saved_ship_states;
 		std::map<int, double> time_last_saved_shipstate;
+		
 
 		bool doSave(const std::map<int, Eigen::Vector4d> &ship_states, double time)
 		{
@@ -78,21 +79,26 @@ namespace INTENTION_INFERENCE
 			return false;
 		}
 
-		void check_remove_steps(std::map<std::string,std::map<std::string,double>> result, double cpa) {
+		void check_remove_steps(std::map<std::string,std::map<std::string,double>> result, double cpa, std::vector<std::map<int, Eigen::Vector4d > > ship_state_vec, std::map<int,Eigen::Vector4d> & new_initial_ship_states) {
 			double unmodeled = better_at(better_at(result, "unmodelled_behaviour"), "true");
 			double seamanship = better_at(better_at(result, "intention_good_seamanship"), "true");
 			double time_cpa = cpa;
 			double cost_remove_steps = time_cpa*unmodeled+0.8*(1-seamanship)*time_cpa;
-			int min_timesteps = 10;
+			int min_timesteps = 6;
 			std::cout << "unmodeled: " << unmodeled << std::endl;
 			std::cout << "sea: " << seamanship << std::endl;
 			std::cout << "cost: " << cost_remove_steps << std::endl;
-			if ((unmodeled>0.3 || seamanship<0.2) && time_cpa > 120 && cost_remove_steps>150){
+			if ((unmodeled>0.3 || seamanship<0.2) && time_cpa > 50 && cost_remove_steps>50){
 				net.removeEarlyTimeSteps(min_timesteps);
 				std::cout << "removed cost: " << cost_remove_steps << " unmodeled: " << unmodeled <<std::endl;
-				
+				std::map<int, Eigen::Vector4d > new_states = get_new_initial_states(15,ship_state_vec);
+				new_initial_ship_states[my_id] = better_at(new_states, my_id);
 			}
 
+		}
+
+		std::map<int, Eigen::Vector4d > get_new_initial_states(int timestep,std::vector<std::map<int, Eigen::Vector4d > > ship_state){
+			return ship_state[timestep];
 		}
 
 		void restart(){
@@ -142,6 +148,11 @@ namespace INTENTION_INFERENCE
         			}
 			auto change_in_speed = better_at(better_at(result, "change_in_speed"), "true");
 			intentionFile << change_in_speed << ",";
+
+			auto check_is_changing_course = better_at(better_at(result, "is_changing_course"), "true");
+			std::cout<< "check is changing course: " << check_is_changing_course << std::endl;
+			intentionFile << check_is_changing_course << ",";
+
 			auto stands_on_correct = better_at(better_at(result, "stands_on_correct"), "true");
 			auto observation_applicable = better_at(better_at(result, "observation_applicable"), "true");
 			
@@ -208,7 +219,7 @@ namespace INTENTION_INFERENCE
 					
 					auto current_risk_of_collision = better_at(better_at(result, "Current_risk_of_collision_towards_" + ship_name), "true");
 					std::cout << "Current collision risk: " << current_risk_of_collision << "\n";
-					intentionFile << current_risk_of_collision;
+					intentionFile << current_risk_of_collision<<",";
 					auto current_cpa_risk_of_collision = better_at(result, "Current_risk_of_collision_CPA_towards__" + ship_name);
 					std::cout << "Current cpa collision risk: "  <<  "\n";
 					for(auto it = current_cpa_risk_of_collision.cbegin(); it != current_cpa_risk_of_collision.cend(); ++it){
@@ -223,7 +234,7 @@ namespace INTENTION_INFERENCE
 					
 				}
 			}
-			intentionFile << "\n";
+			
 
 		}
 
@@ -348,7 +359,7 @@ namespace INTENTION_INFERENCE
 			net.save_network("intention_model_from_code.xdsl");
 		}
 
-		std::map<std::string, double> insertObservationRelativeSituation(const IntentionModelParameters parameters, int &ot_en, const std::map<int, Eigen::Vector4d> ship_states, std::vector<int> currently_tracked_ships, bool is_changing_course, double time, double x, double y, std::ofstream &intentionFile)
+		std::map<std::string, double> insertObservationRelativeSituation(const IntentionModelParameters parameters, int &ot_en, std::map<int, Eigen::Vector4d> ship_states, std::vector<int> currently_tracked_ships, bool is_changing_course, double time, double x, double y, std::ofstream &intentionFile)
 		{
 			std::map<std::string, double> situation;
 			
@@ -381,7 +392,7 @@ namespace INTENTION_INFERENCE
 			return situation;
 		}
 
-		bool insertObservation(const IntentionModelParameters parameters, bool & start,bool new_timestep, std::map<int,bool> & current_risk, std::map<int,Eigen::Vector4d> & new_initial_ship_states, std::map<int, bool>& risk_of_collision, const std::map<int, Eigen::Vector4d> ship_states, std::map<int, Eigen::Vector4d> &old_ship_states, std::vector<int> currently_tracked_ships, bool is_changing_course, double time, double x, double y, std::ofstream &intentionFile)
+		bool insertObservation(const IntentionModelParameters parameters, bool & start,bool new_timestep, std::map<int,double> check_changing_course, std::map<int,bool> & current_risk, std::map<int,Eigen::Vector4d> & new_initial_ship_states, std::map<int, bool>& risk_of_collision, const std::map<int, Eigen::Vector4d> ship_states, std::vector<std::map<int, Eigen::Vector4d>> ship_states_vec, std::map<int, Eigen::Vector4d> last_ship_states, std::map<int, Eigen::Vector4d> &old_ship_states, std::vector<int> currently_tracked_ships, bool is_changing_course, double time, double x, double y, std::ofstream &intentionFile)
 		{
 
 			bool did_save = false;
@@ -415,6 +426,8 @@ namespace INTENTION_INFERENCE
 			
 			net.setEvidence("change_in_speed", changeInSpeedIdentifier(parameters, better_at(ship_states, my_id)[U], new_initial_ship_states[my_id][U]));
 
+			is_changing_course = currentChangeInCourseIdentifier(better_at(ship_states, my_id)[CHI], last_ship_states[my_id][CHI]);
+			bool other_is_changing_course = false;
 			net.setEvidence("is_changing_course", is_changing_course);  
 
 
@@ -426,6 +439,7 @@ namespace INTENTION_INFERENCE
 			{
 				if (ship_id != my_id)
 				{
+					other_is_changing_course = currentChangeInCourseIdentifier(better_at(ship_states, ship_id)[CHI], last_ship_states[ship_id][CHI]);
 					const std::string ship_name = better_at(ship_name_map, ship_id);
 					const auto ship_state = better_at(ship_states, ship_id);
 					handled_ship_names.push_back(ship_name);
@@ -498,6 +512,7 @@ namespace INTENTION_INFERENCE
 			net.setEvidence(output_name, "true");
 			std::map<std::string,std::map<std::string,double>> result = net.evaluateStates(all_node_names);
 			int other_ship_id;
+			
 			for (auto const &ship_id : currently_tracked_ships)
 			{
 				if (ship_id != my_id)
@@ -507,44 +522,68 @@ namespace INTENTION_INFERENCE
 					auto result_risk_of_collision = better_at(better_at(result, "risk_of_collision_towards_"+ ship_name), "true");
 					auto result_me_risk_of_collision = better_at(better_at(result, "risk_of_collision_towards_"+ my_ship_name), "true");
 					current_risk[my_id] = false;
+					check_changing_course[my_id] = better_at(better_at(result, "is_changing_course"), "true");
+					other_ship_id = ship_id;
 					std::cout << "Before write: " << result_risk_of_collision << std::endl;
-					if(result_risk_of_collision>0.9 && !is_changing_course && (cpa.time_untill_CPA<600)){
+					if(result_risk_of_collision>0.9 && !check_changing_course[my_id] &&!check_changing_course[other_ship_id] && (cpa.time_untill_CPA<600)){
 						risk_of_collision[my_id] = true;
 						current_risk[my_id] = true;
 						
 					}
-					other_ship_id = ship_id;
+					
 					
 				}
 			}
 
-			
+			write_results_to_file(result, intentionFile, time, x, y);
 
-			if(risk_of_collision[my_id] && risk_of_collision[other_ship_id] && !is_changing_course &&  (new_timestep || start)){
+			if(risk_of_collision[my_id] && risk_of_collision[other_ship_id] &&  (new_timestep || start)){
 				
-				if((!start && current_risk[my_id] && current_risk[other_ship_id]) || start){
-					write_results_to_file(result, intentionFile, time, x, y);
+				if((!start && current_risk[my_id]) || start){
+					if(new_timestep && !start && !is_changing_course && !other_is_changing_course || start){
+						//write_results_to_file(result, intentionFile, time, x, y);
 
-				//check_remove_steps(result, time_to_cpa);
+						//check_remove_steps(result, time_to_cpa, ship_states_vec, new_initial_ship_states);
 
-					net.add_to_dequeue();
+						net.add_to_dequeue();
 
-					net.incrementTime();
-					did_save = true;
-					if (!start){
-						new_initial_ship_states[my_id] = better_at(ship_states, my_id);
+						net.incrementTime();
+						did_save = true;
+						if (!start){
+							new_initial_ship_states[my_id] = better_at(ship_states, my_id);
+							intentionFile << 1;
+						}
+						else {
+							intentionFile << 0;
+						}
+						start = true;
 					}
-					start = true;
+					else{
+						intentionFile << 0;
+						
+
+					}
 				}
 				else{
 					net.clearEvidence();
 					new_initial_ship_states[my_id] = better_at(ship_states, my_id);
+					intentionFile << 0;
+					std::cout << "if: " << new_timestep << std::endl;
+					std::cout << is_changing_course << std::endl;
+					std::cout << other_is_changing_course << std::endl;
 				}
 			}
 			else{
 				net.clearEvidence();
 				new_initial_ship_states[my_id] = better_at(ship_states, my_id);
+				intentionFile << 0;
 			}
+
+			std::cout<< "New initial states: " << new_initial_ship_states[my_id][CHI] << std::endl;
+
+			intentionFile << "\n";
+
+	
 			
 
 			return did_save;

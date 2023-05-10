@@ -131,16 +131,19 @@ void writeIntentionToFile(int timestep, INTENTION_INFERENCE::IntentionModelParam
     std::ofstream intentionFile;
     std::string filename_intention = "intention_files/nostart_intention_"+filename;
     intentionFile.open (filename_intention);
-    intentionFile << "mmsi,x,y,time,colreg_compliant,good_seamanship,unmodeled_behaviour,has_turned_portwards,has_turned_starboardwards,change_in_speed,CR_PS,CR_SS,HO,OT_en,OT_ing,priority_lower,priority_similar,priority_higher,risk_of_collision,current_risk_of_collision\n"; //,CR_SS2,CR_PS2,OT_ing2,OT_en2,priority_lower2,priority_similar2,priority_higher2\n";
+    intentionFile << "mmsi,x,y,time,colreg_compliant,good_seamanship,unmodeled_behaviour,has_turned_portwards,has_turned_starboardwards,change_in_speed,is_changing_course,CR_PS,CR_SS,HO,OT_en,OT_ing,priority_lower,priority_similar,priority_higher,risk_of_collision,current_risk_of_collision,start\n"; //,CR_SS2,CR_PS2,OT_ing2,OT_en2,priority_lower2,priority_similar2,priority_higher2\n";
     //intentionFile << "mmsi,x,y,time,colreg_compliant,good_seamanship,unmodeled_behaviour,CR_PS,CR_SS,HO,OT_en,OT_ing,priority_lower,priority_similar,priority_higher\n"; //,CR_SS2,CR_PS2,OT_ing2,OT_en2,priority_lower2,priority_similar2,priority_higher2\n";
     //intentionFile << "mmsi,x,y,time,CR_PS,CR_SS,HO,OT_en,OT_ing\n";
     std::map<int, bool> risk_of_collision;
     std::map<int,bool> current_risk;
     std::map<int,Eigen::Vector4d> new_initial_ship_states;
+    std::map<int,Eigen::Vector4d> last_ship_states;
+    std::map<int,double> check_changing_course;
     for(int ship_id : ship_list){
         risk_of_collision[ship_id] = false;
         current_risk[ship_id] = false;
         new_initial_ship_states[ship_id] = INTENTION_INFERENCE::better_at(ship_state[timestep], ship_id);
+        last_ship_states[ship_id] = new_initial_ship_states[ship_id];
     }
 
     std::map<int, Eigen::Vector4d> old_ship_states;
@@ -155,7 +158,7 @@ void writeIntentionToFile(int timestep, INTENTION_INFERENCE::IntentionModelParam
             std::cout << "ship_id: " << ship_id << std::endl;
             int j = getShipListIndex(ship_id,ship_list);
             auto CPA = INTENTION_INFERENCE::evaluateCPA(INTENTION_INFERENCE::better_at(ship_state[i], ship_list[1]), INTENTION_INFERENCE::better_at(ship_state[i], ship_list[2]));
-            current_ship_intention_model.insertObservation(parameters,start,new_timestep, current_risk, new_initial_ship_states, risk_of_collision, ship_state[i],old_ship_states, ship_list, false, unique_time_vec[i], x_vec[unique_time_vec.size()*j+i], y_vec[unique_time_vec.size()*j+i], intentionFile); //writes intantion variables to file as well
+            current_ship_intention_model.insertObservation(parameters,start,new_timestep, check_changing_course, current_risk, new_initial_ship_states, risk_of_collision, ship_state[i],ship_state, ship_state[i-1], old_ship_states, ship_list, false, unique_time_vec[i], x_vec[unique_time_vec.size()*j+i], y_vec[unique_time_vec.size()*j+i], intentionFile); //writes intantion variables to file as well
             //current_ship_intention_model.insertObservationRelativeSituation(parameters,ot_en,ship_state[i],ship_list, false, unique_time_vec[i], x_vec[unique_time_vec.size()*j+i], y_vec[unique_time_vec.size()*j+i], intentionFile);
             new_timestep = false;
     }
@@ -170,7 +173,7 @@ INTENTION_INFERENCE::IntentionModelParameters setModelParameters(int num_ships){
     param.number_of_network_evaluation_samples = 100000;
 	param.max_number_of_obstacles = num_ships-1; //must be set to num_ships-1 or else segmantation fault
 	param.time_into_trajectory = 10;
-    param.starting_distance = 15000;
+    param.starting_distance = 10000;
     param.starting_cpa_distance = 15000;
 	param.expanding_dbn.min_time_s = 10;
 	param.expanding_dbn.max_time_s = 1200;
@@ -212,9 +215,9 @@ INTENTION_INFERENCE::IntentionModelParameters setModelParameters(int num_ships){
 	param.colregs_situation_borders_rad.OT_stop = -2.18;
 	param.colregs_situation_borders_rad.OT_uncertainty_stop = -1.74;
 	param.ignoring_safety_probability = 0;
-	param.colregs_compliance_probability = 0.98;
-    param.good_seamanship_probability = 0.99;
-	param.unmodeled_behaviour = 0.001;
+	param.colregs_compliance_probability = 0.95;
+    param.good_seamanship_probability = 0.98;
+	param.unmodeled_behaviour = 0.002;
 	param.priority_probability["lower"] = 0.05;
 	param.priority_probability["similar"] = 0.9;
 	param.priority_probability["higher"] = 0.05;
@@ -235,8 +238,8 @@ int main(){
     //std::string filename = "new_Case - 01-04-2020, 15-34-37 - 7SWX4-60-sec.csv"; //overtake
     //std::string filename = "new_Case - 02-01-2018, 15-50-25 - C1401-60-sec.csv"; //head-on corr
     //std::string filename = "new_Case - 01-09-2018, 03-55-18 - QZPS3-60-sec.csv"; //ho wr
-    //std::string filename = "new_1_Case - 07-09-2019, 05-52-22 - O7LU9-60-sec.csv"; //weird start
-    std::string filename = "new_1_Case - 08-09-2018, 19-12-24 - 4XJ3B-60-sec.csv"; //not unmodeled
+    std::string filename = "new_1_Case - 07-09-2019, 05-52-22 - O7LU9-60-sec.csv"; //weird start
+    //std::string filename = "new_1_Case - 08-09-2018, 19-12-24 - 4XJ3B-60-sec.csv"; //not unmodeled
     //std::string filename = "new_1_Case - 06-25-2019, 14-22-43 - OO430-60-sec.csv"; //not unmodeled
     //std::string filename = "new_1_Case - 12-02-2018, 20-10-07 - PW6UL-60-sec.csv"; //unmodeled
     //std::string filename = "new_1_Case - 07-18-2019, 05-46-19 - W6ZUC-60-sec.csv";
@@ -273,7 +276,7 @@ int main(){
             std::cout<< "dist: " << dist << std::endl;
             auto CPA = evaluateCPA(INTENTION_INFERENCE::better_at(ship_state[timestep], ship_list[1]), INTENTION_INFERENCE::better_at(ship_state[timestep], ship_list[2]));
             std::cout<< "CPA dist: " << CPA.distance_at_CPA << std::endl;
-            if ((dist < parameters.starting_distance) && (sog_vec[timestep]>0.1) && (sog_vec[unique_time_vec.size()+timestep]>0.1) && timestep>6){ // && (CPA.distance_at_CPA < parameters.starting_cpa_distance) ){ //only checks the speed for two ships
+            if ((dist < parameters.starting_distance) && (sog_vec[timestep]>0.1) && (sog_vec[unique_time_vec.size()+timestep]>0.1) && timestep>0){ // && (CPA.distance_at_CPA < parameters.starting_cpa_distance) ){ //only checks the speed for two ships
             ship_intentions.insert(std::pair<int, INTENTION_INFERENCE::IntentionModel>(ship_list[i], INTENTION_INFERENCE::IntentionModel(intentionModelFilename,parameters,ship_list[i],ship_state[timestep]))); 
             inserted = true;
             }

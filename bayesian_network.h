@@ -111,8 +111,11 @@ class BayesianNetwork{
 
     void apply_evidence()
     {
-        net.ClearAllEvidence();
-
+        //net.ClearAllEvidence();
+        clearEvidence();
+        restartTime();
+        
+        /*
         // normal evidence
         for (const auto &[node_id, outcome_id] : evidence_)
         {
@@ -128,17 +131,19 @@ class BayesianNetwork{
                 printf("ERROR: Set virtual evidence on node \"%d\" resulted in error", node_id);
             assert(res >= 0);
         }
+        */
         int i = 0;
         for (auto evidence : temporal_evidence_)
         {
             for (const auto &[node_id, outcome_id] : evidence)
             {
-                const auto res = net.GetNode(node_id)->Value()->SetTemporalEvidence(i, outcome_id);
+                const auto res = net.GetNode(node_id)->Value()->SetEvidence(outcome_id);
                 if (res < 0)
                     printf("ERROR: Set temporal evidence (slice=%d, outcome_id=%d) on node \"%d\" resulted in error", i, outcome_id, node_id);
                 assert(res >= 0);
             }
             ++i;
+            incrementTime();
             
         }
         i = 0;
@@ -402,16 +407,19 @@ public:
         {
             int num_pop = 0;
             std::cout << "Else \n";
-            while (num_pop<10){
+            while (num_pop<4){
                 std::cout << "while \n";
                 std::cout << "Before: " << temporal_evidence_.size();
                 temporal_evidence_.pop_front();
                 std::cout << " After pop: " << temporal_evidence_.size();
                 temporal_virtual_evidence_.pop_front();
                 num_pop ++;
+                
+                
             }
             apply_evidence();
-            std::cout << " After apply: " << temporal_evidence_.size();
+            //std::cout << " After apply: " << temporal_evidence_.size();
+            
         }
         //temporal_evidence_.push_back(std::map<int, int>{});
         std::cout << " After push: " << temporal_evidence_.size() << std::endl;

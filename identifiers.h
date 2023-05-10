@@ -89,6 +89,19 @@ namespace INTENTION_INFERENCE
         return new_initial_states;
     }
 
+   bool currentChangeInCourseIdentifier(double current_course, double last_course){
+        auto minimal_change = 0.06;
+        if (current_course - last_course > minimal_change)
+        {
+            return true;
+        }
+        else if (last_course - current_course > minimal_change)
+        {
+            return true;
+        }
+        return false;
+    }
+
     std::string changeInCourseIdentifier(const IntentionModelParameters &parameters, double current_course, double initial_course)
     {
         auto minimal_change = parameters.change_in_course_rad.minimal_change;
