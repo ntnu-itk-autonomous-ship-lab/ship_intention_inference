@@ -36,8 +36,8 @@ namespace INTENTION_INFERENCE
 		//const std::vector<std::string> intention_node_names_general = {"intention_colregs_compliant", "intention_good_seamanship", "intention_safe_distance", "intention_safe_distance_front", "intention_safe_distance_midpoint", "intention_ample_time", "intention_ignoring_safety", "unmodelled_behaviour","intention_distance_risk_of_collision","intention_distance_risk_of_collision_front"};
 		const std::vector<std::string> intention_node_names_general = {"intention_colregs_compliant", "intention_good_seamanship", "intention_safe_distance", "intention_safe_distance_front", "intention_safe_distance_midpoint", "intention_ample_time", "intention_ignoring_safety", "unmodelled_behaviour"};
 		//const std::vector<std::string> intermediate_node_names_ship_specific = {"is_pre_ample_time_to_", "safe_distance_at_CPA_towards_", "safe_crossing_front_towards_", "safe_distance_to_", "safe_distance_to_midpoint_", "gives_way_correct_towards_", "Observation_applicable_towards_", "role_towards_", "good_seamanship_to_","lowres_distance_at_cpa_towards_","lowres_crossing_distance_front_towards_"};
-		const std::vector<std::string> intermediate_node_names_ship_specific = {"is_pre_ample_time_to_", "safe_distance_at_CPA_towards_", "safe_crossing_front_towards_", "safe_distance_to_", "safe_distance_to_midpoint_", "gives_way_correct_towards_", "Observation_applicable_towards_", "role_towards_", "good_seamanship_to_"};
-		std::vector<std::string> intermediate_node_names_general = {"has_turned_portwards", "has_turned_starboardwards", "observation_applicable", "stands_on_correct"};
+		const std::vector<std::string> intermediate_node_names_ship_specific = {"Observation_applicable_wrt_colregs_towards_", "GWC_or_pre_ample_time_towards_", "is_pre_ample_time_to_", "safe_distance_at_CPA_towards_", "safe_crossing_front_towards_", "safe_distance_to_", "safe_distance_to_midpoint_", "gives_way_correct_towards_", "Observation_applicable_towards_", "role_towards_", "good_seamanship_to_", "risk_of_collision_towards_", "Current_risk_of_collision_towards_"};
+		std::vector<std::string> intermediate_node_names_general = {"has_turned_portwards", "has_turned_starboardwards", "observation_applicable", "stands_on_correct", "change_in_speed", "is_changing_course"};
 		std::vector<std::string> all_node_names;
 		const std::string output_name = "observation_applicable";
 
@@ -111,7 +111,17 @@ namespace INTENTION_INFERENCE
 			auto has_turned_portwards = better_at(better_at(result, "has_turned_portwards"), "true");
 			auto has_turned_starboardwards = better_at(better_at(result, "has_turned_starboardwards"), "true");
 			std::cout << "has_turned_starboardwards: " << has_turned_starboardwards << std::endl;
+			intentionFile << has_turned_starboardwards << ",";
 			std::cout << "has_turned_portwards: " << has_turned_portwards << std::endl;
+			intentionFile << has_turned_portwards << ",";
+
+			auto change_in_speed = better_at(better_at(result, "change_in_speed"), "true");
+			intentionFile << change_in_speed << ",";
+
+			auto check_is_changing_course = better_at(better_at(result, "is_changing_course"), "true");
+			std::cout<< "check is changing course: " << check_is_changing_course << std::endl;
+			intentionFile << check_is_changing_course << ",";
+
 			auto stands_on_correct = better_at(better_at(result, "stands_on_correct"), "true");
 			auto observation_applicable = better_at(better_at(result, "observation_applicable"), "true");
 			
@@ -159,7 +169,21 @@ namespace INTENTION_INFERENCE
 					intentionFile << priority_intention_similar << ",";
 					//std::cout << "priority_intention_similar: " << priority_intention_similar << std::endl;
 					auto autopriority_intention_higher = better_at(better_at(result, "priority_intention_to_" + ship_name), "higher");
-					intentionFile << autopriority_intention_higher;
+					intentionFile << autopriority_intention_higher << ",";
+
+					auto risk_of_collision = better_at(better_at(result, "risk_of_collision_towards_"+ ship_name), "true");
+					intentionFile << risk_of_collision<< ",";
+					std::cout << "Collision risk: " <<  risk_of_collision <<"\n";
+					
+					auto current_risk_of_collision = better_at(better_at(result, "Current_risk_of_collision_towards_" + ship_name), "true");
+					std::cout << "Current collision risk: " << current_risk_of_collision << "\n";
+					intentionFile << current_risk_of_collision;
+
+					auto GWC = better_at(better_at(result, "GWC_or_pre_ample_time_towards_" + ship_name), "true");
+					std::cout << "GWC: " << GWC << std::endl;
+
+					auto obsap = better_at(better_at(result, "Observation_applicable_wrt_colregs_towards_" + ship_name), "true");
+					std::cout << "applicable: " << obsap << std::endl;
 				}
 			}
 			intentionFile << "\n";
@@ -249,8 +273,8 @@ namespace INTENTION_INFERENCE
 			}
 
 			//net.setPriorNormalDistribution("intention_ample_time", parameters.ample_time_s.mu, parameters.ample_time_s.sigma, parameters.ample_time_s.max / parameters.ample_time_s.n_bins);
-			//net.setPriorNormalDistribution("intention_distance_risk_of_collision", parameters.risk_distance_m.mu, parameters.risk_distance_m.sigma, parameters.risk_distance_m.max / parameters.risk_distance_m.n_bins);
-			//net.setPriorNormalDistribution("intention_distance_risk_of_collision_front", parameters.safe_distance_front_m.mu, parameters.safe_distance_front_m.sigma, parameters.safe_distance_front_m.max / parameters.safe_distance_front_m.n_bins);
+			net.setPriorNormalDistribution("intention_distance_risk_of_collision", parameters.risk_distance_m.mu, parameters.risk_distance_m.sigma, parameters.risk_distance_m.max / parameters.risk_distance_m.n_bins);
+			net.setPriorNormalDistribution("intention_distance_risk_of_collision_front", parameters.safe_distance_front_m.mu, parameters.safe_distance_front_m.sigma, parameters.safe_distance_front_m.max / parameters.safe_distance_front_m.n_bins);
 
 			//int colreg_idx = 7;
 			//int cpa_ts_idx = 4;  // per nå lik r_maneuver_own (skal byttes til cpa_ts_idx)
@@ -284,22 +308,24 @@ namespace INTENTION_INFERENCE
 			net.setAmpleTimeDistribution("intention_ample_time", "classified_west_5.csv", cpa_ample_time_idx, timestep, n_bins);
 		}
 
-		bool insertObservation(const IntentionModelParameters parameters, int &ot_en, const std::map<int, Eigen::Vector4d> ship_states, std::vector<int> currently_tracked_ships, bool is_changing_course, double time, double x, double y, std::ofstream &intentionFile)
+		bool insertObservation(const IntentionModelParameters parameters, int &ot_en, const std::map<int, Eigen::Vector4d> ship_states, const std::map<int, Eigen::Vector4d> last_ship_states, std::vector<int> currently_tracked_ships, bool is_changing_course, double time, double x, double y, std::ofstream &intentionFile)
 		{
 
 			bool did_save = false;
-
+			/*
 			if (doSave(ship_states, time))
 			{
 				net.incrementTime();
 				did_save = true;
 			}
-			
+			*/
 		
 			net.setEvidence("change_in_course", changeInCourseIdentifier(parameters, better_at(ship_states, my_id)[CHI], better_at(initial_ship_states, my_id)[CHI]));
 			//std::cout << "change course: " << changeInCourseIdentifier(parameters, better_at(ship_states, my_id)[CHI], better_at(initial_ship_states, my_id)[CHI]) << std::endl;
 			net.setEvidence("change_in_speed", changeInSpeedIdentifier(parameters, better_at(ship_states, my_id)[U], better_at(initial_ship_states, my_id)[U]));
 
+			is_changing_course = currentChangeInCourseIdentifier(better_at(ship_states, my_id)[CHI],better_at(last_ship_states, my_id)[CHI]);
+			
 			net.setEvidence("is_changing_course", is_changing_course);  
 			
 
@@ -332,7 +358,7 @@ namespace INTENTION_INFERENCE
 					net.setEvidence("time_untill_closest_point_of_approach_towards_" + ship_name, timeIdentifier(parameters, cpa.time_untill_CPA));
 
 					net.setEvidence("distance_at_cpa_towards_" + ship_name, highresCPADistanceIdentifier(parameters, cpa.distance_at_CPA));
-					//net.setEvidence("lowres_distance_at_cpa_towards_" + ship_name, highresCPADistanceIdentifier(parameters, cpa.distance_at_CPA));
+					net.setEvidence("lowres_distance_at_cpa_towards_" + ship_name, lowresCPADistanceIdentifier(parameters, cpa.distance_at_CPA));
 
 					double crossing_in_front_distance = crossingInFrontDistance(better_at(ship_states, my_id), ship_state);
 					net.setEvidence("crossing_distance_front_towards_" + ship_name, crossInFrontHighresIdentifier(parameters, crossing_in_front_distance));
@@ -369,7 +395,8 @@ namespace INTENTION_INFERENCE
 
 			net.setEvidence(output_name, "true");
 			evaluate_nodes(intentionFile, time, x, y);
-
+			net.incrementTime();
+			did_save = true;
 			return did_save;
 			
 		}

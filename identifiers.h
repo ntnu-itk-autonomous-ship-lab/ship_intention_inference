@@ -29,6 +29,11 @@ namespace INTENTION_INFERENCE
     {
         return discretizer(distance_m, parameters.safe_distance_m.max, parameters.safe_distance_m.n_bins);
     }
+    unsigned lowresCPADistanceIdentifier(const IntentionModelParameters &parameters, double distance_m)
+    {
+        std::cout << "In lowres bin: " << discretizer(distance_m, parameters.risk_distance_m.max, parameters.risk_distance_m.n_bins) << "\n";
+        return discretizer(distance_m, parameters.risk_distance_m.max, parameters.risk_distance_m.n_bins);
+    }
     unsigned twotimesDistanceToMidpointIdentifier(const IntentionModelParameters &parameters, double distance_to_midpoint_m)
     {
         return discretizer(2 * distance_to_midpoint_m, parameters.safe_distance_midpoint_m.max, parameters.safe_distance_midpoint_m.n_bins);
@@ -68,6 +73,19 @@ namespace INTENTION_INFERENCE
             return "port";
         else
             return "starboard";
+    }
+
+    bool currentChangeInCourseIdentifier(double current_course, double last_course){
+        auto minimal_change = 0.06;
+        if (current_course - last_course > minimal_change)
+        {
+            return true;
+        }
+        else if (last_course - current_course > minimal_change)
+        {
+            return true;
+        }
+        return false;
     }
 
     std::string changeInCourseIdentifier(const IntentionModelParameters &parameters, double current_course, double initial_course)
