@@ -149,19 +149,43 @@ void writeIntentionToFile(int timestep, INTENTION_INFERENCE::IntentionModelParam
     std::map<int, Eigen::Vector4d> old_ship_states;
     bool start = false;
     bool new_timestep;
-   
-    for(int i = timestep; i < unique_time_vec.size() ; i++){ 
+    int added_timestep = timestep;
+    int i = timestep;
+    while( i < unique_time_vec.size()){ 
+    
         std::cout << "timestep: " << i << std::endl;
         new_timestep = true;
         for(auto& [ship_id, current_ship_intention_model] : ship_intentions){
-        
+            if (i>5){
+                //new_initial_ship_states[ship_id] = INTENTION_INFERENCE::better_at(ship_state[timestep+i-5], ship_id);
+            }
             std::cout << "ship_id: " << ship_id << std::endl;
             int j = getShipListIndex(ship_id,ship_list);
             auto CPA = INTENTION_INFERENCE::evaluateCPA(INTENTION_INFERENCE::better_at(ship_state[i], ship_list[1]), INTENTION_INFERENCE::better_at(ship_state[i], ship_list[2]));
+            try{
             current_ship_intention_model.insertObservation(parameters,start,new_timestep, check_changing_course, current_risk, new_initial_ship_states, risk_of_collision, ship_state[i],ship_state, ship_state[i-1], old_ship_states, ship_list, false, unique_time_vec[i], x_vec[unique_time_vec.size()*j+i], y_vec[unique_time_vec.size()*j+i], intentionFile); //writes intantion variables to file as well
+            }
+            catch(double time){
+                std::cout << "Exeption caught!!";
+                intentionFile << "\n";
+                std::cerr << time << std::endl;
+                int end_time= time/60;
+                std::cout << "End time: " << end_time << " and added timestep: " << added_timestep << std::endl;
+                if( end_time > (added_timestep +2)){
+                    added_timestep +=2;
+                    i = added_timestep;
+                }
+                for(int ship_id : ship_list){
+                    new_initial_ship_states[ship_id] = INTENTION_INFERENCE::better_at(ship_state[i], ship_id);
+                }
+                
+                }
+            
+                    
             //current_ship_intention_model.insertObservationRelativeSituation(parameters,ot_en,ship_state[i],ship_list, false, unique_time_vec[i], x_vec[unique_time_vec.size()*j+i], y_vec[unique_time_vec.size()*j+i], intentionFile);
             new_timestep = false;
-    }
+        }
+        i++;
    }
     intentionFile.close(); 
     printf("Finished writing intentions to file \n");
@@ -173,7 +197,7 @@ INTENTION_INFERENCE::IntentionModelParameters setModelParameters(int num_ships){
     param.number_of_network_evaluation_samples = 100000;
 	param.max_number_of_obstacles = num_ships-1; //must be set to num_ships-1 or else segmantation fault
 	param.time_into_trajectory = 10;
-    param.starting_distance = 10000;
+    param.starting_distance = 16000;
     param.starting_cpa_distance = 15000;
 	param.expanding_dbn.min_time_s = 10;
 	param.expanding_dbn.max_time_s = 1200;
@@ -217,7 +241,7 @@ INTENTION_INFERENCE::IntentionModelParameters setModelParameters(int num_ships){
 	param.ignoring_safety_probability = 0;
 	param.colregs_compliance_probability = 0.95;
     param.good_seamanship_probability = 0.98;
-	param.unmodeled_behaviour = 0.002;
+	param.unmodeled_behaviour = 0.005;
 	param.priority_probability["lower"] = 0.05;
 	param.priority_probability["similar"] = 0.9;
 	param.priority_probability["higher"] = 0.05;
@@ -238,8 +262,8 @@ int main(){
     //std::string filename = "new_Case - 01-04-2020, 15-34-37 - 7SWX4-60-sec.csv"; //overtake
     //std::string filename = "new_Case - 02-01-2018, 15-50-25 - C1401-60-sec.csv"; //head-on corr
     //std::string filename = "new_Case - 01-09-2018, 03-55-18 - QZPS3-60-sec.csv"; //ho wr
-    std::string filename = "new_1_Case - 07-09-2019, 05-52-22 - O7LU9-60-sec.csv"; //weird start
-    //std::string filename = "new_1_Case - 08-09-2018, 19-12-24 - 4XJ3B-60-sec.csv"; //not unmodeled
+    //std::string filename = "new_1_Case - 07-09-2019, 05-52-22 - O7LU9-60-sec.csv"; //weird start
+    std::string filename = "new_1_Case - 08-09-2018, 19-12-24 - 4XJ3B-60-sec.csv"; //not unmodeled
     //std::string filename = "new_1_Case - 06-25-2019, 14-22-43 - OO430-60-sec.csv"; //not unmodeled
     //std::string filename = "new_1_Case - 12-02-2018, 20-10-07 - PW6UL-60-sec.csv"; //unmodeled
     //std::string filename = "new_1_Case - 07-18-2019, 05-46-19 - W6ZUC-60-sec.csv";

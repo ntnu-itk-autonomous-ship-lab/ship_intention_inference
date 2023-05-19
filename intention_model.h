@@ -79,21 +79,23 @@ namespace INTENTION_INFERENCE
 			return false;
 		}
 
-		void check_remove_steps(std::map<std::string,std::map<std::string,double>> result, double cpa, std::vector<std::map<int, Eigen::Vector4d > > ship_state_vec, std::map<int,Eigen::Vector4d> & new_initial_ship_states) {
+		bool check_remove_steps(std::map<std::string,std::map<std::string,double>> result, double cpa, std::vector<std::map<int, Eigen::Vector4d > > ship_state_vec) {
 			double unmodeled = better_at(better_at(result, "unmodelled_behaviour"), "true");
 			double seamanship = better_at(better_at(result, "intention_good_seamanship"), "true");
 			double time_cpa = cpa;
-			double cost_remove_steps = time_cpa*unmodeled+0.8*(1-seamanship)*time_cpa;
+			double cost_remove_steps = time_cpa*unmodeled;
 			int min_timesteps = 6;
 			std::cout << "unmodeled: " << unmodeled << std::endl;
 			std::cout << "sea: " << seamanship << std::endl;
 			std::cout << "cost: " << cost_remove_steps << std::endl;
-			if ((unmodeled>0.3 || seamanship<0.2) && time_cpa > 50 && cost_remove_steps>50){
-				net.removeEarlyTimeSteps(min_timesteps);
-				std::cout << "removed cost: " << cost_remove_steps << " unmodeled: " << unmodeled <<std::endl;
-				std::map<int, Eigen::Vector4d > new_states = get_new_initial_states(15,ship_state_vec);
-				new_initial_ship_states[my_id] = better_at(new_states, my_id);
+			if ((unmodeled>0.5 ) && time_cpa > 100 && cost_remove_steps>100){
+				return true;
+				//net.removeEarlyTimeSteps(min_timesteps);
+				//std::cout << "removed cost: " << cost_remove_steps << " unmodeled: " << unmodeled <<std::endl;
+				//std::map<int, Eigen::Vector4d > new_states = get_new_initial_states(15,ship_state_vec);
+				//new_initial_ship_states[my_id] = better_at(new_states, my_id);
 			}
+			return false;
 
 		}
 
@@ -418,7 +420,7 @@ namespace INTENTION_INFERENCE
 				//new_initial_ship_states = newInitialStatesIdentifier(better_at(ship_states, my_id), better_at(initial_ship_states, my_id), time);
 			//}
 
-
+			std::cout << "course: " << better_at(ship_states, my_id)[CHI] << " and " << better_at(new_initial_ship_states, my_id)[CHI] << std::endl;
 			
 			auto change_in_course_deg = RAD2DEG * (better_at(ship_states, my_id)[CHI] - better_at(new_initial_ship_states, my_id)[CHI]);
 			
@@ -525,7 +527,8 @@ namespace INTENTION_INFERENCE
 					check_changing_course[my_id] = better_at(better_at(result, "is_changing_course"), "true");
 					other_ship_id = ship_id;
 					std::cout << "Before write: " << result_risk_of_collision << std::endl;
-					if(result_risk_of_collision>0.9 && !check_changing_course[my_id] &&!check_changing_course[other_ship_id] && (cpa.time_untill_CPA<600)){
+					if(result_risk_of_collision>0.9  && (cpa.time_untill_CPA<600)){
+						//!check_changing_course[my_id] &&!check_changing_course[other_ship_id] &&
 						risk_of_collision[my_id] = true;
 						current_risk[my_id] = true;
 						
@@ -537,49 +540,42 @@ namespace INTENTION_INFERENCE
 
 			write_results_to_file(result, intentionFile, time, x, y);
 
-			if(risk_of_collision[my_id] && risk_of_collision[other_ship_id] &&  (new_timestep || start)){
-				
-				if((!start && current_risk[my_id]) || start){
-					if(new_timestep && !start && !is_changing_course && !other_is_changing_course || start){
-						//write_results_to_file(result, intentionFile, time, x, y);
+			
+			net.add_to_dequeue();
 
-						//check_remove_steps(result, time_to_cpa, ship_states_vec, new_initial_ship_states);
+			net.incrementTime();
+			did_save = true;
 
-						net.add_to_dequeue();
-
-						net.incrementTime();
-						did_save = true;
-						if (!start){
-							new_initial_ship_states[my_id] = better_at(ship_states, my_id);
-							intentionFile << 1;
-						}
-						else {
-							intentionFile << 0;
-						}
-						start = true;
-					}
-					else{
-						intentionFile << 0;
-						
-
-					}
+			
+			
+			if(check_remove_steps(result,cpa.time_untill_CPA,ship_states_vec)){
+				std::cout << "Number of timesteps: " << net.getNumberOfTimeSteps() << std::endl;
+				net.restartTime();
+				net.clearEvidence();
+				std::cout << "Number of timesteps: " << net.getNumberOfTimeSteps() << std::endl;
+				//net.decrementTime();
+				std::cout << "Number of timesteps after dec: " << net.getNumberOfTimeSteps() << std::endl;
+				std::cout << "Is evidence: " << net.isEvidence() << " Is decisions " << net.isDecisions() << std::endl;
+				start = true;
+				intentionFile << 1;
+				if(cpa.time_untill_CPA > 600){
+					new_initial_ship_states[my_id] = better_at(ship_states, my_id);
+					
 				}
 				else{
-					net.clearEvidence();
-					new_initial_ship_states[my_id] = better_at(ship_states, my_id);
-					intentionFile << 0;
-					std::cout << "if: " << new_timestep << std::endl;
-					std::cout << is_changing_course << std::endl;
-					std::cout << other_is_changing_course << std::endl;
-				}
-			}
-			else{
-				net.clearEvidence();
-				new_initial_ship_states[my_id] = better_at(ship_states, my_id);
-				intentionFile << 0;
-			}
+					 throw time;
 
-			std::cout<< "New initial states: " << new_initial_ship_states[my_id][CHI] << std::endl;
+				}
+			}	
+			else{
+				intentionFile << 0;
+			}		
+					
+			
+
+			
+
+			std::cout<< "New initial states: " << new_initial_ship_states[my_id][PY] << std::endl;
 
 			intentionFile << "\n";
 
