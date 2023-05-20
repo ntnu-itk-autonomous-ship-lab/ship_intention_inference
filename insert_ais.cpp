@@ -156,10 +156,10 @@ INTENTION_INFERENCE::IntentionModelParameters setModelParameters(int num_ships){
     param.number_of_network_evaluation_samples = 100000;
 	param.max_number_of_obstacles = num_ships-1; //must be set to num_ships-1 or else segmantation fault
 	param.time_into_trajectory = 10;
-    param.starting_distance = 10000;
+    param.starting_distance = 16000;
 	param.expanding_dbn.min_time_s = 10;
 	param.expanding_dbn.max_time_s = 1200;
-	param.expanding_dbn.min_course_change_rad = 0.14;
+	param.expanding_dbn.min_course_change_rad = 0.22;
 	param.expanding_dbn.min_speed_change_m_s = 0.5;
 	param.ample_time_s.mu = 200;
 	param.ample_time_s.sigma = 100;
@@ -186,7 +186,7 @@ INTENTION_INFERENCE::IntentionModelParameters setModelParameters(int num_ships){
 	param.risk_distance_front_m.sigma = 500;
 	param.risk_distance_front_m.max = 2500;
     param.risk_distance_front_m.n_bins = 30;  // this value must match the bayesian network
-    param.change_in_course_rad.minimal_change = 0.14;
+    param.change_in_course_rad.minimal_change = 0.22;
 	param.change_in_speed_m_s.minimal_change = 1;
 	param.colregs_situation_borders_rad.HO_uncertainty_start = 2.79;
 	param.colregs_situation_borders_rad.HO_start = 2.96;
@@ -223,7 +223,8 @@ int main(){
     //std::string filename = "new_Case - 05-26-2019, 20-39-57 - 60GEW-60-sec.csv";
     //std::string filename = "new_1_Case - 08-09-2018, 19-12-24 - 4XJ3B-60-sec.csv";
     //std::string filename = "new_Case - 01-12-2018, 03-56-43 - WRNUL-60-sec.csv";
-    std::string filename = "new_Case - 01-02-2018, 01-05-22 - GP38T-60-sec.csv";
+    //std::string filename = "new_Case - 01-02-2018, 01-05-22 - GP38T-60-sec.csv";
+    std::string filename = "new_1_Case - 09-17-2018, 18-24-32 - 0URFX-60-sec.csv";
 
     std::string intentionModelFilename = "intention_model_with_risk_of_collision.xdsl";
     //std::string intentionModelFilename = "intention_model_two_ships.xdsl";
@@ -254,7 +255,7 @@ int main(){
             std::cout<< INTENTION_INFERENCE::better_at(ship_state[timestep], ship_list[1])[INTENTION_INFERENCE::PX]- INTENTION_INFERENCE::better_at(ship_state[timestep], ship_list[2])[INTENTION_INFERENCE::PX] << std::endl;
             double dist = evaluateDistance(INTENTION_INFERENCE::better_at(ship_state[timestep], ship_list[1])[INTENTION_INFERENCE::PX] - INTENTION_INFERENCE::better_at(ship_state[timestep], ship_list[2])[INTENTION_INFERENCE::PX], INTENTION_INFERENCE::better_at(ship_state[timestep], ship_list[1])[INTENTION_INFERENCE::PY] - INTENTION_INFERENCE::better_at(ship_state[timestep], ship_list[2])[INTENTION_INFERENCE::PY]);
             std::cout<< "dist: " << dist << std::endl;
-            if ( (dist < parameters.starting_distance) && (sog_vec[timestep]>0.5) && (sog_vec[unique_time_vec.size()+timestep]>0.5)){
+            if ( (dist < parameters.starting_distance) && (sog_vec[timestep]>0.5) && (sog_vec[unique_time_vec.size()+timestep]>0.5) && timestep>8){
             ship_intentions.insert(std::pair<int, INTENTION_INFERENCE::IntentionModel>(ship_list[i], INTENTION_INFERENCE::IntentionModel(intentionModelFilename,parameters,ship_list[i],ship_state[timestep]))); //ship_state[1] as initial as first state might be NaN
             inserted = true;
             }
