@@ -176,7 +176,7 @@ void writeIntentionToFile(int timestep, INTENTION_INFERENCE::IntentionModelParam
                     i = added_timestep;
                 }
                 for(int ship_id : ship_list){
-                    new_initial_ship_states[ship_id] = INTENTION_INFERENCE::better_at(ship_state[i], ship_id);
+                    new_initial_ship_states[ship_id] = INTENTION_INFERENCE::better_at(ship_state[i+1], ship_id);
                 }
                 
                 }
@@ -263,11 +263,11 @@ int main(){
     //std::string filename = "new_Case - 02-01-2018, 15-50-25 - C1401-60-sec.csv"; //head-on corr
     //std::string filename = "new_Case - 01-09-2018, 03-55-18 - QZPS3-60-sec.csv"; //ho wr
     //std::string filename = "new_1_Case - 07-09-2019, 05-52-22 - O7LU9-60-sec.csv"; //weird start
-    std::string filename = "new_1_Case - 08-09-2018, 19-12-24 - 4XJ3B-60-sec.csv"; //not unmodeled
+    //std::string filename = "new_1_Case - 08-09-2018, 19-12-24 - 4XJ3B-60-sec.csv"; //not unmodeled
     //std::string filename = "new_1_Case - 06-25-2019, 14-22-43 - OO430-60-sec.csv"; //not unmodeled
     //std::string filename = "new_1_Case - 12-02-2018, 20-10-07 - PW6UL-60-sec.csv"; //unmodeled
     //std::string filename = "new_1_Case - 07-18-2019, 05-46-19 - W6ZUC-60-sec.csv";
-    //std::string filename = "new_1_Case - 09-17-2018, 18-24-32 - 0URFX-60-sec.csv";
+    std::string filename = "new_1_Case - 09-17-2018, 18-24-32 - 0URFX-60-sec.csv";
 
 
     //std::string intentionModelFilename = "intention_model_with_risk_of_collision.xdsl";

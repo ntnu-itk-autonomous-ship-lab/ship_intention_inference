@@ -88,7 +88,7 @@ namespace INTENTION_INFERENCE
 			std::cout << "unmodeled: " << unmodeled << std::endl;
 			std::cout << "sea: " << seamanship << std::endl;
 			std::cout << "cost: " << cost_remove_steps << std::endl;
-			if ((unmodeled>0.5 ) && time_cpa > 100 && cost_remove_steps>100){
+			if ((unmodeled>0.5 ) && time_cpa > 60 && cost_remove_steps>60){
 				return true;
 				//net.removeEarlyTimeSteps(min_timesteps);
 				//std::cout << "removed cost: " << cost_remove_steps << " unmodeled: " << unmodeled <<std::endl;
@@ -426,6 +426,7 @@ namespace INTENTION_INFERENCE
 			
 			net.setEvidence("change_in_course", changeInCourseIdentifier(parameters, better_at(ship_states, my_id)[CHI], new_initial_ship_states[my_id][CHI]));
 			
+			std::cout << "change course: " << changeInCourseIdentifier(parameters, better_at(ship_states, my_id)[CHI], new_initial_ship_states[my_id][CHI]) << std::endl;
 			net.setEvidence("change_in_speed", changeInSpeedIdentifier(parameters, better_at(ship_states, my_id)[U], new_initial_ship_states[my_id][U]));
 
 			is_changing_course = currentChangeInCourseIdentifier(better_at(ship_states, my_id)[CHI], last_ship_states[my_id][CHI]);
