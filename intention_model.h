@@ -151,7 +151,7 @@ namespace INTENTION_INFERENCE
 
 			auto check_is_changing_course = better_at(better_at(result, "is_changing_course"), "true");
 			std::cout<< "check is changing course: " << check_is_changing_course << std::endl;
-			intentionFile << check_is_changing_course << ",";
+			//intentionFile << check_is_changing_course << ",";
 
 			auto stands_on_correct = better_at(better_at(result, "stands_on_correct"), "true");
 			auto observation_applicable = better_at(better_at(result, "observation_applicable"), "true");
@@ -428,7 +428,7 @@ namespace INTENTION_INFERENCE
 
 			is_changing_course = currentChangeInCourseIdentifier(better_at(ship_states, my_id)[CHI], last_ship_states[my_id][CHI]);
 			bool other_is_changing_course = false;
-			net.setEvidence("is_changing_course", is_changing_course);  
+			net.setEvidence("is_changing_course", false);  
 
 
 			
@@ -525,7 +525,8 @@ namespace INTENTION_INFERENCE
 					check_changing_course[my_id] = better_at(better_at(result, "is_changing_course"), "true");
 					other_ship_id = ship_id;
 					std::cout << "Before write: " << result_risk_of_collision << std::endl;
-					if(result_risk_of_collision>0.9 && !check_changing_course[my_id] &&!check_changing_course[other_ship_id] && (cpa.time_untill_CPA<600)){
+					//&& !check_changing_course[my_id] &&!check_changing_course[other_ship_id] && (cpa.time_untill_CPA<600)
+					if(result_risk_of_collision>0.9   && !is_changing_course && !other_is_changing_course){
 						risk_of_collision[my_id] = true;
 						current_risk[my_id] = true;
 						
@@ -536,11 +537,14 @@ namespace INTENTION_INFERENCE
 			}
 
 			write_results_to_file(result, intentionFile, time, x, y);
+			intentionFile << is_changing_course << ",";
 
-			if(risk_of_collision[my_id] && risk_of_collision[other_ship_id] &&  (new_timestep || start)){
+			
+			if(risk_of_collision[my_id] &&  (new_timestep || start)){
 				
-				if((!start && current_risk[my_id]) || start){
-					if(new_timestep && !start && !is_changing_course && !other_is_changing_course || start){
+				if((!start && current_risk[my_id] && !is_changing_course && !other_is_changing_course) || start){
+					if((new_timestep && !start)  || start){
+						//&& !is_changing_course && !other_is_changing_course
 						//write_results_to_file(result, intentionFile, time, x, y);
 
 						//check_remove_steps(result, time_to_cpa, ship_states_vec, new_initial_ship_states);
@@ -578,6 +582,12 @@ namespace INTENTION_INFERENCE
 				new_initial_ship_states[my_id] = better_at(ship_states, my_id);
 				intentionFile << 0;
 			}
+			
+
+			//net.add_to_dequeue();
+
+			//net.incrementTime();
+			//intentionFile << 0;
 
 			std::cout<< "New initial states: " << new_initial_ship_states[my_id][CHI] << std::endl;
 

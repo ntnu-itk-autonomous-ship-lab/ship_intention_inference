@@ -131,7 +131,7 @@ void writeIntentionToFile(int timestep, INTENTION_INFERENCE::IntentionModelParam
     std::ofstream intentionFile;
     std::string filename_intention = "intention_files/nostart_intention_"+filename;
     intentionFile.open (filename_intention);
-    intentionFile << "mmsi,x,y,time,colreg_compliant,good_seamanship,unmodeled_behaviour,has_turned_portwards,has_turned_starboardwards,change_in_speed,is_changing_course,CR_PS,CR_SS,HO,OT_en,OT_ing,priority_lower,priority_similar,priority_higher,risk_of_collision,current_risk_of_collision,start\n"; //,CR_SS2,CR_PS2,OT_ing2,OT_en2,priority_lower2,priority_similar2,priority_higher2\n";
+    intentionFile << "mmsi,x,y,time,colreg_compliant,good_seamanship,unmodeled_behaviour,has_turned_portwards,has_turned_starboardwards,change_in_speed,CR_PS,CR_SS,HO,OT_en,OT_ing,priority_lower,priority_similar,priority_higher,risk_of_collision,current_risk_of_collision,is_changing_course,start\n"; //,CR_SS2,CR_PS2,OT_ing2,OT_en2,priority_lower2,priority_similar2,priority_higher2\n";
     //intentionFile << "mmsi,x,y,time,colreg_compliant,good_seamanship,unmodeled_behaviour,CR_PS,CR_SS,HO,OT_en,OT_ing,priority_lower,priority_similar,priority_higher\n"; //,CR_SS2,CR_PS2,OT_ing2,OT_en2,priority_lower2,priority_similar2,priority_higher2\n";
     //intentionFile << "mmsi,x,y,time,CR_PS,CR_SS,HO,OT_en,OT_ing\n";
     std::map<int, bool> risk_of_collision;
@@ -153,8 +153,11 @@ void writeIntentionToFile(int timestep, INTENTION_INFERENCE::IntentionModelParam
     for(int i = timestep; i < unique_time_vec.size() ; i++){ 
         std::cout << "timestep: " << i << std::endl;
         new_timestep = true;
-        for(auto& [ship_id, current_ship_intention_model] : ship_intentions){
         
+        for(auto& [ship_id, current_ship_intention_model] : ship_intentions){
+            if ((i-timestep)>4){
+                //new_initial_ship_states[ship_id] = INTENTION_INFERENCE::better_at(ship_state[i-4], ship_id);
+            }
             std::cout << "ship_id: " << ship_id << std::endl;
             int j = getShipListIndex(ship_id,ship_list);
             auto CPA = INTENTION_INFERENCE::evaluateCPA(INTENTION_INFERENCE::better_at(ship_state[i], ship_list[1]), INTENTION_INFERENCE::better_at(ship_state[i], ship_list[2]));
@@ -177,7 +180,7 @@ INTENTION_INFERENCE::IntentionModelParameters setModelParameters(int num_ships){
     param.starting_cpa_distance = 15000;
 	param.expanding_dbn.min_time_s = 10;
 	param.expanding_dbn.max_time_s = 1200;
-	param.expanding_dbn.min_course_change_rad = 0.20;
+	param.expanding_dbn.min_course_change_rad = 0.13;
 	param.expanding_dbn.min_speed_change_m_s = 0.5;
 	param.ample_time_s.mu = 200;
 	param.ample_time_s.sigma = 100;
@@ -204,8 +207,8 @@ INTENTION_INFERENCE::IntentionModelParameters setModelParameters(int num_ships){
 	param.safe_distance_front_m.sigma = 50;
 	param.safe_distance_front_m.max = 1000;
 	param.safe_distance_front_m.n_bins = 30; // this value must match the bayesian network
-	param.change_in_course_rad.minimal_change = 0.20;
-	param.change_in_speed_m_s.minimal_change = 1;
+	param.change_in_course_rad.minimal_change = 0.13;
+	param.change_in_speed_m_s.minimal_change = 0.5;
 	param.colregs_situation_borders_rad.HO_uncertainty_start = 2.79;
 	param.colregs_situation_borders_rad.HO_start = 2.96;
 	param.colregs_situation_borders_rad.HO_stop = -2.96;
@@ -215,9 +218,9 @@ INTENTION_INFERENCE::IntentionModelParameters setModelParameters(int num_ships){
 	param.colregs_situation_borders_rad.OT_stop = -2.18;
 	param.colregs_situation_borders_rad.OT_uncertainty_stop = -1.74;
 	param.ignoring_safety_probability = 0;
-	param.colregs_compliance_probability = 0.95;
-    param.good_seamanship_probability = 0.98;
-	param.unmodeled_behaviour = 0.002;
+	param.colregs_compliance_probability = 0.99;
+    param.good_seamanship_probability = 0.99;
+	param.unmodeled_behaviour = 0.0001;
 	param.priority_probability["lower"] = 0.05;
 	param.priority_probability["similar"] = 0.9;
 	param.priority_probability["higher"] = 0.05;
@@ -244,7 +247,9 @@ int main(){
     //std::string filename = "new_1_Case - 12-02-2018, 20-10-07 - PW6UL-60-sec.csv"; //unmodeled
     //std::string filename = "new_1_Case - 07-18-2019, 05-46-19 - W6ZUC-60-sec.csv";
     //std::string filename = "new_1_Case - 09-17-2018, 18-24-32 - 0URFX-60-sec.csv";
-
+    //std::string filename = "new_Case - 01-12-2018, 03-56-43 - WRNUL-60-sec.csv";
+    //std::string filename = "new_Case - 01-02-2018, 01-05-22 - GP38T-60-sec.csv"; //crossing wrong both
+    //std::string filename = "new_Case - 05-09-2018, 10-05-48 - 9PNLJ-60-sec.csv";
 
     //std::string intentionModelFilename = "intention_model_with_risk_of_collision.xdsl";
     //std::string intentionModelFilename = "intention_model_two_ships.xdsl";
