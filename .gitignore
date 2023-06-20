@@ -2,6 +2,9 @@ smile/smile_license.h
 smile/
 .vscode/
 testing_ais
+insert_ais
+procsess_data
+intention_model_from_code.xdsl
 
 
 # Byte-compiled / optimized / DLL files
