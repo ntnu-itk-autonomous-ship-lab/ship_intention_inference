@@ -1,0 +1,3 @@
+[submodule "distance_to_coast"]
+	path = distance_to_coast
+	url = git@github.com:guroveglo/Project-thesis.git
