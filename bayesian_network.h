@@ -1,4 +1,4 @@
-// This file interfaces the smile library. It implements commanly used functions.
+// This file interfaces the smile library. It implements commonly used functions.
 // This file should not care what the BBN is used for.
 
 #pragma once
@@ -13,7 +13,7 @@
 #include "geometry.h"
 #include <stdio.h>
 #include <iostream>
-
+#include <deque>
 
 namespace INTENTION_INFERENCE
 {
@@ -277,11 +277,9 @@ public:
         // CPT = distr_map[-2];
         std::cout << "\n Distribution added for colreg sit (" <<col_sit<<") :\n" ;
         double sum = 0;
-        for(std::map<int, std::vector<double> >::iterator it=distr_cpa_map.begin(); it != distr_cpa_map.end(); ++it){
-            int col = (*it).first;
-            std::vector<double> inVect = (*it).second;
+        for(auto [col, inVect] : distr_cpa_map){
             if(col == col_sit){
-                for(int i=0; i < CPT.GetSize()-1; ++i){
+                for(int i=0; i < CPT.GetSize(); ++i){
                     CPT[i]= inVect[i];
                     std::cout << CPT[i] << " ";
                     sum += CPT[i];
@@ -307,14 +305,14 @@ public:
         std::cout << "\n Distribution added for ample time :\n" ;
         double sum = 0;
         
-        for(int i=0; i < CPT.GetSize()-1; ++i){
+        for(int i=0; i < CPT.GetSize(); ++i){
                     CPT[i]= distr_ample_time_vec[i];
                     std::cout << CPT[i] << " ";
                     sum += CPT[i];
             }
         if(sum<0.9999 || sum>1.0001 || !isfinite(sum)){
             double error = 1.0000-sum;
-            CPT[CPT.GetSize()-1] +=  error;
+            CPT[CPT.GetSize()] +=  error;
         }
         setDefinition(node_name, CPT);
         std::cout << "\n";

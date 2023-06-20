@@ -351,8 +351,8 @@ namespace INTENTION_INFERENCE
 
 			// Cpa distance
 			net.setAisDistribution("intention_safe_distance_midpoint", "classified_south.csv", colreg_idx, cpa_dist_idx, multiply, n_bins, head_on);
-			net.setAisDistribution("intention_safe_distance", "classified_south.csv", colreg_idx, cpa_dist_idx, multiply, n_bins, overtake);
-			//net.setAisDistribution("intention_distance_risk_of_collision", "classified_west_5.csv", colreg_idx, cpa_dist_idx, multiply, n_bins, overtake);
+			//net.setAisDistribution("intention_safe_distance", "classified_south.csv", colreg_idx, cpa_dist_idx, multiply, n_bins, overtake);
+			net.setAisDistribution("intention_distance_risk_of_collision", "classified_west_5.csv", colreg_idx, cpa_dist_idx, multiply, n_bins, overtake);
 			//net.setAisDistribution("intention_distance_risk_of_collision_front", "classified_west_5.csv", colreg_idx, cpa_dist_idx, multiply, n_bins, crossing);
 			
 			// Cpa time, the model does NOT differ for the different situations

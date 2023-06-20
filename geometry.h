@@ -546,6 +546,7 @@ namespace INTENTION_INFERENCE
 					row.push_back(num);
 					content.push_back(row);
 				}
+			file.close();
 			}
 			else
 				std::cout << "Could not open file";
@@ -623,9 +624,9 @@ namespace INTENTION_INFERENCE
 			dist[i] = (instance_count_vec[i]/tot_sum);
 			dist_sum += dist[i];
 		}
-		double error = (100 - dist_sum);
+		double error = (1 - dist_sum);
 		if(error != 0){
-			dist[-1] += error;
+			dist.back() += error;
 		}
 
 		return dist;
@@ -633,11 +634,8 @@ namespace INTENTION_INFERENCE
 
 	inline std::map<int, std::vector<double> > distributionMap(std::map<int, std::vector<double> > ais_map, int n_bins){
 		std::map<int, std::vector<double> > distributionMap;
-		for(std::map<int, std::vector<double> >::iterator it=ais_map.begin(); it != ais_map.end(); ++it){
-				int col = (*it).first;
-				std::vector<double> inVect = (*it).second;
-				std::vector<double> dist = find_distribution(inVect, n_bins);
-				distributionMap[col] = dist;
+		for(auto [col, inVect]: ais_map){
+				distributionMap[col] = find_distribution(inVect, n_bins);
 			}
 		return distributionMap;
 	}
