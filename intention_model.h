@@ -323,7 +323,6 @@ namespace INTENTION_INFERENCE
 					net.setPriors("priority_intention_to_" + ship_name, parameters.priority_probability);
 				}
 			}
-
 			//net.setPriorNormalDistribution("intention_ample_time", parameters.ample_time_s.mu, parameters.ample_time_s.sigma, parameters.ample_time_s.max / parameters.ample_time_s.n_bins);
 			net.setPriorNormalDistribution("intention_distance_risk_of_collision", parameters.risk_distance_m.mu, parameters.risk_distance_m.sigma, parameters.risk_distance_m.max / ( parameters.safe_distance_m.n_bins));
 			net.setPriorNormalDistribution("intention_distance_risk_of_collision_front", parameters.risk_distance_front_m.mu, parameters.risk_distance_front_m.sigma, parameters.risk_distance_front_m.max / parameters.risk_distance_front_m.n_bins);
@@ -348,12 +347,11 @@ namespace INTENTION_INFERENCE
 			int overtake = -2;
 			int crossing = -1;
 
-
 			// Cpa distance
 			net.setAisDistribution("intention_safe_distance_midpoint", "classified_south.csv", colreg_idx, cpa_dist_idx, multiply, n_bins, head_on);
-			//net.setAisDistribution("intention_safe_distance", "classified_south.csv", colreg_idx, cpa_dist_idx, multiply, n_bins, overtake);
+			net.setAisDistribution("intention_safe_distance", "classified_south.csv", colreg_idx, cpa_dist_idx, multiply, n_bins, overtake);
 			net.setAisDistribution("intention_distance_risk_of_collision", "classified_west_5.csv", colreg_idx, cpa_dist_idx, multiply, n_bins, overtake);
-			//net.setAisDistribution("intention_distance_risk_of_collision_front", "classified_west_5.csv", colreg_idx, cpa_dist_idx, multiply, n_bins, crossing);
+			net.setAisDistribution("intention_distance_risk_of_collision_front", "classified_west_5.csv", colreg_idx, cpa_dist_idx, multiply, n_bins, crossing);
 			
 			// Cpa time, the model does NOT differ for the different situations
 			//net.setAisDistribution("intention_ample_time", "classified_west_5.csv", colreg_idx, cpa_ample_time_idx, multiply, n_bins, head_on);  //head on
@@ -400,7 +398,6 @@ namespace INTENTION_INFERENCE
 			bool did_save = false;
 			CPA cpa;
 			double time_to_cpa;
-
 	
 			const auto ship_state = better_at(ship_states, my_id);
 			

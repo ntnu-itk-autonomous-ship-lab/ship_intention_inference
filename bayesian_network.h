@@ -259,7 +259,7 @@ public:
         CPT[0] = evaluateBinProbability(-INFINITY, bin_width, mu, sigma); //First bin takes everything below 0 aswell
         std::cout << "\n Distribution added for colreg sit (" <<node_name<<") :\n" ;
         std::cout << "CPT0: " << CPT[0] << "\n";
-        for(auto i=1; i<CPT.GetSize()-1; ++i){
+        for(auto i = 1; i < CPT.GetSize(); ++i){
             CPT[i] = evaluateBinProbability(i*bin_width, (i+1)*bin_width, mu, sigma);
             std::cout << CPT[i] << " ";
         }
@@ -380,7 +380,6 @@ public:
             printf("ERROR: Unable to update beliefs");
             throw "Unable to update beliefs";
         } 
-
         assert(update_res>=0);
 
         std::map<std::string,std::map<std::string,double>> return_value;
