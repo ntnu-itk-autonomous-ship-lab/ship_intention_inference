@@ -312,7 +312,7 @@ public:
             }
         if(sum<0.9999 || sum>1.0001 || !isfinite(sum)){
             double error = 1.0000-sum;
-            CPT[CPT.GetSize()] +=  error;
+            CPT[CPT.GetSize()-1] +=  error;
         }
         setDefinition(node_name, CPT);
         std::cout << "\n";
