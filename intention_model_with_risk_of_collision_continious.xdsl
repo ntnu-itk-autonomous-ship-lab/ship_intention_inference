@@ -47,8 +47,8 @@
 				<interval label="State30" upper="45" />
 			</discretization>
 		</equation>
-		<equation id="distance_at_cpa_towards_ship_0">
-			<definition lower="0" upper="600">distance_at_cpa_towards_ship_0=Uniform(0,600)</definition>
+		<equation id="distance_at_cpa_towards_ship0">
+			<definition lower="0" upper="600">distance_at_cpa_towards_ship0=Uniform(0,600)</definition>
 			<discretization>
 				<interval label="State1" upper="20" />
 				<interval label="State2" upper="40" />
@@ -83,8 +83,8 @@
 			</discretization>
 		</equation>
 		<equation id="safe_distance_at_CPA_towards_ship0">
-			<parents>intention_safe_distance distance_at_cpa_towards_ship_0</parents>
-			<definition lower="0" upper="1">safe_distance_at_CPA_towards_ship0=distance_at_cpa_towards_ship_0&gt;intention_safe_distance</definition>
+			<parents>intention_safe_distance distance_at_cpa_towards_ship0</parents>
+			<definition lower="0" upper="1">safe_distance_at_CPA_towards_ship0=distance_at_cpa_towards_ship0&gt;intention_safe_distance</definition>
 			<discretization>
 				<interval label="false" upper="0.5" />
 				<interval label="true" upper="1" />
@@ -181,9 +181,9 @@
 				<interval label="true" upper="1" />
 			</discretization>
 		</equation>
-		<equation id="safely_passed_ship_0">
+		<equation id="safely_passed_ship0">
 			<parents>passed_ship0 safe_distance_to_ship0</parents>
-			<definition lower="0" upper="1">safely_passed_ship_0=And(passed_ship0=&quot;true&quot;,safe_distance_to_ship0&gt;0.5)</definition>
+			<definition lower="0" upper="1">safely_passed_ship0=And(passed_ship0=&quot;true&quot;,safe_distance_to_ship0&gt;0.5)</definition>
 			<discretization>
 				<interval label="false" upper="0.5" />
 				<interval label="true" upper="1" />
@@ -686,17 +686,17 @@
 				<interval label="true" upper="1" />
 			</discretization>
 		</equation>
-		<equation id="risk_of_collision_towards_ship_0">
+		<equation id="risk_of_collision_towards_ship0">
 			<parents>risk_of_collision_towards_ship0_t_1 Current_risk_of_collision_towards_ship0</parents>
-			<definition lower="0" upper="1">risk_of_collision_towards_ship_0=Or(risk_of_collision_towards_ship0_t_1&gt;0.5,Current_risk_of_collision_towards_ship0&gt;0.5)</definition>
+			<definition lower="0" upper="1">risk_of_collision_towards_ship0=Or(risk_of_collision_towards_ship0_t_1&gt;0.5,Current_risk_of_collision_towards_ship0&gt;0.5)</definition>
 			<discretization>
 				<interval label="false" upper="0.5" />
 				<interval label="true" upper="1" />
 			</discretization>
 		</equation>
 		<equation id="Observation_applicable_towards_ship0">
-			<parents>Observation_applicable_wrt_colregs_towards_ship0 risk_of_collision_towards_ship_0 safely_passed_ship_0</parents>
-			<definition lower="0" upper="1">Observation_applicable_towards_ship0=Or(Observation_applicable_wrt_colregs_towards_ship0&gt;0.5,risk_of_collision_towards_ship_0&lt;0.5,safely_passed_ship_0&gt;0.5)</definition>
+			<parents>Observation_applicable_wrt_colregs_towards_ship0 risk_of_collision_towards_ship0 safely_passed_ship0</parents>
+			<definition lower="0" upper="1">Observation_applicable_towards_ship0=Or(Observation_applicable_wrt_colregs_towards_ship0&gt;0.5,risk_of_collision_towards_ship0&lt;0.5,safely_passed_ship0&gt;0.5)</definition>
 			<discretization>
 				<interval label="false" upper="0.5" />
 				<interval label="true" upper="1" />
@@ -769,7 +769,7 @@
 				<position>888 346 971 397</position>
 				<barchart active="true" width="128" height="108" />
 			</node>
-			<node id="safely_passed_ship_0">
+			<node id="safely_passed_ship0">
 				<name>safely passed ship 0</name>
 				<interior color="e5f6f7" />
 				<outline color="000080" />
@@ -953,7 +953,7 @@
 				<position>163 667 294 748</position>
 				<barchart width="66" height="378" />
 			</node>
-			<node id="distance_at_cpa_towards_ship_0">
+			<node id="distance_at_cpa_towards_ship0">
 				<name>distance at cpa towards ship 0</name>
 				<interior color="e5f6f7" />
 				<outline color="000080" />
@@ -1129,7 +1129,7 @@
 				<font color="000000" name="Arial" size="8" />
 				<position>1183 234 1291 301</position>
 			</node>
-			<node id="risk_of_collision_towards_ship_0">
+			<node id="risk_of_collision_towards_ship0">
 				<name>risk of collision towards ship 0</name>
 				<interior color="e5f6f7" />
 				<outline color="000080" />
