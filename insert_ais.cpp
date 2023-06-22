@@ -149,21 +149,56 @@ void writeIntentionToFile(int timestep, INTENTION_INFERENCE::IntentionModelParam
     std::map<int, Eigen::Vector4d> old_ship_states;
     bool start = false;
     bool new_timestep;
-   
-    for(int i = timestep; i < unique_time_vec.size() ; i++){ 
+    int added_timestep = timestep;
+    int i = timestep;
+    while( i < unique_time_vec.size()){ 
         std::cout << "timestep: " << i << std::endl;
         new_timestep = true;
         
-        for(auto& [ship_id, current_ship_intention_model] : ship_intentions){
-            //if ((i-timestep)>4){
-                //new_initial_ship_states[ship_id] = INTENTION_INFERENCE::better_at(ship_state[i-4], ship_id); used when no start-point
+        for(auto [ship_id, current_ship_intention_model] : ship_intentions){
+            //if (i>5){
+                //new_initial_ship_states[ship_id] = INTENTION_INFERENCE::better_at(ship_state[timestep+i-5], ship_id);
             //}
+
             std::cout << "ship_id: " << ship_id << std::endl;
             int j = getShipListIndex(ship_id,ship_list);
-            current_ship_intention_model.insertObservation(parameters,start,new_timestep, check_changing_course, current_risk, new_initial_ship_states, risk_of_collision, ship_state[i],ship_state, ship_state[i-1], old_ship_states, ship_list, false, unique_time_vec[i], x_vec[unique_time_vec.size()*j+i], y_vec[unique_time_vec.size()*j+i], intentionFile); //writes intantion variables to file as well
+            
+            auto CPA = INTENTION_INFERENCE::evaluateCPA(INTENTION_INFERENCE::better_at(ship_state[i], ship_list[1]), INTENTION_INFERENCE::better_at(ship_state[i], ship_list[2]));
+            try{
+                current_ship_intention_model.insertObservation(parameters,start,new_timestep, check_changing_course, 
+                    current_risk, new_initial_ship_states, risk_of_collision, ship_state[i],ship_state, 
+                    ship_state[i-1], old_ship_states, ship_list, false, unique_time_vec[i], 
+                    x_vec[unique_time_vec.size()*j+i], y_vec[unique_time_vec.size()*j+i], 
+                    intentionFile); //writes intantion variables to file as well
+            }
+            catch(double time){
+                std::cout << "Exeption caught!!";
+                intentionFile << "\n";
+                std::cerr << time << std::endl;
+                int end_time= time/60;
+                std::cout << "End time: " << end_time << " and added timestep: " << added_timestep << std::endl;
+                if( end_time > (added_timestep +2)){
+                    added_timestep +=2;
+                    i = added_timestep;
+                }
+                for(int ship_id : ship_list){
+                    new_initial_ship_states[ship_id] = INTENTION_INFERENCE::better_at(ship_state[i+1], ship_id);
+                }   
+            }
+            
+                    
+            //current_ship_intention_model.insertObservationRelativeSituation(parameters,ot_en,ship_state[i],ship_list, 
+            //    false, unique_time_vec[i], x_vec[unique_time_vec.size()*j+i], y_vec[unique_time_vec.size()*j+i], 
+            //    intentionFile);
+
+            current_ship_intention_model.insertObservation(parameters,start,new_timestep, check_changing_course, 
+                current_risk, new_initial_ship_states, risk_of_collision, ship_state[i],ship_state, ship_state[i-1], 
+                old_ship_states, ship_list, false, unique_time_vec[i], x_vec[unique_time_vec.size()*j+i], 
+                y_vec[unique_time_vec.size()*j+i], intentionFile); //writes intention variables to file as well
             new_timestep = false;
+        }
+        i++;
     }
-   }
     intentionFile.close(); 
     printf("Finished writing intentions to file \n");
 }
@@ -239,8 +274,8 @@ int main(){
     //std::string filename = "new_Case - 01-04-2020, 15-34-37 - 7SWX4-60-sec.csv"; //overtake
     //std::string filename = "new_Case - 02-01-2018, 15-50-25 - C1401-60-sec.csv"; //head-on corr
     //std::string filename = "new_Case - 01-09-2018, 03-55-18 - QZPS3-60-sec.csv"; //ho wr
-    //std::string filename = "new_1_Case - 07-09-2019, 05-52-22 - O7LU9-60-sec.csv"; //weird start
-    std::string filename = "new_1_Case - 08-09-2018, 19-12-24 - 4XJ3B-60-sec.csv"; //not unmodeled
+    std::string filename = "new_1_Case - 07-09-2019, 05-52-22 - O7LU9-60-sec.csv"; //weird start
+    //std::string filename = "new_1_Case - 08-09-2018, 19-12-24 - 4XJ3B-60-sec.csv"; //not unmodeled
     //std::string filename = "new_1_Case - 06-25-2019, 14-22-43 - OO430-60-sec.csv"; //not unmodeled
     //std::string filename = "new_1_Case - 12-02-2018, 20-10-07 - PW6UL-60-sec.csv"; //unmodeled
     //std::string filename = "new_1_Case - 07-18-2019, 05-46-19 - W6ZUC-60-sec.csv";
@@ -250,8 +285,8 @@ int main(){
     //std::string filename = "new_Case - 05-09-2018, 10-05-48 - 9PNLJ-60-sec.csv";
 
     //std::string intentionModelFilename = "intention_model_with_risk_of_collision.xdsl";
-    //std::string intentionModelFilename = "intention_model_two_ships.xdsl";
-    std::string intentionModelFilename = "intention_model_with_risk_of_collision_no_startpoint_3.xdsl";
+    std::string intentionModelFilename = "intention_model_from_code.xdsl";
+    //std::string intentionModelFilename = "intention_model_with_risk_of_collision_no_startpoint_3.xdsl";
 
     std::vector<std::map<int, Eigen::Vector4d> > ship_state;
     std::vector<int> mmsi_vec;
@@ -259,11 +294,9 @@ int main(){
 
     readFileToVecs(filename, mmsi_vec, time_vec, x_vec, y_vec, sog_vec, cog_vec);
 
-
     vecsToShipStateVectorMap(ship_state, unique_time_vec, num_ships, mmsi_vec, time_vec, x_vec, y_vec, sog_vec, cog_vec);
 
     std::vector<int> ship_list = getShipList(mmsi_vec);
-
 
     INTENTION_INFERENCE::IntentionModelParameters parameters = setModelParameters(num_ships);
 
