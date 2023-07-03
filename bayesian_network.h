@@ -363,7 +363,7 @@ public:
     }
 
     void restartTime(){
-        const auto number_of_time_slices = 0; //1; //removeStart
+        const auto number_of_time_slices = 0;
         const auto res = net.SetNumberOfSlices(number_of_time_slices);
         assert(res>=0);
     }
@@ -429,13 +429,6 @@ public:
 
     auto getNumberOfTimeSteps()const{
         return net.GetNumberOfSlices();
-    }
-    auto isEvidence(){
-        return net.IsThereAnyEvidence();
-    }
-    
-    auto isDecisions(){
-        return net.IsThereAnyDecision();
     }
 };
 }
