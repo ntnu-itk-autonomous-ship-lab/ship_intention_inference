@@ -392,7 +392,23 @@ namespace INTENTION_INFERENCE
 			return situation;
 		}
 
-		bool insertObservation(const IntentionModelParameters parameters, bool & start,bool new_timestep, std::map<int,double> check_changing_course, std::map<int,bool> & current_risk, std::map<int,Eigen::Vector4d> & new_initial_ship_states, std::map<int, bool>& risk_of_collision, const std::map<int, Eigen::Vector4d> ship_states, std::vector<std::map<int, Eigen::Vector4d>> ship_states_vec, std::map<int, Eigen::Vector4d> last_ship_states, std::map<int, Eigen::Vector4d> &old_ship_states, std::vector<int> currently_tracked_ships, bool is_changing_course, double time, double x, double y, std::ofstream &intentionFile)
+		bool insertObservation(const IntentionModelParameters parameters
+							   , bool & start
+							   , bool new_timestep
+							   , std::map<int,double> check_changing_course
+							   , std::map<int,bool> & current_risk
+							   , std::map<int,Eigen::Vector4d> & new_initial_ship_states
+							   , std::map<int, bool>& risk_of_collision
+							   , const std::map<int, Eigen::Vector4d> ship_states
+							   , std::vector<std::map<int, Eigen::Vector4d>> ship_states_vec
+							   , std::map<int, Eigen::Vector4d> last_ship_states
+							   , std::map<int, Eigen::Vector4d> &old_ship_states
+							   , std::vector<int> currently_tracked_ships
+							   , bool is_changing_course
+							   , double time
+							   , double x
+							   , double y
+							   , std::string filename)
 		{
 
 			bool did_save = false;
@@ -520,6 +536,13 @@ namespace INTENTION_INFERENCE
 				}
 			}
 
+			std::ofstream intentionFile;
+			std::string filename_intention = "intention_files/nostart_intention_"+filename;
+			intentionFile.open (filename_intention);
+			intentionFile << "mmsi,x,y,time,colreg_compliant,good_seamanship,unmodeled_behaviour,has_turned_portwards,has_turned_starboardwards,change_in_speed,is_changing_course,CR_PS,CR_SS,HO,OT_en,OT_ing,priority_lower,priority_similar,priority_higher,risk_of_collision,current_risk_of_collision,start\n"; //,CR_SS2,CR_PS2,OT_ing2,OT_en2,priority_lower2,priority_similar2,priority_higher2\n";
+			//intentionFile << "mmsi,x,y,time,colreg_compliant,good_seamanship,unmodeled_behaviour,CR_PS,CR_SS,HO,OT_en,OT_ing,priority_lower,priority_similar,priority_higher\n"; //,CR_SS2,CR_PS2,OT_ing2,OT_en2,priority_lower2,priority_similar2,priority_higher2\n";
+			//intentionFile << "mmsi,x,y,time,CR_PS,CR_SS,HO,OT_en,OT_ing\n";
+
 			write_results_to_file(result, intentionFile, time, x, y);
 		
 
@@ -562,19 +585,13 @@ namespace INTENTION_INFERENCE
 				new_initial_ship_states[my_id] = better_at(ship_states, my_id);
 				intentionFile << 0;
 			}
-			
-
 
 			std::cout<< "New initial states: " << new_initial_ship_states[my_id][CHI] << std::endl;
 
 			intentionFile << "\n";
-
-	
-			
+			intentionFile.close();
 
 			return did_save;
-			
-			
 		}
 
 	};

@@ -127,13 +127,14 @@ int getShipListIndex(int mmsi, std::vector<int> ship_list){
 }
 
 
-void writeIntentionToFile(int timestep, INTENTION_INFERENCE::IntentionModelParameters parameters, std::string filename, std::map<int, INTENTION_INFERENCE::IntentionModel> ship_intentions, std::vector<std::map<int, Eigen::Vector4d > > ship_state, std::vector<int> ship_list, std::vector<double> unique_time_vec, std::vector<double> x_vec, std::vector<double> y_vec){
-    std::ofstream intentionFile;
-    std::string filename_intention = "intention_files/nostart_intention_"+filename;
-    intentionFile.open (filename_intention);
-    intentionFile << "mmsi,x,y,time,colreg_compliant,good_seamanship,unmodeled_behaviour,has_turned_portwards,has_turned_starboardwards,change_in_speed,is_changing_course,CR_PS,CR_SS,HO,OT_en,OT_ing,priority_lower,priority_similar,priority_higher,risk_of_collision,current_risk_of_collision,start\n"; //,CR_SS2,CR_PS2,OT_ing2,OT_en2,priority_lower2,priority_similar2,priority_higher2\n";
-    //intentionFile << "mmsi,x,y,time,colreg_compliant,good_seamanship,unmodeled_behaviour,CR_PS,CR_SS,HO,OT_en,OT_ing,priority_lower,priority_similar,priority_higher\n"; //,CR_SS2,CR_PS2,OT_ing2,OT_en2,priority_lower2,priority_similar2,priority_higher2\n";
-    //intentionFile << "mmsi,x,y,time,CR_PS,CR_SS,HO,OT_en,OT_ing\n";
+void writeIntentionToFile(int timestep,
+                          INTENTION_INFERENCE::IntentionModelParameters parameters,
+                          std::string filename,
+                          std::map<int, INTENTION_INFERENCE::IntentionModel> ship_intentions,
+                          std::vector<std::map<int, Eigen::Vector4d > > ship_state,
+                          std::vector<int> ship_list, std::vector<double> unique_time_vec,
+                          std::vector<double> x_vec,
+                          std::vector<double> y_vec){
     std::map<int, bool> risk_of_collision;
     std::map<int,bool> current_risk;
     std::map<int,Eigen::Vector4d> new_initial_ship_states;
@@ -160,11 +161,24 @@ void writeIntentionToFile(int timestep, INTENTION_INFERENCE::IntentionModelParam
             //}
             std::cout << "ship_id: " << ship_id << std::endl;
             int j = getShipListIndex(ship_id,ship_list);
-            current_ship_intention_model.insertObservation(parameters,start,new_timestep, check_changing_course, current_risk, new_initial_ship_states, risk_of_collision, ship_state[i],ship_state, ship_state[i-1], old_ship_states, ship_list, false, unique_time_vec[i], x_vec[unique_time_vec.size()*j+i], y_vec[unique_time_vec.size()*j+i], intentionFile); //writes intantion variables to file as well
+            current_ship_intention_model.insertObservation(parameters,start,new_timestep,
+                                                           check_changing_course,
+                                                           current_risk,
+                                                           new_initial_ship_states,
+                                                           risk_of_collision,
+                                                           ship_state[i], ship_state,
+                                                           ship_state[i-1],
+                                                           old_ship_states,
+                                                           ship_list,
+                                                           false,
+                                                           unique_time_vec[i],
+                                                           x_vec[unique_time_vec.size()*j+i],
+                                                           y_vec[unique_time_vec.size()*j+i],
+                                                           filename); //writes intantion variables to file as well
+
             new_timestep = false;
     }
    }
-    intentionFile.close(); 
     printf("Finished writing intentions to file \n");
 }
 
