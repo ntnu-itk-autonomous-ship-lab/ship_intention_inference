@@ -102,6 +102,15 @@ namespace INTENTION_INFERENCE
         return false;
     }
 
+    /**
+     * @brief 
+     * 
+     * @param parameters Uses the \ref parameters.change_in_course_rad.minimal_change
+     * parameter
+     * @param current_course 
+     * @param initial_course 
+     * @return std::string "starboardwards", "portwards", or "none"
+     */
     std::string changeInCourseIdentifier(const IntentionModelParameters &parameters, double current_course, double initial_course)
     {
         auto minimal_change = parameters.change_in_course_rad.minimal_change;
@@ -116,6 +125,15 @@ namespace INTENTION_INFERENCE
         return "none";
     }
 
+    /**
+     * @brief 
+     * 
+     * @param parameters Uses the \ref parameters.change_in_speed_m_s.minimal_change
+     * parameter
+     * @param current_speed 
+     * @param initial_speed 
+     * @return std::string "higher", "lower", or "similar"
+     */
     std::string changeInSpeedIdentifier(const IntentionModelParameters &parameters, double current_speed, double initial_speed)
     {
         auto minimal_change = parameters.change_in_speed_m_s.minimal_change;

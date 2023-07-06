@@ -1,6 +1,16 @@
-// This file interfaces the smile library. It implements commonly used functions.
-// This file should not care what the BBN is used for.
+/**
+ * @file bayesian_network.h
+ * @author Sverre Velten Rothmund
+ * @brief This file interfaces the smile library. 
+ * It implements commonly used functions. 
+ * This file should not care what the BBN is used for.
 
+ * @version 1.0
+ * @date 2022
+ * 
+ * @copyright Copyright (c) 2022
+ * 
+ */
 #pragma once
 #include "smile/smile.h"
 #include "smile/smile_license.h"
@@ -163,10 +173,22 @@ class BayesianNetwork{
 public:
     BayesianNetwork(){}
 
+    /**
+     * @brief Construct a new Bayesian Network object. Constructor just calls \ref init
+     * 
+     * @param file_name File name of intention model. Typically a path to an .xdsl file
+     * @param num_network_evaluation_samples 
+     */
     BayesianNetwork(std::string file_name, unsigned num_network_evaluation_samples){
         init(file_name, num_network_evaluation_samples);
     }
 
+    /**
+     * @brief 
+     * 
+     * @param file_name File name of intention model. Typically a path to an .xdsl file
+     * @param num_network_evaluation_samples 
+     */
     void init(std::string file_name, unsigned num_network_evaluation_samples){
         DSL_errorH().RedirectToFile(stdout); //Rederects errors to standard output
         std::string full_path = file_name;

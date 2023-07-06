@@ -3,11 +3,21 @@
 #include <map>
 #include <sstream>
 #include <string>
+#include <stdio.h>
+#include <iostream>
 //#include <ros/ros.h>
 
 namespace INTENTION_INFERENCE
 {
     template <typename map_t>
+    /**
+     * @brief Standard .at() operator for maps, just with more debugging
+     * features
+     * 
+     * @param map 
+     * @param key 
+     * @return auto& 
+     */
     auto &better_at(map_t &map, std::string key)
     {
         try
@@ -25,12 +35,21 @@ namespace INTENTION_INFERENCE
                 ss << key << ", ";
             }
             //ROS_ERROR("%s", ss.str().c_str());
+            std::cout << ss.rdbuf() << std::endl;
             assert(false);
         }
         return map.begin()->second;
     }
 
     template <typename map_t>
+    /**
+     * @brief Standard .at() operator for maps, just with more debugging
+     * features
+     * 
+     * @param map 
+     * @param key 
+     * @return auto& 
+     */
     auto &better_at(map_t &map, int key)
     {
         try
@@ -39,7 +58,6 @@ namespace INTENTION_INFERENCE
         }
         catch (const std::out_of_range &error)
         {
-            std::cout << "HERE";
             std::stringstream ss;
             ss << "Trying to get nonexisting key: " << key << "\n";
             ss << "The following keys exist: ";
@@ -49,6 +67,7 @@ namespace INTENTION_INFERENCE
                 ss << key << ", ";
             }
             //printf("ERROR: %s", ss.str().c_str());
+            std::cout << ss.rdbuf() << std::endl;
             assert(false);
         }
         return map.begin()->second;

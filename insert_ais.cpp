@@ -176,15 +176,15 @@ void writeIntentionToFile(int timestep,
                                                            current_risk,
                                                            new_initial_ship_states,
                                                            risk_of_collision,
-                                                           ship_state[i], ship_state,
+                                                           ship_state[i],
                                                            ship_state[i-1],
                                                            old_ship_states,
                                                            ship_list,
-                                                           false,
                                                            unique_time_vec[i],
-                                                           x_vec[unique_time_vec.size()*j+i],
+                                                           x_vec[unique_time_vec.size()*j+i], /* x pos for ship j at time i */
                                                            y_vec[unique_time_vec.size()*j+i],
-                                                           filename); //writes intantion variables to file as well
+                                                           "intention_files/nostart_intention_"+filename
+                                                           ); //writes intention variables to file as well
 
             new_timestep = false;
     }
@@ -253,7 +253,7 @@ INTENTION_INFERENCE::IntentionModelParameters setModelParameters(int num_ships){
 int main(){
     using namespace INTENTION_INFERENCE;
     
-	int num_ships = 2;
+	int num_ships = 2; /* Total number of ships, including own ship*/
     //std::string filename = "new_Case_LQLVS-60-sec.csv"; //crossing
     //std::string filename = "new_case_2ZC9Z-60-sec-two-ships.csv"; //head on
     //std::string filename = "new_Case - 01-08-2021, 08-21-29 - AQ5VM-60-sec-two-ships.csv"; //overtaking must start at timestep 4
