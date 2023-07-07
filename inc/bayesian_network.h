@@ -12,8 +12,8 @@
  * 
  */
 #pragma once
-#include "smile/smile.h"
-#include "smile/smile_license.h"
+#include "../external/smile/smile.h"
+#include "../external/smile/smile_license.h"
 #include <assert.h>
 #include <string>
 #include <vector>

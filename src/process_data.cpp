@@ -179,8 +179,8 @@ void printDist(std::map<int, std::vector<double> > my_map){
 
 int main(){
     
-    const std::string filename = "classified_west.csv";
-    const std::string filename2 = "data_west.csv";
+    const std::string filename = "../files/classified/classified_west.csv";
+    const std::string filename2 = "../files/classified/data_west.csv";
 
     std::vector<std::vector<std::string> > content = read_file(filename);
 

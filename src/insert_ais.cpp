@@ -7,11 +7,11 @@
 #include <iomanip>
 #include <ctime>
 #include <math.h>
-#include "intention_model.h"
-#include "parameters.h"
-#include "geometry.h"
-#include "utils.h"
-#include "Eigen/Dense"
+#include "../inc/intention_model.h"
+#include "../inc/parameters.h"
+#include "../inc/geometry.h"
+#include "../inc/utils.h"
+#include "../external/Eigen/Dense"
 #include <map>
 
 void readFileToVecs (std::string filename, std::vector<int> &mmsi_vec, std::vector<double> &time_vec, std::vector<double> &x_vec, std::vector<double> &y_vec, std::vector<double> &sog_vec, std::vector<double> &cog_vec){
@@ -138,7 +138,7 @@ void writeIntentionToFile(int timestep,
 
 
     std::ofstream intentionFile;
-    std::string filename_intention = "intention_files/nostart_intention_"+filename;
+    std::string filename_intention = "files/intention_files/nostart_intention_"+filename;
     intentionFile.open (filename_intention);
     intentionFile << "mmsi,x,y,time,colreg_compliant,good_seamanship,unmodeled_behaviour,has_turned_portwards,has_turned_starboardwards,change_in_speed,is_changing_course,CR_PS,CR_SS,HO,OT_en,OT_ing,priority_lower,priority_similar,priority_higher,risk_of_collision,current_risk_of_collision,start\n"; //,CR_SS2,CR_PS2,OT_ing2,OT_en2,priority_lower2,priority_similar2,priority_higher2\n";
     //intentionFile << "mmsi,x,y,time,colreg_compliant,good_seamanship,unmodeled_behaviour,CR_PS,CR_SS,HO,OT_en,OT_ing,priority_lower,priority_similar,priority_higher\n"; //,CR_SS2,CR_PS2,OT_ing2,OT_en2,priority_lower2,priority_similar2,priority_higher2\n";
@@ -273,7 +273,7 @@ int main(){
 
     //std::string intentionModelFilename = "intention_model_with_risk_of_collision.xdsl";
     //std::string intentionModelFilename = "intention_model_two_ships.xdsl";
-    std::string intentionModelFilename = "intention_model_with_risk_of_collision_no_startpoint_3.xdsl";
+    std::string intentionModelFilename = "files/intention_models/intention_model_with_risk_of_collision_no_startpoint_3.xdsl";
 
     std::vector<std::map<int, Eigen::Vector4d> > ship_state;
     std::vector<int> mmsi_vec;

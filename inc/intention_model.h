@@ -410,15 +410,15 @@ namespace INTENTION_INFERENCE
 			int crossing = -1;
 
 			// Cpa distance
-			net.setAisDistribution("intention_safe_distance_midpoint", "classified_south.csv", colreg_idx, cpa_dist_idx, multiply, n_bins, head_on);
-			net.setAisDistribution("intention_safe_distance", "classified_south.csv", colreg_idx, cpa_dist_idx, multiply, n_bins, overtake);
-			net.setAisDistribution("intention_distance_risk_of_collision", "classified_west_5.csv", colreg_idx, cpa_dist_idx, multiply, n_bins, overtake);
-			net.setAisDistribution("intention_distance_risk_of_collision_front", "classified_west_5.csv", colreg_idx, cpa_dist_idx, multiply, n_bins, crossing);
+			net.setAisDistribution("intention_safe_distance_midpoint", "files/classified/classified_south.csv", colreg_idx, cpa_dist_idx, multiply, n_bins, head_on);
+			net.setAisDistribution("intention_safe_distance", "files/classified/classified_south.csv", colreg_idx, cpa_dist_idx, multiply, n_bins, overtake);
+			net.setAisDistribution("intention_distance_risk_of_collision", "files/classified/classified_west_5.csv", colreg_idx, cpa_dist_idx, multiply, n_bins, overtake);
+			net.setAisDistribution("intention_distance_risk_of_collision_front", "files/classified/classified_west_5.csv", colreg_idx, cpa_dist_idx, multiply, n_bins, crossing);
 			
 			// Cpa time, the model does NOT differ for the different situations
-			//net.setAisDistribution("intention_ample_time", "classified_west_5.csv", colreg_idx, cpa_ample_time_idx, multiply, n_bins, head_on);  //head on
-			net.setAmpleTimeDistribution("intention_ample_time", "classified_west_5.csv", cpa_ample_time_idx, timestep, n_bins);
-			net.save_network("intention_model_from_code.xdsl");
+			//net.setAisDistribution("intention_ample_time", "files/classified/classified_west_5.csv", colreg_idx, cpa_ample_time_idx, multiply, n_bins, head_on);  //head on
+			net.setAmpleTimeDistribution("intention_ample_time", "files/classified/classified_west_5.csv", cpa_ample_time_idx, timestep, n_bins);
+			net.save_network("files/intention_models/intention_model_from_code.xdsl");
 		}
 
 		/**
