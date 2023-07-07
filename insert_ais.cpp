@@ -157,7 +157,6 @@ void writeIntentionToFile(int timestep,
         last_ship_states[ship_id] = new_initial_ship_states[ship_id];
     }
 
-    std::map<int, Eigen::Vector4d> old_ship_states;
     bool start = false;
     bool new_timestep;
    
@@ -178,7 +177,6 @@ void writeIntentionToFile(int timestep,
                                                            risk_of_collision,
                                                            ship_state[i],
                                                            ship_state[i-1],
-                                                           old_ship_states,
                                                            ship_list,
                                                            unique_time_vec[i],
                                                            x_vec[unique_time_vec.size()*j+i], /* x pos for ship j at time i */

@@ -44,9 +44,10 @@ namespace INTENTION_INFERENCE
 	private:
 		const IntentionModelParameters &parameters;
 		BayesianNetwork net;
-		const int my_id;							/* mmsi of own ship */
+		const int my_id; /* mmsi of own ship */
 		std::map<int, std::string> ship_name_map;
 		std::vector<std::string> ship_names;
+		std::map<int, Eigen::Vector4d> old_ship_states; /* Used for the insertObservation function to store last ship state while CPA > 240 */
 		const std::vector<std::string> intention_node_names_ship_specific = {"colav_situation_towards_", "priority_intention_to_", "disable_"};
 		const std::vector<std::string> intention_node_names_general = {"intention_colregs_compliant", "intention_good_seamanship", "intention_safe_distance", "intention_safe_distance_front", "intention_safe_distance_midpoint", "intention_ample_time", "intention_ignoring_safety", "unmodelled_behaviour","intention_distance_risk_of_collision","intention_distance_risk_of_collision_front"};
 		//const std::vector<std::string> intention_node_names_general = {"intention_colregs_compliant", "intention_good_seamanship", "intention_safe_distance", "intention_safe_distance_front", "intention_safe_distance_midpoint", "intention_ample_time", "intention_ignoring_safety", "unmodelled_behaviour"};
@@ -196,7 +197,14 @@ namespace INTENTION_INFERENCE
 			//for(auto it = change_in_course.cbegin(); it != change_in_course.cend(); ++it){
             //			std::cout << it->first << " -> " << it->second << std::endl;
         	//		}
-			auto change_in_speed = better_at(better_at(result, "change_in_speed"), "true");
+			std::string change_in_speed;
+			for(auto [speed_change, is_true] : better_at(result, "change_in_speed")){
+					if (is_true){
+						change_in_speed = speed_change;
+						break;
+					}
+
+				}
 			intentionFile << change_in_speed << ",";
 
 			auto check_is_changing_course = better_at(better_at(result, "is_changing_course"), "true");
@@ -318,7 +326,7 @@ namespace INTENTION_INFERENCE
 				if (ship_id != my_id)
 				{
 					ship_name_map[ship_id] = ship_names[i];
-					printf("\nAdded ship name \"%s\" for ship id %d", ship_names[i].c_str(), ship_id);
+					printf("\nAdded ship name \"%s\" for ship id %d\n", ship_names[i].c_str(), ship_id);
 					++i;
 				}
 			}
@@ -425,23 +433,23 @@ namespace INTENTION_INFERENCE
 		 * @param x 
 		 * @param y 
 		 * @param intentionFile 
-		 * @return std::map<std::string, double> 
+		 * @return std::map<std::string, double>
 		 */
 		std::map<std::string, double> insertObservationRelativeSituation(const IntentionModelParameters parameters, int &ot_en, std::map<int, Eigen::Vector4d> ship_states, std::vector<int> currently_tracked_ships, bool is_changing_course, double time, double x, double y, std::ofstream &intentionFile)
 		{
 			std::map<std::string, double> situation;
-			
+
 			for (auto const &ship_id : currently_tracked_ships)
 			{
 				if (ship_id != my_id)
 				{
 					intentionFile << my_id << ",";
             		intentionFile << x << ",";
-            		intentionFile << y << ","; 
+            		intentionFile << y << ",";
             		intentionFile << time << ",";
 					const auto ship_state = better_at(ship_states, ship_id);
 					CPA cpa = evaluateCPA(better_at(ship_states, my_id), ship_state);
-					
+
 					situation = evaluateRelativeSituation2(parameters, better_at(ship_states, my_id), ship_state, cpa.time_untill_CPA);
 					std::cout << "time to cpa: " << cpa.time_untill_CPA << std::endl;
 					for (const auto &[name, value] : situation){
@@ -452,7 +460,7 @@ namespace INTENTION_INFERENCE
 						else {
 							intentionFile << value << ",";
 						}
-						
+
 					}
 					intentionFile << "\n";
 				}
@@ -461,25 +469,24 @@ namespace INTENTION_INFERENCE
 		}
 
 		/**
-		 * @brief 
-		 * 
+		 * @brief
+		 *
 		 * @param parameters Parameter object of intention model
-		 * @param start 
-		 * @param new_timestep 
- 		 * @param check_changing_course 
- 		 * @param current_risk 
- 		 * @param new_initial_ship_states 
+		 * @param start
+		 * @param new_timestep
+ 		 * @param check_changing_course
+ 		 * @param current_risk
+ 		 * @param new_initial_ship_states
  		 * @param risk_of_collision
- 		 * @param ship_states 
- 		 * @param last_ship_states 
- 		 * @param old_ship_states
+ 		 * @param ship_states
+ 		 * @param last_ship_states
  		 * @param currently_tracked_ships ship list of all ships (including own)
 		 * @param time current time, just used for writing to file, leave empty if not writing to file
 		 * @param x x coordinate at time \ref time, just used for writing to file, leave empty if not writing to file
 		 * @param y y coordinate at time \ref time, just used for writing to file, leave empty if not writing to file
 		 * @param filename Path to file to be written to. Will not write to
 		 * any file if left empty
-		 * @return bool true or false 
+		 * @return bool true or false
 		 */
 		bool insertObservation(const IntentionModelParameters parameters
 							   , bool & start
@@ -490,7 +497,6 @@ namespace INTENTION_INFERENCE
 							   , std::map<int, bool>& risk_of_collision
 							   , const std::map<int, Eigen::Vector4d> ship_states
 							   , std::map<int, Eigen::Vector4d> last_ship_states
-							   , std::map<int, Eigen::Vector4d> &old_ship_states
 							   , std::vector<int> currently_tracked_ships
 							   , double time = 0
 							   , double x = 0
@@ -524,7 +530,6 @@ namespace INTENTION_INFERENCE
 					cpa = evaluateCPA(better_at(ship_states, my_id), ship_state);
 
 					net.setEvidence("disable_" + ship_name, "enabled");
-
 					std::cout << "time to cpa: " << cpa.time_untill_CPA << std::endl;
 
 					if (cpa.time_untill_CPA > 240){
@@ -579,9 +584,7 @@ namespace INTENTION_INFERENCE
 				if (ship_id != my_id)
 				{
 					const std::string ship_name = better_at(ship_name_map, ship_id);
-					const std::string my_ship_name = better_at(ship_name_map, my_id);
 					auto result_risk_of_collision = better_at(better_at(result, "risk_of_collision_towards_"+ ship_name), "true");
-					auto result_me_risk_of_collision = better_at(better_at(result, "risk_of_collision_towards_"+ my_ship_name), "true");
 					current_risk[my_id] = false;
 					check_changing_course[my_id] = better_at(better_at(result, "is_changing_course"), "true");
 					other_ship_id = ship_id;
