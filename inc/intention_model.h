@@ -386,39 +386,14 @@ namespace INTENTION_INFERENCE
 				}
 			}
 			//net.setPriorNormalDistribution("intention_ample_time", parameters.ample_time_s.mu, parameters.ample_time_s.sigma, parameters.ample_time_s.max / parameters.ample_time_s.n_bins);
-			net.setPriorNormalDistribution("intention_distance_risk_of_collision", parameters.risk_distance_m.mu, parameters.risk_distance_m.sigma, parameters.risk_distance_m.max / ( parameters.safe_distance_m.n_bins));
-			net.setPriorNormalDistribution("intention_distance_risk_of_collision_front", parameters.risk_distance_front_m.mu, parameters.risk_distance_front_m.sigma, parameters.risk_distance_front_m.max / parameters.risk_distance_front_m.n_bins);
+			//net.setPriorNormalDistribution("intention_distance_risk_of_collision", parameters.risk_distance_m.mu, parameters.risk_distance_m.sigma, parameters.risk_distance_m.max / ( parameters.safe_distance_m.n_bins));
+			//net.setPriorNormalDistribution("intention_distance_risk_of_collision_front", parameters.risk_distance_front_m.mu, parameters.risk_distance_front_m.sigma, parameters.risk_distance_front_m.max / parameters.risk_distance_front_m.n_bins);
 
 			//int colreg_idx = 7;
 			//int cpa_ts_idx = 4;  // per nå lik r_maneuver_own (skal byttes til cpa_ts_idx)
 
 			net.setPriorNormalDistribution("intention_safe_distance_front", parameters.safe_distance_front_m.mu, parameters.safe_distance_front_m.sigma, parameters.safe_distance_front_m.max / parameters.safe_distance_front_m.n_bins);
 			//net.setPriorNormalDistribution("intention_distance_risk_of_collision_front", parameters.safe_distance_front_m.mu, parameters.safe_distance_front_m.sigma, parameters.safe_distance_front_m.max / parameters.safe_distance_front_m.n_bins);
-			
-
-			// MOVE LATER
-			int cpa_dist_idx = 6;
-			int colreg_idx = 7;
-			int cpa_ample_time_idx = 8;
-
-			int timestep = 60;
-			int n_bins = 30;
-			int multiply =1;
-
-			int head_on = 3;
-			int overtake = -2;
-			int crossing = -1;
-
-			// Cpa distance
-			net.setAisDistribution("intention_safe_distance_midpoint", "files/classified/classified_south.csv", colreg_idx, cpa_dist_idx, multiply, n_bins, head_on);
-			net.setAisDistribution("intention_safe_distance", "files/classified/classified_south.csv", colreg_idx, cpa_dist_idx, multiply, n_bins, overtake);
-			net.setAisDistribution("intention_distance_risk_of_collision", "files/classified/classified_west_5.csv", colreg_idx, cpa_dist_idx, multiply, n_bins, overtake);
-			net.setAisDistribution("intention_distance_risk_of_collision_front", "files/classified/classified_west_5.csv", colreg_idx, cpa_dist_idx, multiply, n_bins, crossing);
-			
-			// Cpa time, the model does NOT differ for the different situations
-			//net.setAisDistribution("intention_ample_time", "files/classified/classified_west_5.csv", colreg_idx, cpa_ample_time_idx, multiply, n_bins, head_on);  //head on
-			net.setAmpleTimeDistribution("intention_ample_time", "files/classified/classified_west_5.csv", cpa_ample_time_idx, timestep, n_bins);
-			net.save_network("files/intention_models/intention_model_from_code.xdsl");
 		}
 
 		/**

@@ -273,7 +273,7 @@ int main(){
 
     //std::string intentionModelFilename = "intention_model_with_risk_of_collision.xdsl";
     //std::string intentionModelFilename = "intention_model_two_ships.xdsl";
-    std::string intentionModelFilename = "files/intention_models/intention_model_with_risk_of_collision_no_startpoint_3.xdsl";
+    std::string intentionModelFilename = "files/intention_models/intention_model_from_code.xdsl";
 
     std::vector<std::map<int, Eigen::Vector4d> > ship_state;
     std::vector<int> mmsi_vec;

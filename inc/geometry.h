@@ -2,7 +2,7 @@
 
 #pragma once
 #include <cmath>
-#include "../external/Eigen/Dense"
+#include "Eigen/Dense"
 #include <iostream>
 #include <fstream>
 #include <string>
