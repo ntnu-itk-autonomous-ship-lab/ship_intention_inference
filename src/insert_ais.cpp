@@ -148,13 +148,10 @@ void writeIntentionToFile(int timestep,
     std::map<int, bool> risk_of_collision;
     std::map<int,bool> current_risk;
     std::map<int,Eigen::Vector4d> new_initial_ship_states;
-    std::map<int,Eigen::Vector4d> last_ship_states;
     std::map<int,double> check_changing_course;
-    for(int ship_id : ship_list){
+    for(auto& [ship_id, current_ship_intention_model] : ship_intentions){
         risk_of_collision[ship_id] = false;
         current_risk[ship_id] = false;
-        new_initial_ship_states[ship_id] = INTENTION_INFERENCE::better_at(ship_state[timestep], ship_id);
-        last_ship_states[ship_id] = new_initial_ship_states[ship_id];
     }
 
     bool start = false;
@@ -172,8 +169,6 @@ void writeIntentionToFile(int timestep,
             int j = getShipListIndex(ship_id,ship_list);
             current_ship_intention_model.insertObservation(parameters,start,new_timestep,
                                                            check_changing_course,
-                                                           current_risk,
-                                                           new_initial_ship_states,
                                                            risk_of_collision,
                                                            ship_state[i],
                                                            ship_state[i-1],
