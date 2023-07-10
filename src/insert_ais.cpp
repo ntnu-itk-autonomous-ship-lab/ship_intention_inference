@@ -151,7 +151,7 @@ void writeIntentionToFile(int timestep,
     std::map<int,double> check_changing_course;
     for(auto& [ship_id, current_ship_intention_model] : ship_intentions){
         risk_of_collision[ship_id] = false;
-        current_risk[ship_id] = false;
+        current_ship_intention_model.set_initial_ship_state(ship_state[timestep]);
     }
 
     bool start = false;
