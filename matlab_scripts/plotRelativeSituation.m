@@ -6,7 +6,7 @@
 %filename = "Relative_intention_new_Case_LQLVS-60-sec.csv"
 %filename = "Relative2_intention_new_Case_LQLVS-60-sec.csv"
 clf
-
+filename = "nostart_intention_new_1_Case - 12-02-2018, 20-10-07 - PW6UL-60-sec.csv"
 data = readtable(filename);
 
 %data.Properties.VariableNames = {'mmsi','x','y','time','CR_PS','CR_SS','HO','OT_en','OT_ing','colreg_compliant','good_seamanship','unmodeled_behaviour','priority_lower','priority_similar','priority_higher'};

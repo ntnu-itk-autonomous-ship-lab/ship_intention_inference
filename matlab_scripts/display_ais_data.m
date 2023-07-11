@@ -2,7 +2,7 @@
 %filename = "case_T0UNK-60-sec.csv" %masse parkerte båter, noe head-on
 %filename = "case_2ZC9Z-60-sec-two-ships.csv" %head on
 %filename = "case_QVYA6-60-sec.csv" %HO/CR veldig close
-%filename = "Case - 04-12-2019, 20-10-56 - DOTVP-two-ships-60-sec.csv"
+filename = "Case - 04-12-2019, 20-10-56 - DOTVP-two-ships-60-sec.csv"
 %filename = "Case - 01-04-2020, 15-34-37 - 7SWX4-60-sec 2-two-ships.csv"
 %filename = "Case - 01-08-2021, 08-21-29 - AQ5VM-60-sec-two-ships.csv"
 %filename = "Case - 01-15-2020, 09-05-49 - VATEN-60-sec-two-ships.csv"

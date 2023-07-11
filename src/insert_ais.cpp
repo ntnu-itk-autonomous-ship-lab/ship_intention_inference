@@ -151,7 +151,6 @@ void writeIntentionToFile(int timestep,
     std::map<int,double> check_changing_course;
     for(auto& [ship_id, current_ship_intention_model] : ship_intentions){
         risk_of_collision[ship_id] = false;
-        current_ship_intention_model.set_initial_ship_state(ship_state[timestep]);
     }
 
     bool start = false;
@@ -167,17 +166,19 @@ void writeIntentionToFile(int timestep,
             //}
             std::cout << "ship_id: " << ship_id << std::endl;
             int j = getShipListIndex(ship_id,ship_list);
-            current_ship_intention_model.insertObservation(parameters,start,new_timestep,
-                                                           check_changing_course,
-                                                           risk_of_collision,
-                                                           ship_state[i],
-                                                           ship_state[i-1],
-                                                           ship_list,
-                                                           unique_time_vec[i],
-                                                           x_vec[unique_time_vec.size()*j+i], /* x pos for ship j at time i */
-                                                           y_vec[unique_time_vec.size()*j+i],
-                                                           "intention_files/nostart_intention_"+filename
-                                                           ); //writes intention variables to file as well
+            current_ship_intention_model.insertObservation(parameters
+                                                            ,ship_state[i]
+                                                            ,ship_state[i-1]
+                                                            ,ship_list
+                                                            ,check_changing_course
+                                                            ,risk_of_collision
+                                                            ,new_timestep
+                                                            ,start
+                                                           );
+            current_ship_intention_model.save_intention_predictions_to_file(filename_intention, 
+                                                x_vec[unique_time_vec.size()*j+i], /* x pos for ship j at time i */
+                                                y_vec[unique_time_vec.size()*j+i],
+                                                unique_time_vec[i]);
 
             new_timestep = false;
     }
@@ -257,18 +258,18 @@ int main(){
     //std::string filename = "new_Case - 02-01-2018, 15-50-25 - C1401-60-sec.csv"; //head-on corr
     //std::string filename = "new_Case - 01-09-2018, 03-55-18 - QZPS3-60-sec.csv"; //ho wr
     //std::string filename = "new_1_Case - 07-09-2019, 05-52-22 - O7LU9-60-sec.csv"; //weird start
-    std::string filename = "new_1_Case - 08-09-2018, 19-12-24 - 4XJ3B-60-sec.csv"; //not unmodeled
+    //std::string filename = "new_1_Case - 08-09-2018, 19-12-24 - 4XJ3B-60-sec.csv"; //not unmodeled
     //std::string filename = "new_1_Case - 06-25-2019, 14-22-43 - OO430-60-sec.csv"; //not unmodeled
-    //std::string filename = "new_1_Case - 12-02-2018, 20-10-07 - PW6UL-60-sec.csv"; //unmodeled
+    std::string filename = "new_1_Case - 12-02-2018, 20-10-07 - PW6UL-60-sec.csv"; //unmodeled
     //std::string filename = "new_1_Case - 07-18-2019, 05-46-19 - W6ZUC-60-sec.csv";
     //std::string filename = "new_1_Case - 09-17-2018, 18-24-32 - 0URFX-60-sec.csv";
     //std::string filename = "new_Case - 01-12-2018, 03-56-43 - WRNUL-60-sec.csv";
     //std::string filename = "new_Case - 01-02-2018, 01-05-22 - GP38T-60-sec.csv"; //crossing wrong both
     //std::string filename = "new_Case - 05-09-2018, 10-05-48 - 9PNLJ-60-sec.csv";
 
-    //std::string intentionModelFilename = "intention_model_with_risk_of_collision.xdsl";
+    //std::string intentionModelFilename = "files/intention_models/intention_model_from_code.xdsl";
     //std::string intentionModelFilename = "intention_model_two_ships.xdsl";
-    std::string intentionModelFilename = "files/intention_models/intention_model_from_code.xdsl";
+    std::string intentionModelFilename = "files/intention_models/intention_model_with_risk_of_collision_no_startpoint_3.xdsl";
 
     std::vector<std::map<int, Eigen::Vector4d> > ship_state;
     std::vector<int> mmsi_vec;
@@ -307,7 +308,6 @@ int main(){
 
     writeIntentionToFile(timestep, parameters,filename, ship_intentions, ship_state, ship_list, unique_time_vec, x_vec,y_vec); //intentionfile is called: intention_<filename>  NB: not all intentions!
     
-
     /* OLD PRINTS
     for (int i= 0; i <2; i++){
         std::cout << "mmsi: " << mmsi_vec[i] << std::endl;

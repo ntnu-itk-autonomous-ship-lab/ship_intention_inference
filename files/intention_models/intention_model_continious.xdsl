@@ -330,14 +330,14 @@
 				<interval label="true" upper="1" />
 			</discretization>
 		</equation>
-		<cpt id="crossing_wiht_other_on_port_side_to_ship0">
+		<cpt id="crossing_with_other_on_port_side_to_ship0">
 			<state id="port" />
 			<state id="starboard" />
 			<probabilities>0.5 0.5</probabilities>
 		</cpt>
 		<equation id="GW_CR_SS_corerct_ship0">
-			<parents>safe_distance_to_ship0 crossing_wiht_other_on_port_side_to_ship0</parents>
-			<definition lower="0" upper="1">GW_CR_SS_corerct_ship0=And(safe_distance_to_ship0&gt;0.5,crossing_wiht_other_on_port_side_to_ship0=&quot;port&quot;)</definition>
+			<parents>safe_distance_to_ship0 crossing_with_other_on_port_side_to_ship0</parents>
+			<definition lower="0" upper="1">GW_CR_SS_corerct_ship0=And(safe_distance_to_ship0&gt;0.5,crossing_with_other_on_port_side_to_ship0=&quot;port&quot;)</definition>
 			<discretization>
 				<interval label="false" upper="0.5" />
 				<interval label="true" upper="1" />
@@ -488,7 +488,7 @@
 		<cpt id="good_seamanship">
 			<state id="false" />
 			<state id="true" />
-			<parents>intention_good_seamanship has_turned_portwards has_turned_starboardwards crossing_wiht_other_on_port_side_to_ship0</parents>
+			<parents>intention_good_seamanship has_turned_portwards has_turned_starboardwards crossing_with_other_on_port_side_to_ship0</parents>
 			<probabilities>0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 0 1 1 0 1 0</probabilities>
 		</cpt>
 		<cpt id="is_changing_course">
@@ -916,7 +916,7 @@
 				<font color="000000" name="Arial" size="8" />
 				<position>1628 39 1759 95</position>
 			</node>
-			<node id="crossing_wiht_other_on_port_side_to_ship0">
+			<node id="crossing_with_other_on_port_side_to_ship0">
 				<name>crossing wiht other on port side to ship0</name>
 				<interior color="339966" />
 				<outline color="003300" />

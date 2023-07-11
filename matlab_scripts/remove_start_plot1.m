@@ -47,9 +47,9 @@ clear all
 %base_filename = "new_Case - 01-09-2018, 03-55-18 - QZPS3-60-sec.csv";  %best ho not following colregs
 %base_filename = "new_Case - 02-01-2018, 15-50-25 - C1401-60-sec.csv"; %best ho following colregs
 
-intention_filename ="2removestart_intention_"+base_filename;
+%intention_filename ="2removestart_intention_"+base_filename;
 %measurement_filename = "measurements_"+base_filename;
-
+intention_filename = "nostart_intention_new_1_Case - 12-02-2018, 20-10-07 - PW6UL-60-sec.csv"
 linewidth = 2;
 data = readtable(intention_filename);
 data{:,"x"} = data{:,"x"}-data{1,"x"};

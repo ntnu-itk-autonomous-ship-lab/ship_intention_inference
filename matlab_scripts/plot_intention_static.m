@@ -11,7 +11,7 @@ clear all
 % base_filename = "new_Case - 05-26-2019, 20-39-57 - 60GEW-60-sec.csv";
 % base_filename = "new_1_Case - 07-09-2019, 05-52-22 - O7LU9-60-sec.csv"; %wierd start
 %base_filename = "new_Case - 12-18-2018, 05-11-19 - 4D0M7-60-sec.csv"; %not unmodeled
-base_filename = "new_1_Case - 08-09-2018, 19-12-24 - 4XJ3B-60-sec.csv"; %not unmodeled
+%base_filename = "new_1_Case - 08-09-2018, 19-12-24 - 4XJ3B-60-sec.csv"; %not unmodeled
 %base_filename = "new_1_Case - 06-25-2019, 14-22-43 - OO430-60-sec.csv"; %unmodeled
 %base_filename = "new_1_Case - 05-09-2018, 02-26-49 - HQJ86-60-sec.csv"
 %base_filename = "new_1_Case - 12-02-2018, 20-10-07 - PW6UL-60-sec.csv"
@@ -47,7 +47,7 @@ base_filename = "new_1_Case - 08-09-2018, 19-12-24 - 4XJ3B-60-sec.csv"; %not unm
 %base_filename = "new_Case - 01-09-2018, 03-55-18 - QZPS3-60-sec.csv";  %best ho not following colregs
 %base_filename = "new_Case - 02-01-2018, 15-50-25 - C1401-60-sec.csv"; %best ho following colregs
 
-intention_filename ="1risk_change_start_intention_"+base_filename;
+intention_filename = "nostart_intention_new_1_Case - 12-02-2018, 20-10-07 - PW6UL-60-sec.csv"
 %measurement_filename = "measurements_"+base_filename;
 %2760
 

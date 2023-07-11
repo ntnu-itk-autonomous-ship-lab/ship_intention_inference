@@ -1,5 +1,5 @@
 %filename = "risk_dist_intention_new_case_LQLVS-60-sec.csv" %classisk crossing
-filename = "dist_intention_new_case_2ZC9Z-60-sec-two-ships.csv" %Head on
+%filename = "dist_intention_new_case_2ZC9Z-60-sec-two-ships.csv" %Head on
 %filename = "risk_dist_intention_new_Case - 01-08-2021, 08-21-29 - AQ5VM-60-sec-two-ships" %overtaking
 %filename = "dist_intention_new_Case - 01-15-2020, 09-05-49 - VATEN-60-sec-two-ships" %overtaking
 %filename = "dist_intention_new_Case - 01-04-2020, 15-34-37 - 7SWX4-60-sec.csv" %overtaking used project
@@ -11,6 +11,8 @@ filename = "dist_intention_new_case_2ZC9Z-60-sec-two-ships.csv" %Head on
 %filename = "dist_intention_new_Case - 05-26-2019, 20-39-57 - 60GEW-60-sec.csv"
 %filename = "dist_intention_new_Case - 01-12-2018, 03-56-43 - WRNUL-60-sec.csv"
 %filename = "plot_intention_new_2_Case - 09-17-2018, 18-24-32 - 0URFX-60-sec.csv"
+
+filename = "nostart_intention_new_Case - 01-02-2018, 01-05-22 - GP38T-60-sec.csv"
 clf
 
 data = readtable(filename);

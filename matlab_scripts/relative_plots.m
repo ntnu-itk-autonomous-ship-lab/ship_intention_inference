@@ -9,10 +9,11 @@
 %filename = "Relative_intention_new_Case - 05-26-2019, 20-39-57 - 60GEW-60-sec 2.csv"
 %filename = "impRelative_intention_new_Case - 05-26-2019, 20-39-57 - 60GEW-60-sec.csv"
 %filename = "emilRelative_intention_new_Case - 01-04-2020, 15-34-37 - 7SWX4-60-sec.csv"
-%filename = "emilRelative_intention_new_Case - 02-01-2018, 15-50-25 - C1401-60-sec.csv"
-filename = "emil2Relative_intention_new_Case - 01-09-2018, 03-55-18 - QZPS3-60-sec.csv"
+%filename = "emilRelative_intention_new_Case - 02-01-2018, 15-50-25 -
+%C1401-60-sec.csv"%
+%filename = "emil2Relative_intention_new_Case - 01-09-2018, 03-55-18 - QZPS3-60-sec.csv"
 clf
-
+filename = "nostart_intention_new_1_Case - 12-02-2018, 20-10-07 - PW6UL-60-sec.csv"
 data = readtable(filename);
 
 
