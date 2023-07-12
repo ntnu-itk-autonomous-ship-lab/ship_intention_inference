@@ -134,12 +134,12 @@ namespace INTENTION_INFERENCE
 		}
 
 		/**
-		 * @brief 
-		 * 
-		 * @param result 
-		 * @param cpa 
-		 * @param ship_state_vec 
-		 * @param new_initial_ship_states 
+		 * @brief
+		 *
+		 * @param result
+		 * @param cpa
+		 * @param ship_state_vec
+		 * @param new_initial_ship_states
 		 */
 		void check_remove_steps(std::map<std::string,
 								std::map<std::string,double>> result,
@@ -168,8 +168,8 @@ namespace INTENTION_INFERENCE
 		}
 
 		/**
-		 * @brief 
-		 * 
+		 * @brief
+		 *
 		 */
 		void restart(){
 			net.clearEvidence();
@@ -181,17 +181,17 @@ namespace INTENTION_INFERENCE
 		 * mmsi,x,y,time,colreg_compliant,good_seamanship,unmodeled_behaviour,
 		 * has_turned_portwards,has_turned_starboardwards,change_in_speed,is_changing_course,
 		 * CR_PS,CR_SS,HO,OT_en,OT_ing,priority_lower,priority_similar,priority_higher,risk_of_collision,current_risk_of_collision,start
-		 * 
+		 *
 		 * @param intentionFile path to csv file to be written to. Should already be opened
-		 * @param time 
-		 * @param x 
-		 * @param y 
+		 * @param time
+		 * @param x
+		 * @param y
 		 */
 		void write_results_to_file(std::ofstream &intentionFile,
 								   double time, double x, double y){
 			intentionFile << my_id << ",";
             intentionFile << x << ",";
-            intentionFile << y << ","; 
+            intentionFile << y << ",";
             intentionFile << time << ",";
 
 			auto intention_colregs_compliant = better_at(better_at(intention_model_predictions, "intention_colregs_compliant"), "true");
@@ -208,7 +208,7 @@ namespace INTENTION_INFERENCE
 			intentionFile << change_in_speed << ",";
 			auto check_is_changing_course = better_at(better_at(intention_model_predictions, "is_changing_course"), "true");
 			intentionFile << check_is_changing_course << ",";
-			
+
 			for (auto const &[ship_id, ship_name] : ship_name_map)
 			{
 				if (ship_id != my_id)
@@ -254,10 +254,10 @@ namespace INTENTION_INFERENCE
 		IntentionModel(std::string network_file_name,
 					   const IntentionModelParameters &parameters,
 					   int my_id, const std::map<int,
-					   Eigen::Vector4d> &ship_states) : IntentionModel(network_file_name, 
-					   													parameters, 
-																		my_id, 
-																		ship_states, 
+					   Eigen::Vector4d> &ship_states) : IntentionModel(network_file_name,
+					   													parameters,
+																		my_id,
+																		ship_states,
 																		std::map<std::string, std::string>{}){}
 
 		IntentionModel(std::string network_file_name,
@@ -303,7 +303,7 @@ namespace INTENTION_INFERENCE
 					all_node_names.push_back(node + ship_name);
 				}
 			}
-	
+
 			net.setEvidence(priors);
 
 			// Initiate colregs situation
@@ -389,16 +389,16 @@ namespace INTENTION_INFERENCE
 		 * @brief Updates intention model based on given data
 		 *
 		 * @param parameters Parameter object of intention model
-		 * the previous time step, and that we now are in a new time step
- 		 * map needs to be parsed between all intention models.
  		 * @param ship_states
  		 * @param last_ship_states
  		 * @param currently_tracked_ships ship list of all ships (including own)
  		 * @param check_changing_course
  		 * @param risk_of_collision A map of ships and if they have a risk of collision. This
+ 		 * map needs to be parsed between all intention models.
 		 * @param new_timestep if true, indicates that all ships intention models have been updated for
+		 * the previous time step, and that we now are in a new time step
 		 * @param start
-		 * @return bool true or false
+		 * @return bool true or false. Returns start for pybind11 compatability
 		 */
 		bool insertObservation(const IntentionModelParameters parameters
 							   , const std::map<int, Eigen::Vector4d> ship_states
@@ -514,14 +514,14 @@ namespace INTENTION_INFERENCE
 				my_initial_ship_state = better_at(ship_states, my_id);
 			}
 
-			return did_save;
+			return start;
 		}
 
 		/**
 		 * @brief Opens given filename and calls the private
 		 * \ref write_results_to_file() function
-		 * 
-		 * @param filename Path to file to be written to. 
+		 *
+		 * @param filename Path to file to be written to.
 		 * @param x x coordinate at time \ref time
 		 * @param y y coordinate at time \ref time
 		 * @param time current time, just used for writing to file
@@ -536,7 +536,7 @@ namespace INTENTION_INFERENCE
 			} else {
 				std::cout << "ERROR: Failed to open " << filename << std::endl;
 				assert(false);
-			}						
+			}
 		}
 
 		std::map<std::string,std::map<std::string,double>> get_intention_model_predictions(){
