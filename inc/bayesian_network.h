@@ -348,13 +348,13 @@ public:
             //std::map<int, std::vector<double>> new_temporal_virtual_evidence { { node_id, virtualEvidence} };
             //temporal_virtual_evidence_.push_back(new_temporal_virtual_evidence);
             const auto result = net.GetNode(node_id)->Value()->SetTemporalEvidence(time_slice,virtualEvidence);
-            if(result<0) printf("ERROR: Set virtual evidence (t=%d) on node \"%s\" resulted in error", time_slice, node_name.c_str());
+            if(result<0) std::cout << "ERROR: Set virtual evidence (t=" << time_slice <<") on node " << node_name.c_str() <<" resulted in error" << std::endl;
             assert(result>=0);
         }
         else{
             virtual_evidence_[node_id] = virtualEvidence;
             const auto result = net.GetNode(node_id)->Value()->SetVirtualEvidence(virtualEvidence);
-            if(result<0) printf("ERROR: Set virtual evidence on node \"%s\" resulted in error", node_name.c_str());
+            if(result<0) std::cout<<"ERROR: Set virtual evidence on node " << node_name.c_str() << " resulted in error" << std::endl;
             assert(result>=0);
         }
     }
@@ -385,7 +385,7 @@ public:
     }
 
     void restartTime(){
-        const auto number_of_time_slices = 0;
+        const auto number_of_time_slices = 1;
         const auto res = net.SetNumberOfSlices(number_of_time_slices);
         assert(res>=0);
     }
@@ -451,6 +451,14 @@ public:
 
     auto getNumberOfTimeSteps()const{
         return net.GetNumberOfSlices();
+    }
+
+    auto isEvidence(){
+        return net.IsThereAnyEvidence();
+    }
+     
+    auto isDecisions(){
+        return net.IsThereAnyDecision();
     }
 };
 }

@@ -146,8 +146,6 @@ void writeIntentionToFile(int timestep,
     intentionFile.close();
 
     std::map<int, bool> risk_of_collision;
-    std::map<int,bool> current_risk;
-    std::map<int,Eigen::Vector4d> new_initial_ship_states;
     std::map<int,double> check_changing_course;
     for(auto& [ship_id, current_ship_intention_model] : ship_intentions){
         risk_of_collision[ship_id] = false;
@@ -155,7 +153,8 @@ void writeIntentionToFile(int timestep,
 
     bool start = false;
     bool new_timestep;
-   
+    int added_timestep = timestep;
+
     for(int i = timestep; i < unique_time_vec.size() ; i++){ 
         std::cout << "timestep: " << i << std::endl;
         new_timestep = true;
@@ -166,23 +165,43 @@ void writeIntentionToFile(int timestep,
             //}
             std::cout << "ship_id: " << ship_id << std::endl;
             int j = getShipListIndex(ship_id,ship_list);
-            current_ship_intention_model.insertObservation(parameters
-                                                            ,ship_state[i]
-                                                            ,ship_state[i-1]
-                                                            ,ship_list
-                                                            ,check_changing_course
-                                                            ,risk_of_collision
-                                                            ,new_timestep
-                                                            ,start
-                                                           );
-            current_ship_intention_model.save_intention_predictions_to_file(filename_intention, 
-                                                x_vec[unique_time_vec.size()*j+i], /* x pos for ship j at time i */
-                                                y_vec[unique_time_vec.size()*j+i],
-                                                unique_time_vec[i]);
+            try {current_ship_intention_model.insertObservation(parameters
+                                                                ,ship_state[i]
+                                                                ,ship_state[i-1]
+                                                                ,ship_list
+                                                                ,check_changing_course
+                                                                ,risk_of_collision
+                                                                ,new_timestep
+                                                                ,start
+                                                                );
+                current_ship_intention_model.save_intention_predictions_to_file(filename_intention,
+                                                                                x_vec[unique_time_vec.size()*j+i], /* x pos for ship j at time i */
+                                                                                y_vec[unique_time_vec.size()*j+i],
+                                                                                unique_time_vec[i]);
+
+            }
+            catch(int time){
+                current_ship_intention_model.save_intention_predictions_to_file(filename_intention,
+                                                                                x_vec[unique_time_vec.size()*j+i], /* x pos for ship j at time i */
+                                                                                y_vec[unique_time_vec.size()*j+i],
+                                                                                unique_time_vec[i]);
+                std::cout << "Exeption caught!!";
+                intentionFile << "\n";
+                std::cerr << unique_time_vec[i] << std::endl;
+                int end_time= unique_time_vec[i]/60;
+                std::cout << "End time: " << end_time << " and added timestep: " << added_timestep << std::endl;
+                if( end_time > (added_timestep +2)){
+                    added_timestep +=2;
+                    i = added_timestep;
+                }
+                for(auto& [ship_id2, current_ship_intention_model2] : ship_intentions){
+                    current_ship_intention_model2.set_initial_state(INTENTION_INFERENCE::better_at(ship_state[i+1], ship_id2));
+                }
+            }                                               
 
             new_timestep = false;
+        }
     }
-   }
     printf("Finished writing intentions to file \n");
 }
 
@@ -249,14 +268,14 @@ int main(){
     
 	int num_ships = 2; /* Total number of ships, including own ship*/
     //std::string filename = "new_Case_LQLVS-60-sec.csv"; //crossing
-    //std::string filename = "new_case_2ZC9Z-60-sec-two-ships.csv"; //head on
+    std::string filename = "new_case_2ZC9Z-60-sec-two-ships.csv"; //head on
     //std::string filename = "new_Case - 01-08-2021, 08-21-29 - AQ5VM-60-sec-two-ships.csv"; //overtaking must start at timestep 4
     //std::string filename = "new_Case - 01-15-2020, 09-05-49 - VATEN-60-sec-two-ships.csv"; //overtaking
     //std::string filename  = "new_Case - 01-17-2018, 06-26-20 - W4H51-60-sec.csv";
     //std::string filename = "new_Case - 05-26-2019, 20-39-57 - 60GEW-60-sec.csv";
     //std::string filename = "new_Case - 01-04-2020, 15-34-37 - 7SWX4-60-sec.csv"; //overtake
     //std::string filename = "new_Case - 02-01-2018, 15-50-25 - C1401-60-sec.csv"; //head-on corr
-    std::string filename = "new_Case - 01-09-2018, 03-55-18 - QZPS3-60-sec.csv"; //ho wr
+    //std::string filename = "new_Case - 01-09-2018, 03-55-18 - QZPS3-60-sec.csv"; //ho wr
     //std::string filename = "new_1_Case - 07-09-2019, 05-52-22 - O7LU9-60-sec.csv"; //weird start
     //std::string filename = "new_1_Case - 08-09-2018, 19-12-24 - 4XJ3B-60-sec.csv"; //not unmodeled
     //std::string filename = "new_1_Case - 06-25-2019, 14-22-43 - OO430-60-sec.csv"; //not unmodeled

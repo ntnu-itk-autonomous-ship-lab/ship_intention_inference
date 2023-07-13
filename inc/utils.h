@@ -9,6 +9,9 @@
 
 namespace INTENTION_INFERENCE
 {
+    double prob_saturation(double val) {
+        return std::max(0.0, std::min(val, 1.0));
+    }
     template <typename map_t>
     /**
      * @brief Standard .at() operator for maps, just with more debugging
