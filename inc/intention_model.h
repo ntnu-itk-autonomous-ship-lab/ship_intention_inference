@@ -431,7 +431,6 @@ namespace INTENTION_INFERENCE
 							   , bool & start
 							   )
 		{
-
 			bool did_save = false;
 
 			net.setEvidence("change_in_course", changeInCourseIdentifier(parameters, better_at(ship_states, my_id)[CHI], my_initial_ship_state[CHI]));
@@ -479,7 +478,7 @@ namespace INTENTION_INFERENCE
 						// 	std::cout<< ship << ": " << event <<std::endl;
 						//}
 				    }
-					std::map<std::string, double> situation = evaluateRelativeSituation2(parameters, better_at(old_ship_states, my_id), ship_state);
+					std::map<std::string, double> situation = evaluateRelativeSituation2(parameters, better_at(old_ship_states, my_id), better_at(old_ship_states, ship_id));
 					net.setVirtualEvidence("colav_situation_towards_" + ship_name, situation);
 				}
 			}
@@ -506,10 +505,9 @@ namespace INTENTION_INFERENCE
 					check_changing_course[my_id] = better_at(better_at(intention_model_predictions, "is_changing_course"), "true");
 					other_ship_id = ship_id;
 					//&& !check_changing_course[my_id] &&!check_changing_course[other_ship_id] && (cpa.time_untill_CPA<600)
-					if(result_risk_of_collision>0.9  && !check_changing_course[my_id] &&!check_changing_course[other_ship_id] && (cpa.time_untill_CPA<600)){
+					if(result_risk_of_collision>0.9  && !check_changing_course[my_id] &&!check_changing_course[other_ship_id]){
 						risk_of_collision[my_id] = true;
 						my_current_risk = true;
-
 					}
 				}
 			}
@@ -548,9 +546,9 @@ namespace INTENTION_INFERENCE
 
 						if (!start){
 							my_initial_ship_state = better_at(ship_states, my_id);
-							start = true;
 							my_start = 1;
 						}
+						start = true;
 					}
 				}
 				else{

@@ -277,10 +277,10 @@ int main(){
     //std::string filename  = "new_Case - 01-17-2018, 06-26-20 - W4H51-60-sec.csv";
     //std::string filename = "new_Case - 05-26-2019, 20-39-57 - 60GEW-60-sec.csv";
     //std::string filename = "new_Case - 01-04-2020, 15-34-37 - 7SWX4-60-sec.csv"; //overtake
-    //std::string filename = "new_Case - 02-01-2018, 15-50-25 - C1401-60-sec.csv"; //head-on corr
+    std::string filename = "new_Case - 02-01-2018, 15-50-25 - C1401-60-sec.csv"; //head-on corr
     //std::string filename = "new_Case - 01-09-2018, 03-55-18 - QZPS3-60-sec.csv"; //ho wr
     //std::string filename = "new_1_Case - 07-09-2019, 05-52-22 - O7LU9-60-sec.csv"; //weird start
-    std::string filename = "new_1_Case - 08-09-2018, 19-12-24 - 4XJ3B-60-sec.csv"; //not unmodeled
+    //std::string filename = "new_1_Case - 08-09-2018, 19-12-24 - 4XJ3B-60-sec.csv"; //not unmodeled
     //std::string filename = "new_1_Case - 06-25-2019, 14-22-43 - OO430-60-sec.csv"; //not unmodeled
     //std::string filename = "new_1_Case - 12-02-2018, 20-10-07 - PW6UL-60-sec.csv"; //unmodeled
     //std::string filename = "new_1_Case - 07-18-2019, 05-46-19 - W6ZUC-60-sec.csv";
@@ -301,8 +301,6 @@ int main(){
     std::vector<int> ship_list = getShipList(mmsi_vec);
 
     vecsToShipStateVectorMap(ship_state, unique_time_vec, ship_list, time_vec, x_vec, y_vec, sog_vec, cog_vec);
-
-
 
     INTENTION_INFERENCE::IntentionModelParameters parameters = setModelParameters(num_ships);
 
@@ -337,11 +335,12 @@ int main(){
         std::cout << "y: " << y_vec[i] << std::endl;
         std::cout << "sog: " << sog_vec[i] << std::endl;
         std::cout << "cog: " << cog_vec[i] << std::endl;
-    } */
+    }
     for (int i = 0; i < 5; i++){
             for(auto [key, item]: ship_state[i]){
             std::cout << key << " -> " << item << std::endl;
             std::cout << " time: " << unique_time_vec[i] << std::endl;
         }
     } 
+    */
 }
