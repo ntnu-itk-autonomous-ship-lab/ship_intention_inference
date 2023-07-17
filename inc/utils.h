@@ -9,7 +9,10 @@
 
 namespace INTENTION_INFERENCE
 {
-    double prob_saturation(double val) {
+    double prob_saturation(double val, std::string key = "") {
+        if ((key != "") && ((val < 0.0) || (val > 1.0))){
+            std::cout<<"WARNING: " << key << " = " << val << " is out of scope [0, 1]." << std::endl;
+        }
         return std::max(0.0, std::min(val, 1.0));
     }
     template <typename map_t>

@@ -327,10 +327,10 @@ namespace INTENTION_INFERENCE
 				}
 			}
 
-			net.setBinaryPriors("intention_ignoring_safety", parameters.ignoring_safety_probability);
-			net.setBinaryPriors("intention_colregs_compliant", parameters.colregs_compliance_probability);
-			net.setBinaryPriors("intention_good_seamanship", parameters.good_seamanship_probability);
-			net.setBinaryPriors("unmodelled_behaviour", parameters.unmodeled_behaviour);
+			//net.setBinaryPriors("intention_ignoring_safety", parameters.ignoring_safety_probability);
+			//net.setBinaryPriors("intention_colregs_compliant", parameters.colregs_compliance_probability);
+			//net.setBinaryPriors("intention_good_seamanship", parameters.good_seamanship_probability);
+			//net.setBinaryPriors("unmodelled_behaviour", parameters.unmodeled_behaviour);
 
 			for (auto [ship_id, ship_name] : ship_name_map)
 			{
@@ -340,13 +340,13 @@ namespace INTENTION_INFERENCE
 				}
 			}
 			//net.setPriorNormalDistribution("intention_ample_time", parameters.ample_time_s.mu, parameters.ample_time_s.sigma, parameters.ample_time_s.max / parameters.ample_time_s.n_bins);
-			net.setPriorNormalDistribution("intention_distance_risk_of_collision", parameters.risk_distance_m.mu, parameters.risk_distance_m.sigma, parameters.risk_distance_m.max / ( parameters.safe_distance_m.n_bins));
-			net.setPriorNormalDistribution("intention_distance_risk_of_collision_front", parameters.risk_distance_front_m.mu, parameters.risk_distance_front_m.sigma, parameters.risk_distance_front_m.max / parameters.risk_distance_front_m.n_bins);
+			//net.setPriorNormalDistribution("intention_distance_risk_of_collision", parameters.risk_distance_m.mu, parameters.risk_distance_m.sigma, parameters.risk_distance_m.max / ( parameters.safe_distance_m.n_bins));
+			//net.setPriorNormalDistribution("intention_distance_risk_of_collision_front", parameters.risk_distance_front_m.mu, parameters.risk_distance_front_m.sigma, parameters.risk_distance_front_m.max / parameters.risk_distance_front_m.n_bins);
 
 			//int colreg_idx = 7;
 			//int cpa_ts_idx = 4;  // per nå lik r_maneuver_own (skal byttes til cpa_ts_idx)
 
-			net.setPriorNormalDistribution("intention_safe_distance_front", parameters.safe_distance_front_m.mu, parameters.safe_distance_front_m.sigma, parameters.safe_distance_front_m.max / parameters.safe_distance_front_m.n_bins);
+			//net.setPriorNormalDistribution("intention_safe_distance_front", parameters.safe_distance_front_m.mu, parameters.safe_distance_front_m.sigma, parameters.safe_distance_front_m.max / parameters.safe_distance_front_m.n_bins);
 			//net.setPriorNormalDistribution("intention_distance_risk_of_collision_front", parameters.safe_distance_front_m.mu, parameters.safe_distance_front_m.sigma, parameters.safe_distance_front_m.max / parameters.safe_distance_front_m.n_bins);
 
     		int cpa_dist_idx = 6;
@@ -362,14 +362,14 @@ namespace INTENTION_INFERENCE
     		int crossing = -1;
 
     		// Cpa distance
-    		net.setAisDistribution("intention_safe_distance_midpoint", "files/classified/classified_south.csv", colreg_idx, cpa_dist_idx, multiply, n_bins, head_on);
-    		net.setAisDistribution("intention_safe_distance", "files/classified/classified_south.csv", colreg_idx, cpa_dist_idx, multiply, n_bins, overtake);
+    		//net.setAisDistribution("intention_safe_distance_midpoint", "files/classified/classified_south.csv", colreg_idx, cpa_dist_idx, multiply, n_bins, head_on);
+    		//net.setAisDistribution("intention_safe_distance", "files/classified/classified_south.csv", colreg_idx, cpa_dist_idx, multiply, n_bins, overtake);
     		//net.setAisDistribution("intention_distance_risk_of_collision", "files/classified/classified_west_5.csv", colreg_idx, cpa_dist_idx, multiply, n_bins, overtake);
     		//net.setAisDistribution("intention_distance_risk_of_collision_front", "files/classified/classified_west_5.csv", colreg_idx, cpa_dist_idx, multiply, n_bins, crossing);
 
     		// Cpa time, the model does NOT differ for the different situations
     		//net.setAisDistribution("intention_ample_time", "files/classified/classified_west_5.csv", colreg_idx, cpa_ample_time_idx, multiply, n_bins, head_on);  //head on
-    		net.setAmpleTimeDistribution("intention_ample_time", "files/classified/classified_west_5.csv", cpa_ample_time_idx, timestep, n_bins);
+    		//net.setAmpleTimeDistribution("intention_ample_time", "files/classified/classified_west_5.csv", cpa_ample_time_idx, timestep, n_bins);
 		}
 
 		// std::map<std::string, double> insertObservationRelativeSituation(const IntentionModelParameters parameters, int &ot_en, std::map<int, Eigen::Vector4d> ship_states, std::vector<int> currently_tracked_ships, bool is_changing_course, double time, double x, double y, std::ofstream &intentionFile)
@@ -474,13 +474,13 @@ namespace INTENTION_INFERENCE
 					
 					if (cpa.time_untill_CPA > 240){
 						old_ship_states = ship_states;
-						std::map<std::string, double> situation = evaluateRelativeSituation2(parameters, better_at(old_ship_states, my_id), ship_state);
 						//std::cout<< "\n\nSituations: " << std::endl;
 						// for (auto [ship, event]: situation){
 						// 	std::cout<< ship << ": " << event <<std::endl;
 						//}
-						net.setVirtualEvidence("colav_situation_towards_" + ship_name, situation);
 				    }
+					std::map<std::string, double> situation = evaluateRelativeSituation2(parameters, better_at(old_ship_states, my_id), ship_state);
+					net.setVirtualEvidence("colav_situation_towards_" + ship_name, situation);
 				}
 			}
 
@@ -516,6 +516,7 @@ namespace INTENTION_INFERENCE
 
 			my_start = 0;
 			/* This sets new initial conditions if we either are on a start or a new timestep and we are in risk of collision */
+			/* TODO: Add a CPA limit on how long a start poin can be delayed */
 			if(risk_of_collision[my_id] && risk_of_collision[other_ship_id] && (new_timestep || start)){
 				if((!start && my_current_risk) || start){
 					if((new_timestep && !start && !is_changing_course && !other_is_changing_course)  || start){

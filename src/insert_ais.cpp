@@ -76,32 +76,11 @@ void readFileToVecs (std::string filename, std::vector<int> &mmsi_vec, std::vect
 }
 
 
-void vecsToShipStateVectorMap(std::vector<std::map<int, Eigen::Vector4d > > &ship_state, std::vector<double> &unique_time_vec, int num_ships, std::vector<int> mmsi_vec, std::vector<double> time_vec, std::vector<double> x_vec, std::vector<double> y_vec, std::vector<double> sog_vec, std::vector<double> cog_vec){
-    int mmsi;
-    time_t time;
-    double time_1;
-    double x, y, sog, cog;
-    std::string str;
-
-	for (int i = 0; i < time_vec.size()/num_ships; i++ ) {
-        std::map<int, Eigen::Vector4d> current_ship_states;
-        for (int c = 0; c < num_ships; c++){
-            int index = c*time_vec.size()/num_ships + i;
-            Eigen::Vector4d states(x_vec[index],y_vec[index],cog_vec[index],sog_vec[index]);
-            std::map<int,Eigen::Vector4d>::iterator it = current_ship_states.end();
-            current_ship_states.insert(it, std::pair<int, Eigen::Vector4d>(mmsi_vec[index],states));
-        }
-        ship_state.push_back(current_ship_states);
-				unique_time_vec.push_back(time_vec[i]);
-    }
-}
-
-
 std::vector<int> getShipList(std::vector<int> mmsi_vec){
-    std::vector<int> ship_list( mmsi_vec.begin(), mmsi_vec.end() );
-    auto it = unique(ship_list.begin(), ship_list.end());
-    ship_list.resize(distance(ship_list.begin(), it));
-    return ship_list;
+    std::sort(mmsi_vec.begin(), mmsi_vec.end());
+    auto it = std::unique(mmsi_vec.begin(), mmsi_vec.end());
+    mmsi_vec.resize(std::distance(mmsi_vec.begin(), it));
+    return mmsi_vec;
 }
 
 /*void ensure_initialization(std::map<int, INTENTION_INFERENCE::IntentionModel> ship_intentions){
@@ -126,6 +105,29 @@ int getShipListIndex(int mmsi, std::vector<int> ship_list){
     return index;
 }
 
+void vecsToShipStateVectorMap(std::vector<std::map<int, Eigen::Vector4d >> &ship_state, std::vector<double> &unique_time_vec, std::vector<int> ship_list, std::vector<double> time_vec, std::vector<double> x_vec, std::vector<double> y_vec, std::vector<double> sog_vec, std::vector<double> cog_vec){
+    time_t time;
+    double time_1;
+    double x, y, sog, cog;
+    std::string str;
+    int num_ships = ship_list.size();
+
+	for (int i = 0; i < time_vec.size()/num_ships; i++ ) {
+        std::map<int, Eigen::Vector4d> current_ship_states;
+        for (auto & ship_id : ship_list){
+            int j = getShipListIndex(ship_id,ship_list);
+            int index = j*time_vec.size()/num_ships + i;
+            Eigen::Vector4d states(x_vec[index],y_vec[index],cog_vec[index],sog_vec[index]);
+            std::map<int,Eigen::Vector4d>::iterator it = current_ship_states.end();
+            current_ship_states.insert(it, std::pair<int, Eigen::Vector4d>(ship_id,states));
+        }
+        ship_state.push_back(current_ship_states);
+				unique_time_vec.push_back(time_vec[i]);
+    }
+}
+
+
+
 
 void writeIntentionToFile(int timestep,
                           INTENTION_INFERENCE::IntentionModelParameters parameters,
@@ -149,6 +151,7 @@ void writeIntentionToFile(int timestep,
     std::map<int,double> check_changing_course;
     for(auto& [ship_id, current_ship_intention_model] : ship_intentions){
         risk_of_collision[ship_id] = false;
+        check_changing_course[ship_id] = false;
     }
 
     bool start = false;
@@ -268,7 +271,7 @@ int main(){
     
 	int num_ships = 2; /* Total number of ships, including own ship*/
     //std::string filename = "new_Case_LQLVS-60-sec.csv"; //crossing
-    std::string filename = "new_case_2ZC9Z-60-sec-two-ships.csv"; //head on
+    //std::string filename = "new_case_2ZC9Z-60-sec-two-ships.csv"; //head on
     //std::string filename = "new_Case - 01-08-2021, 08-21-29 - AQ5VM-60-sec-two-ships.csv"; //overtaking must start at timestep 4
     //std::string filename = "new_Case - 01-15-2020, 09-05-49 - VATEN-60-sec-two-ships.csv"; //overtaking
     //std::string filename  = "new_Case - 01-17-2018, 06-26-20 - W4H51-60-sec.csv";
@@ -277,7 +280,7 @@ int main(){
     //std::string filename = "new_Case - 02-01-2018, 15-50-25 - C1401-60-sec.csv"; //head-on corr
     //std::string filename = "new_Case - 01-09-2018, 03-55-18 - QZPS3-60-sec.csv"; //ho wr
     //std::string filename = "new_1_Case - 07-09-2019, 05-52-22 - O7LU9-60-sec.csv"; //weird start
-    //std::string filename = "new_1_Case - 08-09-2018, 19-12-24 - 4XJ3B-60-sec.csv"; //not unmodeled
+    std::string filename = "new_1_Case - 08-09-2018, 19-12-24 - 4XJ3B-60-sec.csv"; //not unmodeled
     //std::string filename = "new_1_Case - 06-25-2019, 14-22-43 - OO430-60-sec.csv"; //not unmodeled
     //std::string filename = "new_1_Case - 12-02-2018, 20-10-07 - PW6UL-60-sec.csv"; //unmodeled
     //std::string filename = "new_1_Case - 07-18-2019, 05-46-19 - W6ZUC-60-sec.csv";
@@ -286,20 +289,19 @@ int main(){
     //std::string filename = "new_Case - 01-02-2018, 01-05-22 - GP38T-60-sec.csv"; //crossing wrong both
     //std::string filename = "new_Case - 05-09-2018, 10-05-48 - 9PNLJ-60-sec.csv";
 
-    //std::string intentionModelFilename = "files/intention_models/intention_model_from_code.xdsl";
+    std::string intentionModelFilename = "files/intention_models/intention_model_from_code.xdsl";
     //std::string intentionModelFilename = "intention_model_two_ships.xdsl";
-    std::string intentionModelFilename = "files/intention_models/intention_model_with_risk_of_collision_no_startpoint_3.xdsl";
+    //std::string intentionModelFilename = "files/intention_models/intention_model_with_risk_of_collision_no_startpoint_3.xdsl";
 
     std::vector<std::map<int, Eigen::Vector4d> > ship_state;
     std::vector<int> mmsi_vec;
     std::vector<double> time_vec, x_vec, y_vec, sog_vec, cog_vec, unique_time_vec;;
-
     readFileToVecs(filename, mmsi_vec, time_vec, x_vec, y_vec, sog_vec, cog_vec);
 
-
-    vecsToShipStateVectorMap(ship_state, unique_time_vec, num_ships, mmsi_vec, time_vec, x_vec, y_vec, sog_vec, cog_vec);
-
     std::vector<int> ship_list = getShipList(mmsi_vec);
+
+    vecsToShipStateVectorMap(ship_state, unique_time_vec, ship_list, time_vec, x_vec, y_vec, sog_vec, cog_vec);
+
 
 
     INTENTION_INFERENCE::IntentionModelParameters parameters = setModelParameters(num_ships);
@@ -311,10 +313,10 @@ int main(){
 
     while (!inserted){
         for (int i = 0; i < num_ships; i++){
-            std::cout<< INTENTION_INFERENCE::better_at(ship_state[timestep], ship_list[1])[INTENTION_INFERENCE::PX]- INTENTION_INFERENCE::better_at(ship_state[timestep], ship_list[2])[INTENTION_INFERENCE::PX] << std::endl;
-            double dist = evaluateDistance(INTENTION_INFERENCE::better_at(ship_state[timestep], ship_list[1])[INTENTION_INFERENCE::PX] - INTENTION_INFERENCE::better_at(ship_state[timestep], ship_list[2])[INTENTION_INFERENCE::PX], INTENTION_INFERENCE::better_at(ship_state[timestep], ship_list[1])[INTENTION_INFERENCE::PY] - INTENTION_INFERENCE::better_at(ship_state[timestep], ship_list[2])[INTENTION_INFERENCE::PY]);
+            std::cout<< INTENTION_INFERENCE::better_at(ship_state[timestep], ship_list[1])[INTENTION_INFERENCE::PX]- INTENTION_INFERENCE::better_at(ship_state[timestep], ship_list[0])[INTENTION_INFERENCE::PX] << std::endl;
+            double dist = evaluateDistance(INTENTION_INFERENCE::better_at(ship_state[timestep], ship_list[1])[INTENTION_INFERENCE::PX] - INTENTION_INFERENCE::better_at(ship_state[timestep], ship_list[0])[INTENTION_INFERENCE::PX], INTENTION_INFERENCE::better_at(ship_state[timestep], ship_list[1])[INTENTION_INFERENCE::PY] - INTENTION_INFERENCE::better_at(ship_state[timestep], ship_list[0])[INTENTION_INFERENCE::PY]);
             std::cout<< "dist: " << dist << std::endl;
-            auto CPA = evaluateCPA(INTENTION_INFERENCE::better_at(ship_state[timestep], ship_list[1]), INTENTION_INFERENCE::better_at(ship_state[timestep], ship_list[2]));
+            auto CPA = evaluateCPA(INTENTION_INFERENCE::better_at(ship_state[timestep], ship_list[1]), INTENTION_INFERENCE::better_at(ship_state[timestep], ship_list[0]));
             std::cout<< "CPA dist: " << CPA.distance_at_CPA << std::endl;
             
             if ((dist < parameters.starting_distance) && (sog_vec[timestep]>0.1) && (sog_vec[unique_time_vec.size()+timestep]>0.1) && timestep>0){ // && (CPA.distance_at_CPA < parameters.starting_cpa_distance) ){ //only checks the speed for two ships

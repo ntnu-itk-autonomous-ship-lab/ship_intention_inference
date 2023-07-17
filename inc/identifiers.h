@@ -32,7 +32,7 @@ namespace INTENTION_INFERENCE
     }
     unsigned lowresCPADistanceIdentifier(const IntentionModelParameters &parameters, double distance_m)
     {
-        std::cout << "In lowres bin: " << discretizer(distance_m, parameters.risk_distance_m.max, parameters.risk_distance_m.n_bins) << "\n";
+        //std::cout << "In lowres bin: " << discretizer(distance_m, parameters.risk_distance_m.max, parameters.risk_distance_m.n_bins) << "\n";
         return discretizer(distance_m, parameters.risk_distance_m.max, parameters.risk_distance_m.n_bins);
     }
     unsigned twotimesDistanceToMidpointIdentifier(const IntentionModelParameters &parameters, double distance_to_midpoint_m)
@@ -45,7 +45,7 @@ namespace INTENTION_INFERENCE
     }
     unsigned crossInFrontLowresIdentifier(const IntentionModelParameters &parameters, double distance_m)
     {
-        std::cout << "In front bin: " << discretizer(2 * distance_m, parameters.risk_distance_front_m.max, parameters.risk_distance_front_m.n_bins) << "\n";
+        //std::cout << "In front bin: " << discretizer(2 * distance_m, parameters.risk_distance_front_m.max, parameters.risk_distance_front_m.n_bins) << "\n";
         return discretizer(2 * distance_m, parameters.risk_distance_front_m.max, parameters.risk_distance_front_m.n_bins);
     }
 
@@ -399,26 +399,26 @@ namespace INTENTION_INFERENCE
                 result.at("HO") = 1;
             }
             else if (relative_heading > M_PI-theta1-uncertainty+bearing_relative_to_ownship_heading){
-                result.at("HO") = prob_saturation(-((M_PI-theta1+bearing_relative_to_ownship_heading-uncertainty)- relative_heading) / (uncertainty));
-                result.at("CR_PS") = prob_saturation(-(relative_heading - (M_PI-theta1+bearing_relative_to_ownship_heading)) / (uncertainty));
+                result.at("HO") = prob_saturation(-((M_PI-theta1+bearing_relative_to_ownship_heading-uncertainty)- relative_heading) / (uncertainty), "HO");
+                result.at("CR_PS") = prob_saturation(-(relative_heading - (M_PI-theta1+bearing_relative_to_ownship_heading)) / (uncertainty), "CR_PS");
             }
             else if (relative_heading > M_PI-theta2+bearing_relative_to_ownship_heading+uncertainty){
                 result.at("CR_PS") = 1;
             }
             else if (relative_heading > M_PI-theta2+bearing_relative_to_ownship_heading-uncertainty){
-                result.at("CR_PS") = prob_saturation(((M_PI-theta2+bearing_relative_to_ownship_heading+uncertainty)- relative_heading) / (uncertainty));
-                result.at("OT_ing") = prob_saturation((relative_heading - (M_PI-theta2+bearing_relative_to_ownship_heading)) / (uncertainty));
+                result.at("CR_PS") = prob_saturation(((M_PI-theta2+bearing_relative_to_ownship_heading+uncertainty)- relative_heading) / (uncertainty), "CR_PS");
+                result.at("OT_ing") = prob_saturation((relative_heading - (M_PI-theta2+bearing_relative_to_ownship_heading)) / (uncertainty), "OT_ing");
             }
             else if (relative_heading< -M_PI+theta2+bearing_relative_to_ownship_heading-uncertainty){
                 result.at("CR_SS") = 1;
             }
             else if (relative_heading< -M_PI+theta2+bearing_relative_to_ownship_heading+uncertainty){
-                result.at("CR_SS") = prob_saturation(((-M_PI+theta2+bearing_relative_to_ownship_heading+uncertainty)-relative_heading) / (uncertainty));
-                result.at("OT_ing") = prob_saturation((relative_heading - (-M_PI+theta2+bearing_relative_to_ownship_heading)) / (uncertainty));
+                result.at("CR_SS") = prob_saturation(((-M_PI+theta2+bearing_relative_to_ownship_heading+uncertainty)-relative_heading) / (uncertainty), "CR_SS");
+                result.at("OT_ing") = prob_saturation((relative_heading - (-M_PI+theta2+bearing_relative_to_ownship_heading)) / (uncertainty), "OT_ing");
             }
             else if (relative_heading< -M_PI+theta1+bearing_relative_to_ownship_heading+uncertainty){
-                result.at("HO") =prob_saturation(((-M_PI+theta1+bearing_relative_to_ownship_heading+uncertainty)-relative_heading) / (uncertainty));
-                result.at("CR_SS") =prob_saturation((relative_heading - (-M_PI+theta1+bearing_relative_to_ownship_heading)) / (uncertainty));
+                result.at("HO") =prob_saturation(((-M_PI+theta1+bearing_relative_to_ownship_heading+uncertainty)-relative_heading) / (uncertainty), "HO");
+                result.at("CR_SS") =prob_saturation((relative_heading - (-M_PI+theta1+bearing_relative_to_ownship_heading)) / (uncertainty), "CR_SS");
             }
             else if (relative_heading < M_PI-theta2+bearing_relative_to_ownship_heading-uncertainty && relative_heading> -M_PI+theta2+bearing_relative_to_ownship_heading+uncertainty){
                 result.at("OT_ing") = 1;
@@ -430,22 +430,22 @@ namespace INTENTION_INFERENCE
                 result.at("CR_SS") = 1;
             }
             else if (relative_heading > M_PI-theta1-uncertainty+bearing_relative_to_ownship_heading){
-                result.at("CR_SS") = prob_saturation(((M_PI-theta1+bearing_relative_to_ownship_heading+uncertainty)- relative_heading) / (uncertainty));
-                result.at("HO") = prob_saturation((relative_heading - (M_PI-theta1+bearing_relative_to_ownship_heading)) / (uncertainty));
+                result.at("CR_SS") = prob_saturation(((M_PI-theta1+bearing_relative_to_ownship_heading+uncertainty)- relative_heading) / (uncertainty), "CR_SS");
+                result.at("HO") = prob_saturation((relative_heading - (M_PI-theta1+bearing_relative_to_ownship_heading)) / (uncertainty), "HO");
             }
             else if (relative_heading > M_PI-theta2+bearing_relative_to_ownship_heading+uncertainty){
                 result.at("HO") = 1;
             }
             else if (relative_heading > M_PI-theta2+bearing_relative_to_ownship_heading-uncertainty){
-                result.at("HO") = prob_saturation(((M_PI-theta2+bearing_relative_to_ownship_heading+uncertainty)- relative_heading) / (uncertainty));
-                result.at("OT_ing") = prob_saturation((relative_heading - (M_PI-theta2+bearing_relative_to_ownship_heading)) / (uncertainty));
+                result.at("HO") = prob_saturation(((M_PI-theta2+bearing_relative_to_ownship_heading+uncertainty)- relative_heading) / (uncertainty), "HO");
+                result.at("OT_ing") = prob_saturation((relative_heading - (M_PI-theta2+bearing_relative_to_ownship_heading)) / (uncertainty), "OT_ing");
             }
             else if (relative_heading< -M_PI+theta2+bearing_relative_to_ownship_heading-uncertainty){
                 result.at("CR_SS") = 1;
             }
             else if (relative_heading< -M_PI+theta2+bearing_relative_to_ownship_heading+uncertainty){
-                result.at("CR_SS") = prob_saturation((-relative_heading+(-M_PI+theta2+bearing_relative_to_ownship_heading+uncertainty)) / (uncertainty));
-                result.at("OT_ing") = prob_saturation((-(-M_PI+theta2+bearing_relative_to_ownship_heading)+relative_heading) / (uncertainty));
+                result.at("CR_SS") = prob_saturation((-relative_heading+(-M_PI+theta2+bearing_relative_to_ownship_heading+uncertainty)) / (uncertainty), "CR_SS");
+                result.at("OT_ing") = prob_saturation((-(-M_PI+theta2+bearing_relative_to_ownship_heading)+relative_heading) / (uncertainty), "OT_ing");
             }
             else if (relative_heading < M_PI-theta2+bearing_relative_to_ownship_heading-uncertainty && relative_heading> -M_PI+theta2+bearing_relative_to_ownship_heading+uncertainty){
                 result.at("OT_ing") = 1;
@@ -473,15 +473,15 @@ namespace INTENTION_INFERENCE
                 result.at("OT_en") = 1;
             }
             else if (relative_heading > M_PI-theta2+bearing_relative_to_ownship_heading-uncertainty){
-                result.at("OT_en") = prob_saturation(((M_PI-theta2+bearing_relative_to_ownship_heading+uncertainty)- relative_heading) / (uncertainty));
-                result.at("HO") = prob_saturation((relative_heading - (M_PI-theta2+bearing_relative_to_ownship_heading)) / (uncertainty));
+                result.at("OT_en") = prob_saturation(((M_PI-theta2+bearing_relative_to_ownship_heading+uncertainty)- relative_heading) / (uncertainty), "OT_en");
+                result.at("HO") = prob_saturation((relative_heading - (M_PI-theta2+bearing_relative_to_ownship_heading)) / (uncertainty), "HO");
             }
             else if (relative_heading< -M_PI+theta2+bearing_relative_to_ownship_heading-uncertainty){
                 result.at("OT_en") = 1;
             }
             else if (relative_heading< -M_PI+theta2+bearing_relative_to_ownship_heading+uncertainty){
-                result.at("OT_en") = prob_saturation((relative_heading-(-M_PI+theta2+bearing_relative_to_ownship_heading-uncertainty)) / (uncertainty));
-                result.at("HO") = prob_saturation(((-M_PI+theta2+bearing_relative_to_ownship_heading)-relative_heading) / (uncertainty));
+                result.at("OT_en") = prob_saturation((relative_heading-(-M_PI+theta2+bearing_relative_to_ownship_heading-uncertainty)) / (uncertainty), "OT_en");
+                result.at("HO") = prob_saturation(((-M_PI+theta2+bearing_relative_to_ownship_heading)-relative_heading) / (uncertainty), "HO");
             }
             else if (relative_heading < M_PI-theta2+bearing_relative_to_ownship_heading-uncertainty && relative_heading> -M_PI+theta2+bearing_relative_to_ownship_heading+uncertainty){
                 result.at("HO") = 1;
@@ -509,19 +509,19 @@ namespace INTENTION_INFERENCE
                 result.at("CR_PS") = 1;
             }
             else if (relative_heading > M_PI-theta2+bearing_relative_to_ownship_heading-uncertainty){
-                result.at("CR_PS") = prob_saturation(((M_PI-theta2+bearing_relative_to_ownship_heading+uncertainty)- relative_heading) / (uncertainty));
-                result.at("OT_ing") = prob_saturation((relative_heading - (M_PI-theta2+bearing_relative_to_ownship_heading)) / (uncertainty));
+                result.at("CR_PS") = prob_saturation(((M_PI-theta2+bearing_relative_to_ownship_heading+uncertainty)- relative_heading) / (uncertainty), "CR_PS");
+                result.at("OT_ing") = prob_saturation((relative_heading - (M_PI-theta2+bearing_relative_to_ownship_heading)) / (uncertainty), "OT_ing");
             }
             else if (relative_heading< -M_PI+theta2+bearing_relative_to_ownship_heading-uncertainty){
                 result.at("HO") = 1;
             }
             else if (relative_heading< -M_PI+theta2+bearing_relative_to_ownship_heading+uncertainty){
-                result.at("HO") = prob_saturation((relative_heading-(-M_PI+theta2+bearing_relative_to_ownship_heading-uncertainty)) / (uncertainty));
-                result.at("OT_ing") = prob_saturation(((-M_PI+theta2+bearing_relative_to_ownship_heading)-relative_heading) / (uncertainty));
+                result.at("HO") = prob_saturation((relative_heading-(-M_PI+theta2+bearing_relative_to_ownship_heading-uncertainty)) / (uncertainty), "HO");
+                result.at("OT_ing") = prob_saturation(((-M_PI+theta2+bearing_relative_to_ownship_heading)-relative_heading) / (uncertainty), "OT_ing");
             }
             else if (relative_heading< -M_PI+theta1+bearing_relative_to_ownship_heading+uncertainty){
-                result.at("CR_PS") = prob_saturation(((-M_PI+theta1+bearing_relative_to_ownship_heading+uncertainty)-relative_heading) / (uncertainty));
-                result.at("HO") = prob_saturation((relative_heading - (-M_PI+theta1+bearing_relative_to_ownship_heading)) / (uncertainty));
+                result.at("CR_PS") = prob_saturation(((-M_PI+theta1+bearing_relative_to_ownship_heading+uncertainty)-relative_heading) / (uncertainty), "CR_PS");
+                result.at("HO") = prob_saturation((relative_heading - (-M_PI+theta1+bearing_relative_to_ownship_heading)) / (uncertainty), "HO");
             }
             else if (relative_heading < M_PI-theta2+bearing_relative_to_ownship_heading-uncertainty && relative_heading> -M_PI+theta2+bearing_relative_to_ownship_heading+uncertainty){
                 result.at("OT_ing") = 1;
