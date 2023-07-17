@@ -208,64 +208,6 @@ void writeIntentionToFile(int timestep,
     printf("Finished writing intentions to file \n");
 }
 
-
-INTENTION_INFERENCE::IntentionModelParameters setModelParameters(int num_ships){
-    INTENTION_INFERENCE::IntentionModelParameters param;
-    param.number_of_network_evaluation_samples = 100000;
-	param.max_number_of_obstacles = num_ships-1; //must be set to num_ships-1 or else segmantation fault
-	param.time_into_trajectory = 10;
-    param.starting_distance = 10000;
-    param.starting_cpa_distance = 15000;
-	param.expanding_dbn.min_time_s = 10;
-	param.expanding_dbn.max_time_s = 1200;
-	param.expanding_dbn.min_course_change_rad = 0.18;
-	param.expanding_dbn.min_speed_change_m_s = 2;
-	param.ample_time_s.mu = 200;
-	param.ample_time_s.sigma = 100;
-	param.ample_time_s.max = 1000;
-	param.ample_time_s.n_bins = 30; // this value must match the bayesian network
-	param.ample_time_s.minimal_accepted_by_ownship = 20;
-    param.safe_distance_m.mu = 200;
-	param.safe_distance_m.sigma = 30;
-	param.safe_distance_m.max = 800;
-    param.safe_distance_m.n_bins = 30;
-    param.risk_distance_m.mu = 1800;
-	param.risk_distance_m.sigma = 500;
-	param.risk_distance_m.max = 2500;
-	param.risk_distance_m.n_bins = 30; // this value must match the bayesian network
-	param.risk_distance_front_m.mu = 1900;
-	param.risk_distance_front_m.sigma = 500;
-	param.risk_distance_front_m.max = 2000;
-	param.risk_distance_front_m.n_bins = 30;
-    param.safe_distance_midpoint_m.mu = 600;
-	param.safe_distance_midpoint_m.sigma = 20;
-	param.safe_distance_midpoint_m.max = 2500;
-	param.safe_distance_midpoint_m.n_bins = 30; // this value must match the bayesian network
-	param.safe_distance_front_m.mu = 100;
-	param.safe_distance_front_m.sigma = 50;
-	param.safe_distance_front_m.max = 1000;
-	param.safe_distance_front_m.n_bins = 30; // this value must match the bayesian network
-	param.change_in_course_rad.minimal_change = 0.18;
-	param.change_in_speed_m_s.minimal_change = 2;
-	param.colregs_situation_borders_rad.HO_uncertainty_start = 2.79;
-	param.colregs_situation_borders_rad.HO_start = 2.96;
-	param.colregs_situation_borders_rad.HO_stop = -2.96;
-	param.colregs_situation_borders_rad.HO_uncertainty_stop = -2.79;
-	param.colregs_situation_borders_rad.OT_uncertainty_start = 1.74;
-	param.colregs_situation_borders_rad.OT_start = 2.18;
-	param.colregs_situation_borders_rad.OT_stop = -2.18;
-	param.colregs_situation_borders_rad.OT_uncertainty_stop = -1.74;
-	param.ignoring_safety_probability = 0;
-	param.colregs_compliance_probability = 0.97;
-    param.good_seamanship_probability = 0.99;
-	param.unmodeled_behaviour = 0.001;
-	param.priority_probability["lower"] = 0.05;
-	param.priority_probability["similar"] = 0.90;
-	param.priority_probability["higher"] = 0.05;
-    return param;
-}
-
-
 int main(){
     using namespace INTENTION_INFERENCE;
     
@@ -277,10 +219,10 @@ int main(){
     //std::string filename  = "new_Case - 01-17-2018, 06-26-20 - W4H51-60-sec.csv";
     //std::string filename = "new_Case - 05-26-2019, 20-39-57 - 60GEW-60-sec.csv";
     //std::string filename = "new_Case - 01-04-2020, 15-34-37 - 7SWX4-60-sec.csv"; //overtake
-    std::string filename = "new_Case - 02-01-2018, 15-50-25 - C1401-60-sec.csv"; //head-on corr
+    //std::string filename = "new_Case - 02-01-2018, 15-50-25 - C1401-60-sec.csv"; //head-on corr
     //std::string filename = "new_Case - 01-09-2018, 03-55-18 - QZPS3-60-sec.csv"; //ho wr
     //std::string filename = "new_1_Case - 07-09-2019, 05-52-22 - O7LU9-60-sec.csv"; //weird start
-    //std::string filename = "new_1_Case - 08-09-2018, 19-12-24 - 4XJ3B-60-sec.csv"; //not unmodeled
+    std::string filename = "new_1_Case - 08-09-2018, 19-12-24 - 4XJ3B-60-sec.csv"; //not unmodeled
     //std::string filename = "new_1_Case - 06-25-2019, 14-22-43 - OO430-60-sec.csv"; //not unmodeled
     //std::string filename = "new_1_Case - 12-02-2018, 20-10-07 - PW6UL-60-sec.csv"; //unmodeled
     //std::string filename = "new_1_Case - 07-18-2019, 05-46-19 - W6ZUC-60-sec.csv";
@@ -295,14 +237,14 @@ int main(){
 
     std::vector<std::map<int, Eigen::Vector4d> > ship_state;
     std::vector<int> mmsi_vec;
-    std::vector<double> time_vec, x_vec, y_vec, sog_vec, cog_vec, unique_time_vec;;
+    std::vector<double> time_vec, x_vec, y_vec, sog_vec, cog_vec, unique_time_vec;
     readFileToVecs(filename, mmsi_vec, time_vec, x_vec, y_vec, sog_vec, cog_vec);
 
     std::vector<int> ship_list = getShipList(mmsi_vec);
 
     vecsToShipStateVectorMap(ship_state, unique_time_vec, ship_list, time_vec, x_vec, y_vec, sog_vec, cog_vec);
 
-    INTENTION_INFERENCE::IntentionModelParameters parameters = setModelParameters(num_ships);
+    INTENTION_INFERENCE::IntentionModelParameters parameters = default_parameters(num_ships);
 
     std::map<int, INTENTION_INFERENCE::IntentionModel> ship_intentions;
 

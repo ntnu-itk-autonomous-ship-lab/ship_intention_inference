@@ -2,3 +2,6 @@
 	path = external/distance_to_coast
 	url = git@github.com:guroveglo/Project-thesis.git
 	branch = make_histograms
+[submodule "external/yaml-cpp"]
+	path = external/yaml-cpp
+	url = git@github.com:jbeder/yaml-cpp.git
