@@ -54,39 +54,39 @@ namespace INTENTION_INFERENCE
 		bool my_current_risk = false;
 
 		const std::vector<std::string> intention_node_names_ship_specific = {"colav_situation_towards_"
-																			 , "priority_intention_to_"
-																			 , "disable_"};
+                                                                             , "priority_intention_to_"
+                                                                             , "disable_"};
 		const std::vector<std::string> intention_node_names_general = {"intention_colregs_compliant"
-																	   , "intention_good_seamanship"
-																	   , "intention_safe_distance"
-																	   , "intention_safe_distance_front"
-																	   , "intention_safe_distance_midpoint"
-																	   , "intention_ample_time"
-																	   , "intention_ignoring_safety"
-																	   , "unmodelled_behaviour"
-																	   ,"intention_distance_risk_of_collision"
-																	   ,"intention_distance_risk_of_collision_front"};
+                                                                       , "intention_good_seamanship"
+                                                                       , "intention_safe_distance"
+                                                                       , "intention_safe_distance_front"
+                                                                       , "intention_safe_distance_midpoint"
+                                                                       , "intention_ample_time"
+                                                                       , "intention_ignoring_safety"
+                                                                       , "unmodelled_behaviour"
+                                                                       ,"intention_distance_risk_of_collision"
+                                                                       ,"intention_distance_risk_of_collision_front"};
 		//const std::vector<std::string> intention_node_names_general = {"intention_colregs_compliant", "intention_good_seamanship", "intention_safe_distance", "intention_safe_distance_front", "intention_safe_distance_midpoint", "intention_ample_time", "intention_ignoring_safety", "unmodelled_behaviour"};
 		const std::vector<std::string> intermediate_node_names_ship_specific = {"risk_of_collision_towards_"
-																				, "is_pre_ample_time_to_"
-																				, "safe_distance_at_CPA_towards_"
-																				, "safe_crossing_front_towards_"
-																				, "safe_distance_to_"
-																				, "safe_distance_to_midpoint_"
-																				, "gives_way_correct_towards_"
-																				, "Observation_applicable_towards_"
-																				, "role_towards_"
-																				, "good_seamanship_to_"
-																				, "Current_risk_of_collision_CPA_towards_"
-																				, "Current_risk_of_collision_front_towards_"
-																				, "Current_risk_of_collision_towards_"};
+                                                                                , "is_pre_ample_time_to_"
+                                                                                , "safe_distance_at_CPA_towards_"
+                                                                                , "safe_crossing_front_towards_"
+                                                                                , "safe_distance_to_"
+                                                                                , "safe_distance_to_midpoint_"
+                                                                                , "gives_way_correct_towards_"
+                                                                                , "Observation_applicable_towards_"
+                                                                                , "role_towards_"
+                                                                                , "good_seamanship_to_"
+                                                                                , "Current_risk_of_collision_CPA_towards_"
+                                                                                , "Current_risk_of_collision_front_towards_"
+                                                                                , "Current_risk_of_collision_towards_"};
 		//const std::vector<std::string> intermediate_node_names_ship_specific = {"is_pre_ample_time_to_", "safe_distance_at_CPA_towards_", "safe_crossing_front_towards_", "safe_distance_to_", "safe_distance_to_midpoint_", "gives_way_correct_towards_", "Observation_applicable_towards_", "role_towards_", "good_seamanship_to_"};
 		std::vector<std::string> intermediate_node_names_general = {"has_turned_portwards"
-																	, "has_turned_starboardwards"
-																	, "observation_applicable"
-																	, "stands_on_correct"
-																	, "change_in_speed"
-																	, "is_changing_course"};
+                                                                    , "has_turned_starboardwards"
+                                                                    , "observation_applicable"
+                                                                    , "stands_on_correct"
+                                                                    , "change_in_speed"
+                                                                    , "is_changing_course"};
 		std::vector<std::string> all_node_names;
 		const std::string output_name = "observation_applicable";
 
@@ -143,7 +143,7 @@ namespace INTENTION_INFERENCE
 		 * @param new_initial_ship_states
 		 */
 		bool check_remove_steps(double cpa
-								//, std::vector<std::map<int, Eigen::Vector4d>> ship_state_vec
+                                //, std::vector<std::map<int, Eigen::Vector4d>> ship_state_vec
 								) {
 			double unmodeled = better_at(better_at(intention_model_predictions, "unmodelled_behaviour"), "true");
 			double seamanship = better_at(better_at(intention_model_predictions, "intention_good_seamanship"), "true");
@@ -255,18 +255,18 @@ namespace INTENTION_INFERENCE
 					   const IntentionModelParameters &parameters,
 					   int my_id, const std::map<int,
 					   Eigen::Vector4d> &ship_states) : IntentionModel(network_file_name,
-					   													parameters,
-																		my_id,
-																		ship_states,
-																		std::map<std::string, std::string>{}){}
+                                                                       parameters,
+                                                                       my_id,
+                                                                       ship_states,
+                                                                       std::map<std::string, std::string>{}){}
 
 		IntentionModel(std::string network_file_name,
 					   const IntentionModelParameters &parameters,
 					   int my_id, const std::map<int, Eigen::Vector4d> &ship_states,
 					   const std::map<std::string, std::string> &priors) : parameters(parameters),
-																		   net(network_file_name, parameters.number_of_network_evaluation_samples),
-																		   my_id(my_id),
-																		   my_initial_ship_state(better_at(ship_states,my_id))
+                                                                           net(network_file_name, parameters.number_of_network_evaluation_samples),
+                                                                           my_id(my_id),
+                                                                           my_initial_ship_state(better_at(ship_states,my_id))
 		{
 			ship_names.clear();
 			for (unsigned i = 0; i < parameters.max_number_of_obstacles; ++i)
@@ -327,11 +327,6 @@ namespace INTENTION_INFERENCE
 				}
 			}
 
-			//net.setBinaryPriors("intention_ignoring_safety", parameters.ignoring_safety_probability);
-			//net.setBinaryPriors("intention_colregs_compliant", parameters.colregs_compliance_probability);
-			//net.setBinaryPriors("intention_good_seamanship", parameters.good_seamanship_probability);
-			//net.setBinaryPriors("unmodelled_behaviour", parameters.unmodeled_behaviour);
-
 			for (auto [ship_id, ship_name] : ship_name_map)
 			{
 				if (ship_id != my_id)
@@ -339,37 +334,6 @@ namespace INTENTION_INFERENCE
 					net.setPriors("priority_intention_to_" + ship_name, parameters.priority_probability);
 				}
 			}
-			//net.setPriorNormalDistribution("intention_ample_time", parameters.ample_time_s.mu, parameters.ample_time_s.sigma, parameters.ample_time_s.max / parameters.ample_time_s.n_bins);
-			//net.setPriorNormalDistribution("intention_distance_risk_of_collision", parameters.risk_distance_m.mu, parameters.risk_distance_m.sigma, parameters.risk_distance_m.max / ( parameters.safe_distance_m.n_bins));
-			//net.setPriorNormalDistribution("intention_distance_risk_of_collision_front", parameters.risk_distance_front_m.mu, parameters.risk_distance_front_m.sigma, parameters.risk_distance_front_m.max / parameters.risk_distance_front_m.n_bins);
-
-			//int colreg_idx = 7;
-			//int cpa_ts_idx = 4;  // per nå lik r_maneuver_own (skal byttes til cpa_ts_idx)
-
-			//net.setPriorNormalDistribution("intention_safe_distance_front", parameters.safe_distance_front_m.mu, parameters.safe_distance_front_m.sigma, parameters.safe_distance_front_m.max / parameters.safe_distance_front_m.n_bins);
-			//net.setPriorNormalDistribution("intention_distance_risk_of_collision_front", parameters.safe_distance_front_m.mu, parameters.safe_distance_front_m.sigma, parameters.safe_distance_front_m.max / parameters.safe_distance_front_m.n_bins);
-
-    		int cpa_dist_idx = 6;
-    		int colreg_idx = 7;
-    		int cpa_ample_time_idx = 8;
-
-    		int timestep = 60;
-    		int n_bins = 30;
-    		int multiply =1;
-
-    		int head_on = 3;
-    		int overtake = -2;
-    		int crossing = -1;
-
-    		// Cpa distance
-    		//net.setAisDistribution("intention_safe_distance_midpoint", "files/classified/classified_south.csv", colreg_idx, cpa_dist_idx, multiply, n_bins, head_on);
-    		//net.setAisDistribution("intention_safe_distance", "files/classified/classified_south.csv", colreg_idx, cpa_dist_idx, multiply, n_bins, overtake);
-    		//net.setAisDistribution("intention_distance_risk_of_collision", "files/classified/classified_west_5.csv", colreg_idx, cpa_dist_idx, multiply, n_bins, overtake);
-    		//net.setAisDistribution("intention_distance_risk_of_collision_front", "files/classified/classified_west_5.csv", colreg_idx, cpa_dist_idx, multiply, n_bins, crossing);
-
-    		// Cpa time, the model does NOT differ for the different situations
-    		//net.setAisDistribution("intention_ample_time", "files/classified/classified_west_5.csv", colreg_idx, cpa_ample_time_idx, multiply, n_bins, head_on);  //head on
-    		//net.setAmpleTimeDistribution("intention_ample_time", "files/classified/classified_west_5.csv", cpa_ample_time_idx, timestep, n_bins);
 		}
 
 		// std::map<std::string, double> insertObservationRelativeSituation(const IntentionModelParameters parameters, int &ot_en, std::map<int, Eigen::Vector4d> ship_states, std::vector<int> currently_tracked_ships, bool is_changing_course, double time, double x, double y, std::ofstream &intentionFile)
@@ -406,7 +370,7 @@ namespace INTENTION_INFERENCE
 		// }
 
 		/**
-		 * @brief Updates intention model based on given data
+		 * @brief Updates intention model based on given data.
 		 *
 		 * @param parameters Parameter object of intention model
  		 * @param ship_states
@@ -417,7 +381,7 @@ namespace INTENTION_INFERENCE
  		 * map needs to be parsed between all intention models.
 		 * @param new_timestep if true, indicates that all ships intention models have been updated for
 		 * the previous time step, and that we now are in a new time step
-		 * @param start
+		 * @param start indicator if startpoint has been set
 		 * @return bool true or false. Returns start for pybind11 compatability
 		 */
 		bool insertObservation(const IntentionModelParameters parameters
