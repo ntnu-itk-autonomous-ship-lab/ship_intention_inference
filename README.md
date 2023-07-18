@@ -1,5 +1,5 @@
 # ship_intention_inference
-Intention model to predict intentions of ships using ais data. To use in another project, the files in `inc/` are of interest, in particular `intention_model.h`. In addition, a range of .cpp files are made to test and improve the intention model. **Currently, only insert_ais.cpp and generate_intention_model.cpp are supported**. 
+Intention model to predict intentions of ships using ais data. To use in another project, the files in `inc/` are of interest, in particular `intention_model.h`. In addition, a range of .cpp files are made to test and improve the intention model. **Currently, only insert_ais.cpp and generate_intention_model.cpp are supported**. The rest of the cpp files are reminants from older versions. 
 
 ## Setup
 To get the intention model to run we need the smile library. Therefore, you need to download the correct version of this for your computer from https://www.bayesfusion.com. Add the contents of the smile folder to `external/smile`. We also need `smile_licence.h`, that must be added to this folder as well, and can be downloaded from the same page. 
@@ -10,7 +10,13 @@ To build, run
 cmake -S . -B build
 cmake --build build
 ```
-After that, the compiled programs will be in the `build` folder. To run `insert_ais`, run the following command:
+After that, the compiled programs will be in the `build` folder. Then to generate priors for the intention model, run
+
+```bash
+./build/generate_intention_model
+```
+and then run to test the intention model with the `insert_ais` program, run the following command:
+
 ```bash
 ./build/insert_ais
 ```
@@ -27,6 +33,8 @@ To run AIS data on the intention model a case file with two (three) ships is use
 Can also use a different intentionModelFile: `intention_model_with_risk_of_collision.xdsl`. This is currently working on a different branch called `riskofCollision`. Here the risk of collision is taken into consideration, a risk distance distribution is used and if `r_cpa` is high there is no risk of collision and maneuvers will not affect the intentions.
 
 Also `generate_intention_model.cpp` will generate the intentionModelFile `intention_model_from_code.xdsl`, which will use historic AIS data to find distributions for safe distance and ample time. The rest of the prior distributions will directly be transferred from another given intentionModelFIle.
+
+In the file `parameters.h`, a function with default parameters is defined, that is used both for `insert_ais` and `generate_intention_model`. 
 
 To evaluate the intentions, by plotting the values from the intention file, a matlab file (*plot_intentions.m*) was used. The ship positions and intention variables were plotted with circles moving indicating each timestep.
 
