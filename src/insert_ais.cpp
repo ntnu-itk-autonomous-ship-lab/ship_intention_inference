@@ -40,9 +40,7 @@ void readFileToVecs (std::string filename, std::vector<int> &mmsi_vec, std::vect
             ss >> std::get_time(&td, "%Y-%m-%d %H:%M:%S"); // or just %T in this case
             std::time_t time = mktime(&td);
             time_d = time;
-            //std::tm local = *std::localtime(&time);
-            //std::cout << "local: " << std::put_time(&local, "%c %Z") << '\n';
-            
+
             getline(iss, token, ',');
             x = stod(token);
             int new_x = round(x);
