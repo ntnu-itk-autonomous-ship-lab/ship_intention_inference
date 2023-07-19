@@ -51,6 +51,7 @@ namespace INTENTION_INFERENCE
 		std::map<int, Eigen::Vector4d> old_ship_states; /* Used for the insertObservation function to store last ship state while CPA > 240 */
 		std::map<std::string,std::map<std::string,double>> intention_model_predictions; /* Predictions from observations. Is changed by the insertObservation fuction */
 		int my_start; /* Either 1 or 0. For writing to file*/
+		int remove_start = 0; /* Either 1 or 0. For writing to file*/
 		bool my_current_risk = false;
 
 		const std::vector<std::string> intention_node_names_ship_specific = {"colav_situation_towards_"
@@ -150,9 +151,9 @@ namespace INTENTION_INFERENCE
 			double time_cpa = cpa;
 			double cost_remove_steps = time_cpa*unmodeled;
 			int min_timesteps = 6;
-			std::cout << "unmodeled: " << unmodeled << std::endl;
-			std::cout << "sea: " << seamanship << std::endl;
-			std::cout << "cost: " << cost_remove_steps << std::endl;
+			//std::cout << "unmodeled: " << unmodeled << std::endl;
+			//std::cout << "sea: " << seamanship << std::endl;
+			//std::cout << "cost: " << cost_remove_steps << std::endl;
 			if ((unmodeled>0.5 ) && time_cpa > 60 && cost_remove_steps>60){
 				return true;
 				//net.removeEarlyTimeSteps(min_timesteps);
@@ -233,6 +234,10 @@ namespace INTENTION_INFERENCE
 					intentionFile << risk_of_collision<< ",";
 					auto current_risk_of_collision = better_at(better_at(intention_model_predictions, "Current_risk_of_collision_towards_" + ship_name), "true");
 					intentionFile << current_risk_of_collision<<",";
+					if (remove_start){
+						my_start = 1;
+						remove_start = 0;
+					}
 					intentionFile << my_start << std::endl;
 				}
 			}
@@ -487,28 +492,24 @@ namespace INTENTION_INFERENCE
 						did_save = true;
 
 						/* For remove start  */
-						// if(check_remove_steps(cpa.time_untill_CPA
-						// 							//,all_ship_states
-						// 							)){
-						// 	std::cout << "Number of timesteps: " << net.getNumberOfTimeSteps() << std::endl;
-						// 	net.restartTime();
-						// 	net.clearEvidence();
-						// 	std::cout << "Number of timesteps: " << net.getNumberOfTimeSteps() << std::endl;
-						// 	//net.decrementTime();
-						// 	std::cout << "Number of timesteps after dec: " << net.getNumberOfTimeSteps() << std::endl;
-						// 	std::cout << "Is evidence: " << net.isEvidence() << " Is decisions " << net.isDecisions() << std::endl;
-						// 	start = true;
-						// 	my_start = 1;
-						// 	if(cpa.time_untill_CPA > 600){
-						// 		my_initial_ship_state = better_at(ship_states, my_id);
-						// 	}
-						// 	else{
-						// 		int time = 1;
-					 	// 		throw time;
-						// 	}
-						// }
+						if(check_remove_steps(cpa.time_untill_CPA
+													//,all_ship_states
+													)){
+							net.restartTime();
+							net.clearEvidence();
+							//net.decrementTime();
+							start = true;
+							my_start = 1;
+							if(cpa.time_untill_CPA > 600){
+								my_initial_ship_state = better_at(ship_states, my_id);
+							}
+							else{
+								int time = 1; /* Just some arbitrary throw value */
+					 			throw time;
+							}
+						}
 
-						if (!start){
+						else if (!start){
 							my_initial_ship_state = better_at(ship_states, my_id);
 							my_start = 1;
 						}
@@ -528,34 +529,97 @@ namespace INTENTION_INFERENCE
 			return start;
 		}
 
-		/**
-		 * @brief Opens given filename and calls the private
-		 * \ref write_results_to_file() function
-		 *
-		 * @param filename Path to file to be written to.
-		 * @param x x coordinate at time \ref time
-		 * @param y y coordinate at time \ref time
-		 * @param time current time, just used for writing to file
-		 */
-		void save_intention_predictions_to_file(std::string filename, double x, double y, double time){
-			std::ofstream intentionFile;
+			/**
+			 * @brief Opens given filename and calls the private
+			 * \ref write_results_to_file() function
+			 *
+			 * @param filename Path to file to be written to.
+			 * @param x x coordinate at time \ref time
+			 * @param y y coordinate at time \ref time
+			 * @param time current time, just used for writing to file
+			 */
+			void save_intention_predictions_to_file(std::string filename, double x, double y, double time){
+				std::ofstream intentionFile;
 
-			intentionFile.open (filename, std::ios_base::app);
-			if (intentionFile.is_open()) {
-				write_results_to_file(intentionFile, time, x, y);
-				intentionFile.close();
-			} else {
-				std::cout << "ERROR: Failed to open " << filename << std::endl;
-				assert(false);
+				intentionFile.open (filename, std::ios_base::app);
+				if (intentionFile.is_open()) {
+					write_results_to_file(intentionFile, time, x, y);
+					intentionFile.close();
+				} else {
+					std::cout << "ERROR: Failed to open " << filename << std::endl;
+					assert(false);
+				}
 			}
-		}
 
-		std::map<std::string,std::map<std::string,double>> get_intention_model_predictions(){
-			return intention_model_predictions;
-		}
+			/**
+			 * @brief Removes lines from prediction files after the given time, and 
+			 * after given mmsi index in ship list.
+			 * 
+			 * @param filename path to intention file
+			 * @param time not timestep, but as given in the file
+			 * @param ship_list list of tracked ships, including own ship
+			 * @param mmsi id of ship where exception was thrown.
+			 */
+			void remove_intention_predictions_from_file(std::string filename, double time, std::vector<int> ship_list, int mmsi){
+				std::ifstream intentionFileRead;
 
-		void set_initial_state(Eigen::Vector4d initial_ship_state){
-			my_initial_ship_state = initial_ship_state;
-		}
+				intentionFileRead.open (filename);
+				if (!intentionFileRead.is_open()) {
+					std::cout << "ERROR: Failed to open " << filename << std::endl;
+					assert(false);
+				}
+
+				std::vector<std::string> lines;
+				std::string line;
+				bool is_header = true;
+
+				while (std::getline(intentionFileRead, line)) {
+					if (is_header){
+						is_header = false;
+						continue;
+					}
+					std::istringstream ss(line);
+					std::vector<std::string> fields;
+					std::string field;
+
+					while (std::getline(ss, field, ',')) {
+						fields.push_back(field);
+					}
+					if (std::stoi(fields[3]) < time) {
+						lines.push_back(line);
+					}
+					else if ((std::stoi(fields[3]) == time) &&
+							 (std::find(ship_list.begin(), ship_list.end(), std::stoi(fields[0])) <= std::find(ship_list.begin(), ship_list.end(), mmsi))){
+						lines.push_back(line);
+					}
+					else{break;}
+				}
+
+				intentionFileRead.close();
+
+				std::ofstream intentionFile;
+
+				intentionFile.open(filename);
+				if (!intentionFile.is_open()) {
+					std::cerr << "Error opening file for writing: " << filename << std::endl;
+					assert(false);
+				}
+
+				intentionFile << "mmsi,x,y,time,colreg_compliant,good_seamanship,unmodeled_behaviour,has_turned_portwards,has_turned_starboardwards,change_in_speed,is_changing_course,CR_PS,CR_SS,HO,OT_en,OT_ing,priority_lower,priority_similar,priority_higher,risk_of_collision,current_risk_of_collision,start\n"; //,CR_SS2,CR_PS2,OT_ing2,OT_en2,priority_lower2,priority_similar2,priority_higher2\n";
+				for (const auto& l : lines) {
+					intentionFile << l << std::endl;
+				}
+
+				intentionFile.close();
+				remove_start = 1;
+			}
+
+			std::map<std::string,std::map<std::string,double>> get_intention_model_predictions(){
+				return intention_model_predictions;
+			}
+
+			void set_initial_state(Eigen::Vector4d initial_ship_state){
+				my_initial_ship_state = initial_ship_state;
+			}
 	};
 }

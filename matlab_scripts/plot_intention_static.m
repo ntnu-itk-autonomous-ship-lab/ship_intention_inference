@@ -49,7 +49,8 @@ clear all
 
 %intention_filename = "nostart_intention_new_1_Case - 08-09-2018, 19-12-24 - 4XJ3B-60-sec.csv"
 %intention_filename = "nostart_intention_new_Case - 02-01-2018, 15-50-25 - C1401-60-sec.csv"
-intention_filename = "nostart_intention_new_1_Case - 08-09-2018, 19-12-24 - 4XJ3B-60-sec.csv"
+%intention_filename = "nostart_intention_new_1_Case - 12-02-2018, 20-10-07 - PW6UL-60-sec.csv"
+intention_filename = "nostart_intention_new_Case - 01-02-2018, 01-05-22 - GP38T-60-sec.csv"
 %measurement_filename = "measurements_"+base_filename;
 %2760
 
@@ -377,7 +378,7 @@ subplot(subplot_n_rows,subplot_n_cols,[1:2, 4:5]);
 
 has_added_legend = false;
 row_nr = find(data{:,'start'}) 
-step_nr = (row_nr+1)/2-1;
+step_nr = round((row_nr)/2);
 for i = 1:length(shipnames)
     j=0;
     if(has_added_legend)
