@@ -121,52 +121,56 @@ class BayesianNetwork{
 
     void apply_evidence()
     {
-        //net.ClearAllEvidence();
         clearEvidence();
         restartTime();
+
+        std::cout << "Evidence Size: " << evidence_.size() << std::endl;
+        std::cout << "Virtual Evidence Size: " << virtual_evidence_.size() << std::endl; 
+        std::cout << "Temporal Evidence Size: " << temporal_evidence_.size() << std::endl;
+        std::cout << "Temporal Virtual Evidence Size: " << temporal_virtual_evidence_.size() << std::endl; 
         
-        /*
         // normal evidence
-        for (const auto &[node_id, outcome_id] : evidence_)
-        {
-            const auto res = net.GetNode(node_id)->Value()->SetEvidence(outcome_id);
-            if (res < 0)
-                printf("ERROR: Set evidence (outcome_id=%d) on node \"%d\" resulted in error", outcome_id, node_id);
-            assert(res >= 0);
-        }
-        for (const auto &[node_id, evidence_vec] : virtual_evidence_)
-        {
-            const auto res = net.GetNode(node_id)->Value()->SetVirtualEvidence(evidence_vec);
-            if (res < 0)
-                printf("ERROR: Set virtual evidence on node \"%d\" resulted in error", node_id);
-            assert(res >= 0);
-        }
-        */
+        // for (const auto &[node_id, outcome_id] : evidence_)
+        // {
+        //     const auto res = net.GetNode(node_id)->Value()->SetEvidence(outcome_id);
+        //     if (res < 0)
+        //         printf("ERROR: Set evidence (outcome_id=%d) on node \"%d\" resulted in error", outcome_id, node_id);
+        //     assert(res >= 0);
+        // }
+        // for (const auto &[node_id, evidence_vec] : virtual_evidence_)
+        // {
+        //     const auto res = net.GetNode(node_id)->Value()->SetVirtualEvidence(evidence_vec);
+        //     if (res < 0)
+        //         printf("ERROR: Set virtual evidence on node \"%d\" resulted in error", node_id);
+        //     assert(res >= 0);
+        // }
+        
+        auto evidence_it = temporal_evidence_.begin();
+        auto virtual_evidence_it = temporal_virtual_evidence_.begin();
         int i = 0;
-        for (auto evidence : temporal_evidence_)
+
+        while (evidence_it != temporal_evidence_.end() && virtual_evidence_it != temporal_virtual_evidence_.end())
         {
-            for (const auto &[node_id, outcome_id] : evidence)
+            for (const auto &[node_id, outcome_id] : *evidence_it)
             {
                 const auto res = net.GetNode(node_id)->Value()->SetEvidence(outcome_id);
                 if (res < 0)
-                    printf("ERROR: Set temporal evidence (slice=%d, outcome_id=%d) on node \"%d\" resulted in error", i, outcome_id, node_id);
+                    printf("ERROR: Set temporal evidence (slice=%d, outcome_id=%d) on node \"%d\" resulted in an error", i, outcome_id, node_id);
                 assert(res >= 0);
             }
-            ++i;
-            incrementTime();
-            
-        }
-        i = 0;
-        for (auto virtual_evidence : temporal_virtual_evidence_)
-        {
-            for (const auto &[node_id, evidence_vec] : virtual_evidence)
+
+            for (const auto &[node_id, evidence_vec] : *virtual_evidence_it)
             {
                 const auto res = net.GetNode(node_id)->Value()->SetTemporalEvidence(i, evidence_vec);
                 if (res < 0)
-                    printf("ERROR: Set temporal evidence (slice=%d) on node \"%d\" resulted in error", i, node_id);
+                    printf("ERROR: Set temporal evidence (slice=%d) on node \"%d\" resulted in an error", i, node_id);
                 assert(res >= 0);
             }
+
             ++i;
+            incrementTime();
+            ++evidence_it;
+            ++virtual_evidence_it;
         }
     }
 
@@ -273,7 +277,7 @@ public:
         setPriors(node_name, {{"false", 1-probablity_of_true},{"true", probablity_of_true}});
     }
 
-    // for e<ach elemeent 
+    // for each elemeent 
     void setPriorNormalDistribution(const std::string node_name, const double mu, const double sigma, const double bin_width){
         const auto node_id = getNodeId(node_name);
         auto node_definition = net.GetNode(node_id)->Definition();
@@ -385,8 +389,7 @@ public:
     }
 
     void restartTime(){
-        const auto number_of_time_slices = 1;
-        const auto res = net.SetNumberOfSlices(number_of_time_slices);
+        const auto res = net.SetNumberOfSlices(1);
         assert(res>=0);
     }
 
@@ -411,30 +414,22 @@ public:
         return return_value;
     }
 
-    void removeEarlyTimeSteps(int min_number_of_timesteps_) //must decrement time equal times to number of pop front of evidence
+    void removeEarlyTimeSteps(int min_number_of_timesteps, int num_of_timesteps_to_be_removed) //must decrement time equal times to number of pop front of evidence
     {
-        const auto number_of_time_slices = net.GetNumberOfSlices();
-        auto node_id = getNodeId("unmodelled_behaviour");
-        if (min_number_of_timesteps_ < 0 || temporal_evidence_.size() < min_number_of_timesteps_)
+        if (min_number_of_timesteps < 0 || temporal_evidence_.size() < min_number_of_timesteps)
         {
-            const auto res = net.SetNumberOfSlices(number_of_time_slices + 1);
-            if (res < 0)
-                printf("ERROR: Increment time failed");
-            assert(res >= 0);
+            incrementTime();
         }
         else
         {
             int num_pop = 0;
-            std::cout << "Else \n";
-            while (num_pop<4){
-                std::cout << "while \n";
-                std::cout << "Before: " << temporal_evidence_.size();
+            while (num_pop<num_of_timesteps_to_be_removed){
+                std::cout << "Before: " << temporal_evidence_.size() << std::endl;
                 temporal_evidence_.pop_front();
-                std::cout << " After pop: " << temporal_evidence_.size();
+                std::cout << " After pop: " << temporal_evidence_.size() << std::endl;
                 temporal_virtual_evidence_.pop_front();
+                decrementTime();
                 num_pop ++;
-                
-                
             }
             apply_evidence();
             //std::cout << " After apply: " << temporal_evidence_.size();

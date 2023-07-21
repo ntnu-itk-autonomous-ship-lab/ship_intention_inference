@@ -27,6 +27,7 @@
 #include "geometry.h"
 #include "parameters.h"
 #include "utils.h"
+#include <deque>
 
 //TODO fiks:
 // ros::Time::now() <- tidspunktet for denne målingen
@@ -48,11 +49,14 @@ namespace INTENTION_INFERENCE
 		Eigen::Vector4d my_initial_ship_state; /* Ship state from where intentions are calculated */
 		std::map<int, std::string> ship_name_map;
 		std::vector<std::string> ship_names;
-		std::map<int, Eigen::Vector4d> old_ship_states; /* Used for the insertObservation function to store last ship state while CPA > 240 */
+		std::map<int, Eigen::Vector4d> ship_states_before_cpa_limit; /* Used for the insertObservation function to store last ship state while CPA > 240 */
 		std::map<std::string,std::map<std::string,double>> intention_model_predictions; /* Predictions from observations. Is changed by the insertObservation fuction */
-		int my_start; /* Either 1 or 0. For writing to file*/
+		int write_start_to_file = 0; /* Either 1 or 0. For writing to file*/
 		int remove_start = 0; /* Either 1 or 0. For writing to file*/
 		bool my_current_risk = false;
+		bool my_start = false;
+		bool my_risk_of_collision = false;
+		std::deque<std::map<int, Eigen::Vector4d >> ship_states_history;
 
 		const std::vector<std::string> intention_node_names_ship_specific = {"colav_situation_towards_"
                                                                              , "priority_intention_to_"
@@ -138,34 +142,15 @@ namespace INTENTION_INFERENCE
 		/**
 		 * @brief
 		 *
-		 * @param result
-		 * @param cpa
-		 * @param ship_state_vec
-		 * @param new_initial_ship_states
+		 * @param time_cpa
 		 */
-		bool check_remove_steps(double cpa
-                                //, std::vector<std::map<int, Eigen::Vector4d>> ship_state_vec
-								) {
+		bool check_remove_steps(double time_cpa) {
 			double unmodeled = better_at(better_at(intention_model_predictions, "unmodelled_behaviour"), "true");
-			double seamanship = better_at(better_at(intention_model_predictions, "intention_good_seamanship"), "true");
-			double time_cpa = cpa;
 			double cost_remove_steps = time_cpa*unmodeled;
-			int min_timesteps = 6;
-			//std::cout << "unmodeled: " << unmodeled << std::endl;
-			//std::cout << "sea: " << seamanship << std::endl;
-			//std::cout << "cost: " << cost_remove_steps << std::endl;
 			if ((unmodeled>0.5 ) && time_cpa > 60 && cost_remove_steps>60){
 				return true;
-				//net.removeEarlyTimeSteps(min_timesteps);
-				//std::cout << "removed cost: " << cost_remove_steps << " unmodeled: " << unmodeled <<std::endl;
-				//std::map<int, Eigen::Vector4d > new_states = get_new_initial_states(15,ship_state_vec);
-				//new_initial_ship_states[my_id] = better_at(new_states, my_id);
 			}
 			return false;
-		}
-		
-		std::map<int, Eigen::Vector4d > get_new_initial_states(int timestep, std::vector<std::map<int, Eigen::Vector4d > > ship_state){
-			return ship_state[timestep];
 		}
 
 		/**
@@ -235,14 +220,13 @@ namespace INTENTION_INFERENCE
 					auto current_risk_of_collision = better_at(better_at(intention_model_predictions, "Current_risk_of_collision_towards_" + ship_name), "true");
 					intentionFile << current_risk_of_collision<<",";
 					if (remove_start){
-						my_start = 1;
+						write_start_to_file = 1;
 						remove_start = 0;
 					}
-					intentionFile << my_start << std::endl;
+					intentionFile << write_start_to_file << std::endl;
 				}
 			}
 		}
-
 
 	public:
 		/**
@@ -271,9 +255,13 @@ namespace INTENTION_INFERENCE
 					   const std::map<std::string, std::string> &priors) : parameters(parameters),
                                                                            net(network_file_name, parameters.number_of_network_evaluation_samples),
                                                                            my_id(my_id),
+																		   ship_states_before_cpa_limit(ship_states),
                                                                            my_initial_ship_state(better_at(ship_states,my_id))
 		{
 			ship_names.clear();
+			ship_states_history.clear();
+
+			ship_states_history.push_back(ship_states);
 			for (unsigned i = 0; i < parameters.max_number_of_obstacles; ++i)
 			{
 				std::string name = "ship" + std::to_string(i);
@@ -288,7 +276,6 @@ namespace INTENTION_INFERENCE
 				if (ship_id != my_id)
 				{
 					ship_name_map[ship_id] = ship_names[i];
-					printf("\nAdded ship name \"%s\" for ship id %d\n", ship_names[i].c_str(), ship_id);
 					++i;
 				}
 			}
@@ -319,16 +306,6 @@ namespace INTENTION_INFERENCE
 					std::string ship_name = better_at(ship_name_map, ship_id);
 					const auto situation = evaluateRelativeSituation2(parameters, better_at(ship_states, my_id), ship_state);
 					net.setPriors("colav_situation_towards_" + ship_name, situation);
-
-					std::stringstream situation_ss;
-					situation_ss.precision(2);
-					situation_ss << "Ship " << my_id << " init colav situation towards ship " << ship_id << " as: ";
-					for (const auto &[name, value] : situation)
-					{
-						situation_ss << name << "=" << value << ", ";
-					}
-					auto s = situation_ss.str();
-					printf("%s", s.c_str());
 				}
 			}
 
@@ -340,39 +317,6 @@ namespace INTENTION_INFERENCE
 				}
 			}
 		}
-
-		// std::map<std::string, double> insertObservationRelativeSituation(const IntentionModelParameters parameters, int &ot_en, std::map<int, Eigen::Vector4d> ship_states, std::vector<int> currently_tracked_ships, bool is_changing_course, double time, double x, double y, std::ofstream &intentionFile)
-		// {
-		// 	std::map<std::string, double> situation;
-
-		// 	for (auto const &ship_id : currently_tracked_ships)
-		// 	{
-		// 		if (ship_id != my_id)
-		// 		{
-		// 			intentionFile << my_id << ",";
-        //     		intentionFile << x << ",";
-        //     		intentionFile << y << ",";
-        //     		intentionFile << time << ",";
-		// 			const auto ship_state = better_at(ship_states, ship_id);
-		// 			CPA cpa = evaluateCPA(better_at(ship_states, my_id), ship_state);
-
-		// 			situation = evaluateRelativeSituation2(parameters, better_at(ship_states, my_id), ship_state, cpa.time_untill_CPA);
-		// 			std::cout << "time to cpa: " << cpa.time_untill_CPA << std::endl;
-		// 			for (const auto &[name, value] : situation){
-		// 				std::cout << name << "=" << value << ", ";
-		// 				if (name == "OT_ing") {
-		// 					intentionFile << value;
-		// 				}
-		// 				else {
-		// 					intentionFile << value << ",";
-		// 				}
-
-		// 			}
-		// 			intentionFile << "\n";
-		// 		}
-		// 	}
-		// 	return situation;
-		// }
 
 		/**
 		 * @brief Updates intention model based on given data.
@@ -389,15 +333,9 @@ namespace INTENTION_INFERENCE
 		 * @param start indicator if startpoint has been set
 		 * @return bool true or false. Returns start for pybind11 compatability
 		 */
-		bool insertObservation(const IntentionModelParameters parameters
-							   , const std::map<int, Eigen::Vector4d> ship_states
+		bool insertObservation(const std::map<int, Eigen::Vector4d> ship_states
 							   , std::map<int, Eigen::Vector4d> last_ship_states
-							   //, std::vector<std::map<int, Eigen::Vector4d>> all_ship_states
 							   , std::vector<int> currently_tracked_ships
-							   , std::map<int,double> check_changing_course
-							   , std::map<int, bool>& risk_of_collision
-							   , bool new_timestep
-							   , bool & start
 							   )
 		{
 			bool did_save = false;
@@ -407,7 +345,6 @@ namespace INTENTION_INFERENCE
 
 			bool is_changing_course = currentChangeInCourseIdentifier(better_at(ship_states, my_id)[CHI], last_ship_states[my_id][CHI]);
 			net.setEvidence("is_changing_course", is_changing_course);
-
 			bool other_is_changing_course = false;
 			std::vector<std::string> handled_ship_names;
 			CPA cpa;
@@ -425,29 +362,25 @@ namespace INTENTION_INFERENCE
 					net.setEvidence("disable_" + ship_name, "enabled");
 					net.setEvidence("time_untill_closest_point_of_approach_towards_" + ship_name, timeIdentifier(parameters, cpa.time_untill_CPA));
 					net.setEvidence("distance_at_cpa_towards_" + ship_name, highresCPADistanceIdentifier(parameters, cpa.distance_at_CPA));
-					
+
 					double crossing_in_front_distance = crossingInFrontDistance(better_at(ship_states, my_id), ship_state);
 					net.setEvidence("crossing_distance_front_towards_" + ship_name, crossInFrontHighresIdentifier(parameters, crossing_in_front_distance));
 
 					auto distanceToMidpointResult = distanceToMidpointCourse(better_at(ship_states, my_id), ship_state);
 					net.setEvidence("two_times_distance_to_midpoint_at_cpa_to_" + ship_name, twotimesDistanceToMidpointIdentifier(parameters, distanceToMidpointResult.distance_to_midpoint));
 					net.setEvidence("crossing_with_midpoint_on_side_"+ship_name, crossingWithMidpointOnSideIdentifier(distanceToMidpointResult.crossing_with_midpoint_on_port_side));
-					
+
 					net.setEvidence("aft_front_crossing_side_to_" + ship_name, frontAftIdentifier(cpa.passing_in_front));
 					net.setEvidence("passed_" + ship_name, hasPassedIdentifier(cpa.time_untill_CPA));
 					net.setEvidence("crossing_with_other_on_port_side_to_" + ship_name, crossing_port_starboard_identifier(cpa.bearing_relative_to_heading));
-					
+
 					net.setEvidence("lowres_distance_at_cpa_towards_" + ship_name, lowresCPADistanceIdentifier(parameters, cpa.distance_at_CPA));
 					net.setEvidence("lowres_crossing_distance_front_towards_" + ship_name, crossInFrontLowresIdentifier(parameters, crossing_in_front_distance));
-					
+
 					if (cpa.time_untill_CPA > 240){
-						old_ship_states = ship_states;
-						//std::cout<< "\n\nSituations: " << std::endl;
-						// for (auto [ship, event]: situation){
-						// 	std::cout<< ship << ": " << event <<std::endl;
-						//}
+						ship_states_before_cpa_limit = ship_states;
 				    }
-					std::map<std::string, double> situation = evaluateRelativeSituation2(parameters, better_at(old_ship_states, my_id), better_at(old_ship_states, ship_id));
+					std::map<std::string, double> situation = evaluateRelativeSituation2(parameters, better_at(ship_states_before_cpa_limit, my_id), better_at(ship_states_before_cpa_limit, ship_id));
 					net.setVirtualEvidence("colav_situation_towards_" + ship_name, situation);
 				}
 			}
@@ -471,49 +404,46 @@ namespace INTENTION_INFERENCE
 					my_current_risk = false;
 					const std::string ship_name = better_at(ship_name_map, ship_id);
 					auto result_risk_of_collision = better_at(better_at(intention_model_predictions, "risk_of_collision_towards_"+ ship_name), "true");
-					check_changing_course[my_id] = better_at(better_at(intention_model_predictions, "is_changing_course"), "true");
+					bool check_changing_course = better_at(better_at(intention_model_predictions, "is_changing_course"), "true");
 					other_ship_id = ship_id;
 					//&& !check_changing_course[my_id] &&!check_changing_course[other_ship_id] && (cpa.time_untill_CPA<600)
-					if(result_risk_of_collision>0.9  && !check_changing_course[my_id] &&!check_changing_course[other_ship_id]){
-						risk_of_collision[my_id] = true;
+					if(result_risk_of_collision>0.9  && !check_changing_course){
+						my_risk_of_collision = true;
 						my_current_risk = true;
 					}
 				}
 			}
 
-			my_start = 0;
+			write_start_to_file = 0;
 			/* This sets new initial conditions if we either are on a start or a new timestep and we are in risk of collision */
 			/* TODO: Add a CPA limit on how long a start poin can be delayed */
-			if(risk_of_collision[my_id] && risk_of_collision[other_ship_id] && (new_timestep || start)){
-				if((!start && my_current_risk) || start){
-					if((new_timestep && !start && !is_changing_course && !other_is_changing_course)  || start){
+			if(my_risk_of_collision){
+				if((!my_start && my_current_risk) || my_start){
+					if((!my_start && !is_changing_course && !other_is_changing_course)  || my_start){
 						net.add_to_dequeue();
 						net.incrementTime();
 						did_save = true;
 
 						/* For remove start  */
-						if(check_remove_steps(cpa.time_untill_CPA
-													//,all_ship_states
-													)){
+						if(check_remove_steps(cpa.time_untill_CPA)){
 							net.restartTime();
 							net.clearEvidence();
-							//net.decrementTime();
-							start = true;
-							my_start = 1;
+							my_start = true;
+							write_start_to_file = 1;
 							if(cpa.time_untill_CPA > 600){
 								my_initial_ship_state = better_at(ship_states, my_id);
 							}
 							else{
-								int time = 1; /* Just some arbitrary throw value */
-					 			throw time;
+								std::string throw_object = "Remove time steps";
+								throw throw_object;
 							}
 						}
 
-						else if (!start){
+						if (!my_start){
 							my_initial_ship_state = better_at(ship_states, my_id);
-							my_start = 1;
+							write_start_to_file = 1;
 						}
-						start = true;
+						my_start = true;
 					}
 				}
 				else{
@@ -526,100 +456,229 @@ namespace INTENTION_INFERENCE
 				my_initial_ship_state = better_at(ship_states, my_id);
 			}
 
-			return start;
+			return did_save;
 		}
 
-			/**
-			 * @brief Opens given filename and calls the private
-			 * \ref write_results_to_file() function
-			 *
-			 * @param filename Path to file to be written to.
-			 * @param x x coordinate at time \ref time
-			 * @param y y coordinate at time \ref time
-			 * @param time current time, just used for writing to file
-			 */
-			void save_intention_predictions_to_file(std::string filename, double x, double y, double time){
-				std::ofstream intentionFile;
+		double evaluateTrajectory(const Eigen::MatrixXd &trajectory
+								  , const std::map<int, Eigen::Vector4d> &ship_states
+								  , std::vector<int> currently_tracked_ships
+								  , double dt
+//								  , custom_msgs::IntentionMeasurement *measurement_msgs
+)
+		{
+			//measurement_msgs->header.stamp = ros::Time::now();
+			//measurement_msgs->reference_ship_id = my_id;
 
-				intentionFile.open (filename, std::ios_base::app);
-				if (intentionFile.is_open()) {
-					write_results_to_file(intentionFile, time, x, y);
-					intentionFile.close();
-				} else {
-					std::cout << "ERROR: Failed to open " << filename << std::endl;
-					assert(false);
+			net.incrementTime();
+
+			unsigned steps_into_trajectory = parameters.time_into_trajectory;
+
+			//measurement_msgs->change_in_course_deg = RAD2DEG * (trajectory(CHI, steps_into_trajectory) - my_initial_ship_state[CHI]);
+			//measurement_msgs->change_in_course_state_name = changeInCourseIdentifier(parameters, trajectory(CHI, steps_into_trajectory), my_initial_ship_state[CHI]);
+			net.setEvidence("change_in_course", changeInCourseIdentifier(parameters, trajectory(CHI, steps_into_trajectory), my_initial_ship_state[CHI]));
+
+			//measurement_msgs->change_in_speed_m_s = trajectory(U, steps_into_trajectory) - my_initial_ship_state[U];
+			//measurement_msgs->change_in_speed_state_name = changeInSpeedIdentifier(parameters, trajectory(U, steps_into_trajectory), my_initial_ship_state[U]);
+			net.setEvidence("change_in_speed", changeInSpeedIdentifier(parameters, trajectory(U, steps_into_trajectory), my_initial_ship_state[U]));
+
+			//measurement_msgs->is_changing_course = false;
+			net.setEvidence("is_changing_course", false);
+
+			//measurement_msgs->ship_measurements.clear();
+			std::vector<std::string> handled_ship_names;
+			for (auto const ship_id : currently_tracked_ships)
+			{
+				if (ship_id != my_id)
+				{
+					std::string ship_name = better_at(ship_name_map, ship_id);
+					handled_ship_names.push_back(ship_name);
+					const auto ship_state = better_at(ship_states, ship_id);
+					//custom_msgs::IntentionMeasurementSingleShip single_ship_meas_msg;
+					//single_ship_meas_msg.measured_ship_id = ship_id;
+
+					net.setEvidence("disable_" + ship_name, "enabled");
+
+					CPA cpa = evaluateCPA(trajectory, ship_state, dt);
+					auto minimum_acceptable_ample_time = parameters.ample_time_s.minimal_accepted_by_ownship;
+
+					//single_ship_meas_msg.time_untill_CPA_sec = minimum_acceptable_ample_time;
+					//single_ship_meas_msg.time_untill_CPA_state_id = timeIdentifier(parameters, minimum_acceptable_ample_time);
+					net.setEvidence("time_untill_closest_point_of_approach_towards_" + ship_name, timeIdentifier(parameters, minimum_acceptable_ample_time));
+
+					//single_ship_meas_msg.distance_at_CPA_m = cpa.distance_at_CPA;
+					//single_ship_meas_msg.distance_at_CPA_state_id = highresCPADistanceIdentifier(parameters, cpa.distance_at_CPA);
+					net.setEvidence("distance_at_cpa_towards_" + ship_name, highresCPADistanceIdentifier(parameters, cpa.distance_at_CPA));
+
+					double crossing_in_front_distance = crossingInFrontDistanceTrajectory(trajectory, ship_state, dt);
+
+					//single_ship_meas_msg.crossing_distance_front_m = crossing_in_front_distance;
+					//single_ship_meas_msg.crossing_distance_front_state_id = crossInFrontHighresIdentifier(parameters, crossing_in_front_distance);
+					net.setEvidence("crossing_distance_front_towards_" + ship_name, crossInFrontHighresIdentifier(parameters, crossing_in_front_distance));
+
+					auto distanceToMidpointResult = distanceToMidpointTrajectory(trajectory, ship_state, dt);
+					//single_ship_meas_msg.two_times_distance_to_midpoint_at_cpa_to_m = distanceToMidpointResult.distance_to_midpoint;
+					//single_ship_meas_msg.two_times_distance_to_midpoint_at_cpa_to_state_id = twotimesDistanceToMidpointIdentifier(parameters, distanceToMidpointResult.distance_to_midpoint);
+					net.setEvidence("two_times_distance_to_midpoint_at_cpa_to_" + ship_name, twotimesDistanceToMidpointIdentifier(parameters, distanceToMidpointResult.distance_to_midpoint));
+
+					//single_ship_meas_msg.crossing_with_midpoint_on_side = crossingWithMidpointOnSideIdentifier(distanceToMidpointResult.crossing_with_midpoint_on_port_side);
+					net.setEvidence("crossing_with_midpoint_on_side_"+ship_name, crossingWithMidpointOnSideIdentifier(distanceToMidpointResult.crossing_with_midpoint_on_port_side));
+
+					//single_ship_meas_msg.aft_front_crossing_side = frontAftIdentifier(cpa.passing_in_front);
+					net.setEvidence("aft_front_crossing_side_to_" + ship_name, frontAftIdentifier(cpa.passing_in_front));
+
+					//single_ship_meas_msg.passed = hasPassedIdentifier(cpa.time_untill_CPA);
+					net.setEvidence("passed_" + ship_name, hasPassedIdentifier(cpa.time_untill_CPA));
+
+					//single_ship_meas_msg.port_starboard_crossing_side = crossing_port_starboard_identifier(cpa.bearing_relative_to_heading);
+					net.setEvidence("crossing_wiht_other_on_port_side_to_" + ship_name, crossing_port_starboard_identifier(cpa.bearing_relative_to_heading));
+
+					//measurement_msgs->ship_measurements.push_back(single_ship_meas_msg);
 				}
 			}
 
-			/**
-			 * @brief Removes lines from prediction files after the given time, and 
-			 * after given mmsi index in ship list.
-			 * 
-			 * @param filename path to intention file
-			 * @param time not timestep, but as given in the file
-			 * @param ship_list list of tracked ships, including own ship
-			 * @param mmsi id of ship where exception was thrown.
-			 */
-			void remove_intention_predictions_from_file(std::string filename, double time, std::vector<int> ship_list, int mmsi){
-				std::ifstream intentionFileRead;
-
-				intentionFileRead.open (filename);
-				if (!intentionFileRead.is_open()) {
-					std::cout << "ERROR: Failed to open " << filename << std::endl;
-					assert(false);
+			for (const auto ship_name : ship_names)
+			{
+				if (!std::count(handled_ship_names.begin(), handled_ship_names.end(), ship_name))
+				{
+					net.setEvidence("disable_" + ship_name, "disabled");
 				}
+			}
 
-				std::vector<std::string> lines;
-				std::string line;
-				bool is_header = true;
+			// evaluate_nodes(node_state_msg);
+			auto res = net.evaluateStates(all_node_names);
+			//measurement_msgs->probability_of_observation = better_at(better_at(res, output_name), "true");
 
-				while (std::getline(intentionFileRead, line)) {
-					if (is_header){
-						is_header = false;
-						continue;
-					}
-					std::istringstream ss(line);
-					std::vector<std::string> fields;
-					std::string field;
+			net.decrementTime();
+			return better_at(better_at(res, {output_name}), "true");
+			}
 
-					while (std::getline(ss, field, ',')) {
-						fields.push_back(field);
-					}
-					if (std::stoi(fields[3]) < time) {
-						lines.push_back(line);
-					}
-					else if ((std::stoi(fields[3]) == time) &&
-							 (std::find(ship_list.begin(), ship_list.end(), std::stoi(fields[0])) <= std::find(ship_list.begin(), ship_list.end(), mmsi))){
-						lines.push_back(line);
-					}
-					else{break;}
-				}
+		/**
+		 * @brief Opens given filename and calls the private
+		 * \ref write_results_to_file() function
+		 *
+		 * @param filename Path to file to be written to.
+		 * @param x x coordinate at time \ref time
+		 * @param y y coordinate at time \ref time
+		 * @param time current time, just used for writing to file
+		 */
+		void save_intention_predictions_to_file(std::string filename, double x, double y, double time){
+			std::ofstream intentionFile;
 
-				intentionFileRead.close();
-
-				std::ofstream intentionFile;
-
-				intentionFile.open(filename);
-				if (!intentionFile.is_open()) {
-					std::cerr << "Error opening file for writing: " << filename << std::endl;
-					assert(false);
-				}
-
-				intentionFile << "mmsi,x,y,time,colreg_compliant,good_seamanship,unmodeled_behaviour,has_turned_portwards,has_turned_starboardwards,change_in_speed,is_changing_course,CR_PS,CR_SS,HO,OT_en,OT_ing,priority_lower,priority_similar,priority_higher,risk_of_collision,current_risk_of_collision,start\n"; //,CR_SS2,CR_PS2,OT_ing2,OT_en2,priority_lower2,priority_similar2,priority_higher2\n";
-				for (const auto& l : lines) {
-					intentionFile << l << std::endl;
-				}
-
+			intentionFile.open (filename, std::ios_base::app);
+			if (intentionFile.is_open()) {
+				write_results_to_file(intentionFile, time, x, y);
 				intentionFile.close();
-				remove_start = 1;
+			} else {
+				std::cout << "ERROR: Failed to open " << filename << std::endl;
+				assert(false);
+			}
+		}
+
+		/**
+		 * @brief Removes lines from prediction files after the given time, and
+		 * after given mmsi index in ship list.
+		 *
+		 * @param filename path to intention file
+		 * @param time not timestep, but as given in the file
+		 * @param ship_list list of tracked ships, including own ship
+		 * @param mmsi id of ship where exception was thrown.
+		 */
+		void remove_intention_predictions_from_file(std::string filename, double time, std::vector<int> ship_list, int mmsi){
+			std::ifstream intentionFileRead;
+
+			intentionFileRead.open (filename);
+			if (!intentionFileRead.is_open()) {
+				std::cout << "ERROR: Failed to open " << filename << std::endl;
+				assert(false);
 			}
 
-			std::map<std::string,std::map<std::string,double>> get_intention_model_predictions(){
-				return intention_model_predictions;
+			std::vector<std::string> lines;
+			std::string line;
+			bool is_header = true;
+
+			while (std::getline(intentionFileRead, line)) {
+				if (is_header){
+					is_header = false;
+					continue;
+				}
+				std::istringstream ss(line);
+				std::vector<std::string> fields;
+				std::string field;
+
+				while (std::getline(ss, field, ',')) {
+					fields.push_back(field);
+				}
+				if (std::stoi(fields[3]) < time) {
+					lines.push_back(line);
+				}
+				else if ((std::stoi(fields[3]) == time) &&
+						 (std::find(ship_list.begin(), ship_list.end(), std::stoi(fields[0])) <= std::find(ship_list.begin(), ship_list.end(), mmsi))){
+					lines.push_back(line);
+				}
+				else if (std::stoi(fields[0]) != my_id){
+					lines.push_back(line);
+				}
+				else{break;}
 			}
 
-			void set_initial_state(Eigen::Vector4d initial_ship_state){
-				my_initial_ship_state = initial_ship_state;
+			intentionFileRead.close();
+
+			std::ofstream intentionFile;
+
+			intentionFile.open(filename);
+			if (!intentionFile.is_open()) {
+				std::cerr << "Error opening file for writing: " << filename << std::endl;
+				assert(false);
 			}
+
+			intentionFile << "mmsi,x,y,time,colreg_compliant,good_seamanship,unmodeled_behaviour,has_turned_portwards,has_turned_starboardwards,change_in_speed,is_changing_course,CR_PS,CR_SS,HO,OT_en,OT_ing,priority_lower,priority_similar,priority_higher,risk_of_collision,current_risk_of_collision,start\n"; //,CR_SS2,CR_PS2,OT_ing2,OT_en2,priority_lower2,priority_similar2,priority_higher2\n";
+			for (const auto& l : lines) {
+				intentionFile << l << std::endl;
+			}
+
+			intentionFile.close();
+		}
+
+		std::map<std::string,std::map<std::string,double>> get_intention_model_predictions(){
+			return intention_model_predictions;
+		}
+
+		void set_initial_state(Eigen::Vector4d initial_ship_state){
+			my_initial_ship_state = initial_ship_state;
+		}
+
+		void run_inference(const std::map<int, Eigen::Vector4d> ship_states, std::vector<int> ship_list
+								//, std::map<int, Eigen::MatrixXd> trajectory_candidates = {}, double dt
+								)
+		{
+			ship_states_history.push_back(ship_states);
+			auto ship_states_history_it = std::prev(ship_states_history.end(), 1);
+			int remove_timesteps_timeout = 0;
+			while((ship_states_history_it != ship_states_history.end()) && (remove_timesteps_timeout < 7)){
+				try{
+					if(ship_states_history_it == ship_states_history.begin()) {ship_states_history_it++;}
+
+					insertObservation(*ship_states_history_it, *std::prev(ship_states_history_it), ship_list);
+					ship_states_history_it++;
+				}
+				catch (std::string throw_object){
+					++remove_timesteps_timeout;
+					if(ship_states_history.size() > 10){
+						for (int i = 0; i < 4; ++i) {
+							ship_states_history.pop_front();
+						}
+					}
+					set_initial_state(ship_states_history.front()[my_id]);
+					ship_states_history_it = ship_states_history.begin();
+				}
+			}
+
+			//for (auto const &[traj_id, trajecotry] : trajectory_candidates)
+			//{
+				//TODO implement for trajectories!
+
+				//res.emplace(traj_id, evaluateTrajectory(trajecotry, ship_states, dt));
+			//}
+		}	
 	};
 }

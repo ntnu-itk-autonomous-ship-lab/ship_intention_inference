@@ -47,10 +47,16 @@ clear all
 %base_filename = "new_Case - 01-09-2018, 03-55-18 - QZPS3-60-sec.csv";  %best ho not following colregs
 %base_filename = "new_Case - 02-01-2018, 15-50-25 - C1401-60-sec.csv"; %best ho following colregs
 
-%intention_filename = "nostart_intention_new_1_Case - 08-09-2018, 19-12-24 - 4XJ3B-60-sec.csv"
+intention_filename = "nostart_intention_new_1_Case - 08-09-2018, 19-12-24 - 4XJ3B-60-sec.csv"
 %intention_filename = "nostart_intention_new_Case - 02-01-2018, 15-50-25 - C1401-60-sec.csv"
+%intention_filename = "nostart_intention_new_Case - 01-04-2020, 15-34-37 - 7SWX4-60-sec.csv"
+%intention_filename = "nostart_intention_new_1_Case - 06-25-2019, 14-22-43 - OO430-60-sec.csv"
 %intention_filename = "nostart_intention_new_1_Case - 12-02-2018, 20-10-07 - PW6UL-60-sec.csv"
-intention_filename = "nostart_intention_new_Case - 01-02-2018, 01-05-22 - GP38T-60-sec.csv"
+%intention_filename = "nostart_intention_new_Case - 01-02-2018, 01-05-22 - GP38T-60-sec.csv"
+%intention_filename = "nostart_intention_new_Case - 01-15-2020, 09-05-49 - VATEN-60-sec-two-ships.csv"
+%intention_filename = "nostart_intention_new_case_2ZC9Z-60-sec-two-ships.csv"
+%intention_filename = "nostart_intention_new_Case - 01-09-2018, 03-55-18 - QZPS3-60-sec.csv"
+%intention_filename = "nostart_intention_new_1_Case - 07-09-2019, 05-52-22 - O7LU9-60-sec.csv"
 %measurement_filename = "measurements_"+base_filename;
 %2760
 
