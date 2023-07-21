@@ -93,6 +93,25 @@ struct IntentionModelParameters{
         double OT_stop;
         double OT_uncertainty_stop;
     }colregs_situation_borders_rad;
+
+    /**
+     * @brief Parameters of initial start point of intention calculations.
+     * 
+     */
+    struct  {
+        double min_time_cpa; /* Minimum time to CPA before startpoint is set */
+    }set_startpoint;
+
+    /**
+     * @brief Parameters for timestep removal if intention model calculates unmodeled behaviour
+     * 
+     */
+    struct  {
+        int min_timesteps_in_state_history; /* Minimum saved timesteps of ship states */
+        double unmodeled_behaviour_threshold; /* Tolerance of unmodeled behaviour */
+        double time_cpa_threshold; /* Smallest time before cpa where we can remove timesteps */
+    }time_step_removal;
+
     double ignoring_safety_probability; /* Any behaviour not captured by the model, such as changing course that does not give way */
     double colregs_compliance_probability; /* If not colregs compliant, then the ship only needs to pass at a safe distance */
     double good_seamanship_probability; /* Prevents the ship from switching which side it is giving way towards */
@@ -115,8 +134,8 @@ struct IntentionModelParameters{
         param.starting_cpa_distance = 15000;
         param.expanding_dbn.min_time_s = 10;
         param.expanding_dbn.max_time_s = 1200;
-        param.expanding_dbn.min_course_change_rad = 0.13;
-        param.expanding_dbn.min_speed_change_m_s = 0.5;
+        param.expanding_dbn.min_course_change_rad = 0.28;
+        param.expanding_dbn.min_speed_change_m_s = 1.8;
         param.ample_time_s.mu = 200;
         param.ample_time_s.sigma = 100;
         param.ample_time_s.max = 1000;
@@ -142,8 +161,8 @@ struct IntentionModelParameters{
         param.safe_distance_front_m.sigma = 50;
         param.safe_distance_front_m.max = 1000;
         param.safe_distance_front_m.n_bins = 30; // this value must match the bayesian network
-        param.change_in_course_rad.minimal_change = 0.13;
-        param.change_in_speed_m_s.minimal_change = 0.5;
+        param.change_in_course_rad.minimal_change = 0.28;
+        param.change_in_speed_m_s.minimal_change = 1.8;
         param.colregs_situation_borders_rad.HO_uncertainty_start = 2.79;
         param.colregs_situation_borders_rad.HO_start = 2.96;
         param.colregs_situation_borders_rad.HO_stop = -2.96;
@@ -152,6 +171,10 @@ struct IntentionModelParameters{
         param.colregs_situation_borders_rad.OT_start = 2.18;
         param.colregs_situation_borders_rad.OT_stop = -2.18;
         param.colregs_situation_borders_rad.OT_uncertainty_stop = -1.74;
+        param.set_startpoint.min_time_cpa = 60;
+        param.time_step_removal.min_timesteps_in_state_history = 7;
+        param.time_step_removal.unmodeled_behaviour_threshold = 0.1;
+        param.time_step_removal.time_cpa_threshold = 50;
         param.ignoring_safety_probability = 0;
         param.colregs_compliance_probability = 0.99;
         param.good_seamanship_probability = 0.99;
