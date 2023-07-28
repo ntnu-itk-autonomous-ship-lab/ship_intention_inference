@@ -45,7 +45,7 @@ namespace INTENTION_INFERENCE
 	private:
 		const IntentionModelParameters &parameters;
 		BayesianNetwork net;
-		const int my_id; /* mmsi of own ship */
+		const int my_id; /* mmsi of ship for which intentions are being calculated */
 		Eigen::Vector4d my_initial_ship_state; /* Ship state from where intentions are calculated */
 		std::map<int, std::string> ship_name_map;
 		std::vector<std::string> ship_names;
@@ -574,8 +574,16 @@ namespace INTENTION_INFERENCE
 					double current_course = better_at(ship_states, my_id)(CHI);
 					double course_diff = wrapPI(trajectory_course - current_course);
 
+					/* Weights trajectory probabilities based on distance from original traj.
+					 * +1 to prevent neg probabilities. */
 					traj_probabilities[traj_id] = res * ((std::cos(course_diff) + 1) / 2);
+
+					/* For normailization */
 					trajectory_prob_sum += traj_probabilities[traj_id];
+				}
+				if (trajectory_prob_sum < 0.0001){
+					std::cout << "Error: Sum of trajectory probabilities is close to zero.\n";
+					assert(false);
 				}
 				for (auto const &[traj_id, probability] : traj_probabilities){
 					traj_probabilities[traj_id] = probability/trajectory_prob_sum;
