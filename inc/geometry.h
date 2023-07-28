@@ -189,11 +189,11 @@ namespace INTENTION_INFERENCE
 
 		auto sline = toStandardForm(line);
 		if (!std::isfinite(sline.a))
-			printf("WARNING: Nonfinite line standard form a: %f", sline.a);
+			std::cout << "WARNING: Nonfinite line standard form a: " << sline.a << std::endl;
 		if (!std::isfinite(sline.b))
-			printf("WARNING: Nonfinite line standard form b, %f", sline.b);
+			std::cout << "WARNING: Nonfinite line standard form b: " << sline.b << std::endl;
 		if (!std::isfinite(sline.c))
-			printf("WARNING: Nonfinite line standard form c, %f", sline.c);
+			std::cout << "WARNING: Nonfinite line standard form c: " << sline.c << std::endl;
 
 		// Closest point is according to: https://en.wikipedia.org/wiki/Distance_from_a_point_to_a_line
 		double x0 = point(PX);
@@ -242,7 +242,7 @@ namespace INTENTION_INFERENCE
 			{
 				if (!std::isfinite(closest_point.distance))
 				{
-					printf("WARNING: Non finit closest point on line to point distance, %f", closest_point.distance);
+					std::cout << "WARNING: Non finit closest point on line to point distance, " << closest_point.distance << std::endl;
 				}
 			}
 		}
@@ -317,7 +317,7 @@ namespace INTENTION_INFERENCE
 	}
 
 	// Evaluate closest point of approach (CPA) distance, and time untill CPA
-	inline CPA evaluateCPA(const Eigen::MatrixXd &trajecotry, const Eigen::Vector4d &obstacle_state, double dt)
+	inline CPA evaluateCPA(const Eigen::MatrixXd &trajectory, const Eigen::Vector4d &obstacle_state, double dt)
 	{
 		CPA result;
 
@@ -327,12 +327,12 @@ namespace INTENTION_INFERENCE
 		obstacle_velocity(1) = std::sin(obstacle_state(CHI)) * obstacle_state(U);
 
 		bool found_closest_point = false;
-		size_t number_of_timesteps = trajecotry.cols();
+		size_t number_of_timesteps = trajectory.cols();
 		for (size_t i = 0; i < number_of_timesteps; ++i)
 		{
 			double current_time = i * dt;
 			const Eigen::Vector2d obstacle_curent_position = obstacle_initial_position + obstacle_velocity * current_time;
-			const Eigen::Vector2d current_position = trajecotry.block<2, 1>(0, i);
+			const Eigen::Vector2d current_position = trajectory.block<2, 1>(0, i);
 			auto vector_to_obst = obstacle_curent_position - current_position;
 			double current_distane_to_obstacle = vector_to_obst.norm();
 			if (current_distane_to_obstacle < result.distance_at_CPA)
@@ -341,7 +341,7 @@ namespace INTENTION_INFERENCE
 				result.time_untill_CPA = current_time;
 
 				const double angle_to_other_ship = std::atan2(vector_to_obst(1), vector_to_obst(0));
-				result.bearing_relative_to_heading = angle_to_other_ship - trajecotry(CHI, i);
+				result.bearing_relative_to_heading = angle_to_other_ship - trajectory(CHI, i);
 				wrapPI(&result.bearing_relative_to_heading);
 			}
 			else
@@ -355,11 +355,11 @@ namespace INTENTION_INFERENCE
 		if (!found_closest_point)
 		{
 			// ROS_INFO_THROTTLE(1, "Didnt find the closest point along the trajectories, projecting forwards straight line");
-			result = evaluateCPA(trajecotry.col(number_of_timesteps - 1), obstacle_state);
+			result = evaluateCPA(trajectory.col(number_of_timesteps - 1), obstacle_state);
 		}
 		else
 		{
-			auto closest_point = closest_point_in_trajectory_to_line(trajecotry, obstacle_state, dt);
+			auto closest_point = closest_point_in_trajectory_to_line(trajectory, obstacle_state, dt);
 			result.passing_in_front = closest_point.ownship_arrival_time < closest_point.othership_arrival_time;
 		}
 
@@ -398,7 +398,7 @@ namespace INTENTION_INFERENCE
 		auto intersection_point = intersectionpoint(ship1, ship2);
 		if (!std::isfinite(intersection_point.x) || !std::isfinite(intersection_point.y))
 		{
-			printf("WARNING: Non finite intersection point");
+			std::cout << "WARNING: Non finite intersection point" << std::endl;
 			return INFINITY;
 		}
 
@@ -421,10 +421,10 @@ namespace INTENTION_INFERENCE
 		return evaluateDistance(Px2 - intersection_point.x, Py2 - intersection_point.y);
 	}
 
-	inline double crossingInFrontDistanceTrajectory(const Eigen::MatrixXd &trajecotry, const Eigen::Vector4d &ship2, double dt)
+	inline double crossingInFrontDistanceTrajectory(const Eigen::MatrixXd &trajectory, const Eigen::Vector4d &ship2, double dt)
 	{
 
-		auto closest_point = closest_point_in_trajectory_to_line(trajecotry, ship2, dt);
+		auto closest_point = closest_point_in_trajectory_to_line(trajectory, ship2, dt);
 		if (!std::isfinite(closest_point.x) || !std::isfinite(closest_point.y) || !std::isfinite(closest_point.othership_arrival_time) || !std::isfinite(closest_point.ownship_arrival_time))
 		{
 			return INFINITY;
@@ -462,7 +462,7 @@ namespace INTENTION_INFERENCE
 		return retval;
 	}
 
-	inline auto distanceToMidpointTrajectory(const Eigen::MatrixXd &trajecotry, const Eigen::Vector4d &ship2, double dt)
+	inline auto distanceToMidpointTrajectory(const Eigen::MatrixXd &trajectory, const Eigen::Vector4d &ship2, double dt)
 	{
 		struct {
 			double distance_to_midpoint;
@@ -470,12 +470,12 @@ namespace INTENTION_INFERENCE
 		} retval;
 
 		// Find midpoint
-		const double midpoint_x = (trajecotry(PX, 0) + ship2(PX)) / 2;
-		const double midpoint_y = (trajecotry(PY, 0) + ship2(PY)) / 2;
+		const double midpoint_x = (trajectory(PX, 0) + ship2(PX)) / 2;
+		const double midpoint_y = (trajectory(PY, 0) + ship2(PY)) / 2;
 		Eigen::Vector4d midpoint_state;
 		midpoint_state << midpoint_x, midpoint_y, 0, 0;
 		// Find CPA-vector relative to midpoint
-		CPA cpa_to_midpoint = evaluateCPA(trajecotry, midpoint_state, dt);
+		CPA cpa_to_midpoint = evaluateCPA(trajectory, midpoint_state, dt);
 
 		retval.distance_to_midpoint = cpa_to_midpoint.distance_at_CPA;
 		retval.crossing_with_midpoint_on_port_side = cpa_to_midpoint.bearing_relative_to_heading < 0;

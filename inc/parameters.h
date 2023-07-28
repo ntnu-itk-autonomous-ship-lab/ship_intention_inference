@@ -129,7 +129,7 @@ struct IntentionModelParameters{
         IntentionModelParameters param;
         param.number_of_network_evaluation_samples = 100000;
         param.max_number_of_obstacles = num_ships-1; //must be set to num_ships-1 or else segmantation fault
-        param.time_into_trajectory = 10;
+        param.time_into_trajectory = 3;
         param.starting_distance = 10000;
         param.starting_cpa_distance = 15000;
         param.expanding_dbn.min_time_s = 10;

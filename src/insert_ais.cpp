@@ -7,6 +7,7 @@
 #include <iomanip>
 #include <ctime>
 #include <math.h>
+#include <random>
 #include "../inc/intention_model.h"
 #include "../inc/parameters.h"
 #include "../inc/geometry.h"
@@ -81,15 +82,6 @@ std::vector<int> getShipList(std::vector<int> mmsi_vec){
     return mmsi_vec;
 }
 
-/*void ensure_initialization(std::map<int, INTENTION_INFERENCE::IntentionModel> ship_intentions){
-		for (auto& [ship_id, current_ship_intention_model] : ship_intentions){
-			// Initiate ships that are not the own-ship, that have not already been initiated, and that are sufficiently close
-			if (ship_id != OWN_SHIP_ID && !ship_intentions.count(ship_id) && evaluateDistance(better_at(ship_states, ship_id)[PX] - better_at(ship_states, OWN_SHIP_ID)[PX], better_at(ship_states, ship_id)[PY] - better_at(ship_states, OWN_SHIP_ID)[PY]) < starting_distance){
-				ship_intentions.insert({ship_id, IntentionModel(network_filename, intention_model_parameters, ship_id, ship_states)});
-			}
-		}
-	}*/
-
 int getShipListIndex(int mmsi, std::vector<int> ship_list){
     int index = -1;
     for (int i = 0; i < ship_list.size(); i++){
@@ -124,8 +116,85 @@ void vecsToShipStateVectorMap(std::vector<std::map<int, Eigen::Vector4d >> &ship
     }
 }
 
+std::map<int, Eigen::MatrixXd> generate_trajectories(Eigen::Vector4d ship_state, double dt, int num_timesteps, Eigen::MatrixXd scenarios) {
+
+    std::map<int, Eigen::MatrixXd> trajectories;
+
+    for (int traj_id = 0; traj_id < scenarios.cols(); ++traj_id) {
+        Eigen::MatrixXd trajectory(4, num_timesteps);
+        double x = ship_state[0];
+        double y = ship_state[1];
+        double cog = ship_state[2];
+        double sog = ship_state[3];
+
+        trajectory(0, 0) = x;
+        trajectory(1, 0) = y;
+        trajectory(2, 0) = cog;
+        trajectory(3, 0) = sog;
+
+        for (int t = 1; t < num_timesteps; ++t) {
+            sog += sog * scenarios(0, traj_id);
+            cog += scenarios(1, traj_id);
+
+            double dx = sog * std::cos(cog);
+            double dy = sog * std::sin(cog);
+            x += dx * dt;
+            y += dy * dt;
+
+            trajectory(0, t) = x;
+            trajectory(1, t) = y;
+            trajectory(2, t) = cog;
+            trajectory(3, t) = sog;
+        }
+
+        trajectories[traj_id] = trajectory;
+    }
+
+    return trajectories;
+}
 
 
+std::map<int, Eigen::MatrixXd> generate_random_trajectories(Eigen::Vector4d ship_state, double dt, int num_timesteps, int num_trajectories) {
+
+    std::map<int, Eigen::MatrixXd> trajectories;
+
+    for (int traj_id = 0; traj_id < num_trajectories; ++traj_id) {
+        Eigen::MatrixXd trajectory(4, num_timesteps);
+        double x = ship_state[0];
+        double y = ship_state[1];
+        double cog = ship_state[2];
+        double sog = ship_state[3];
+
+        std::random_device rd;
+        std::default_random_engine engine(rd());
+        std::uniform_real_distribution<double> sog_perturbation(-0.1 * sog, 0.1 * sog);
+        std::uniform_real_distribution<double> cog_perturbation(-0.5, 0.5);
+
+        trajectory(0, 0) = x;
+        trajectory(1, 0) = y;
+        trajectory(2, 0) = cog;
+        trajectory(3, 0) = sog;
+
+        for (int t = 1; t < num_timesteps; ++t) {
+            sog += sog_perturbation(engine);
+            cog += cog_perturbation(engine);
+
+            double dx = sog * std::cos(cog);
+            double dy = sog * std::sin(cog);
+            x += dx * dt;
+            y += dy * dt;
+
+            trajectory(0, t) = x;
+            trajectory(1, t) = y;
+            trajectory(2, t) = cog;
+            trajectory(3, t) = sog;
+        }
+
+        trajectories[traj_id] = trajectory;
+    }
+
+    return trajectories;
+}
 
 void writeIntentionToFile(int timestep,
                           INTENTION_INFERENCE::IntentionModelParameters parameters,
@@ -139,26 +208,42 @@ void writeIntentionToFile(int timestep,
 
     std::ofstream intentionFile;
     std::string filename_intention = "files/intention_files/nostart_intention_"+filename;
+    std::string filename_trajectories = "files/trajectory_files/nostart_trajectory_"+filename;
     intentionFile.open (filename_intention);
     intentionFile << "mmsi,x,y,time,colreg_compliant,good_seamanship,unmodeled_behaviour,has_turned_portwards,has_turned_starboardwards,change_in_speed,is_changing_course,CR_PS,CR_SS,HO,OT_en,OT_ing,priority_lower,priority_similar,priority_higher,risk_of_collision,current_risk_of_collision,start\n"; //,CR_SS2,CR_PS2,OT_ing2,OT_en2,priority_lower2,priority_similar2,priority_higher2\n";
     //intentionFile << "mmsi,x,y,time,colreg_compliant,good_seamanship,unmodeled_behaviour,CR_PS,CR_SS,HO,OT_en,OT_ing,priority_lower,priority_similar,priority_higher\n"; //,CR_SS2,CR_PS2,OT_ing2,OT_en2,priority_lower2,priority_similar2,priority_higher2\n";
     //intentionFile << "mmsi,x,y,time,CR_PS,CR_SS,HO,OT_en,OT_ing\n";
     intentionFile.close();
 
+    intentionFile.open (filename_trajectories);
+    intentionFile << "mmsi,time,traj_id,x,y,prob\n"; //,CR_SS2,CR_PS2,OT_ing2,OT_en2,priority_lower2,priority_similar2,priority_higher2\n";
+    intentionFile.close();
+
+    Eigen::MatrixXd traj_scenarios(2,9);
+    traj_scenarios << 0, 0, 0, 0, 0, 0, 0, 0, 0, /* Pertubations in sog */
+                 0, 0.1, -0.1, 0.2, -0.2, 0.3, -0.3, 0.4, -0.4; /* Perturbations in cog */
+
     for(int i = timestep; i < unique_time_vec.size() ; i++){
-        std::cout << "timestep: " << i - timestep + 2 << std::endl;
+        std::cout << "timestep: " << unique_time_vec[i] << std::endl;
 
         for(auto& [ship_id, current_ship_intention_model] : ship_intentions){
             int j = getShipListIndex(ship_id,ship_list);
             std::cout << "ship_id: " << ship_id << std::endl;
-            current_ship_intention_model.run_inference(ship_state[i] ,ship_list);
+            double dt = unique_time_vec[i] - unique_time_vec[i-1];
+
+            //auto trajectory_candidates = generate_random_trajectories(ship_state[i][ship_id], dt, parameters.time_into_trajectory, 10);
+            auto trajectory_candidates = generate_trajectories(ship_state[i][ship_id], dt, parameters.time_into_trajectory, traj_scenarios);
+            current_ship_intention_model.run_inference(ship_state[i] ,ship_list, trajectory_candidates, dt);
             current_ship_intention_model.save_intention_predictions_to_file(filename_intention,
-                                                                                x_vec[unique_time_vec.size()*j+i], /* x pos for ship j at time i */
-                                                                                y_vec[unique_time_vec.size()*j+i],
-                                                                                unique_time_vec[i]);
+                                                                            x_vec[unique_time_vec.size()*j+i], /* x pos for ship j at time i */
+                                                                            y_vec[unique_time_vec.size()*j+i],
+                                                                            unique_time_vec[i]);
+            current_ship_intention_model.save_trajectories_to_file(filename_trajectories,
+                                                                    unique_time_vec[i],
+                                                                    trajectory_candidates);
         }
     }
-    printf("Finished writing intentions to file \n");
+    std::cout << "Finished writing intentions to file \n";
 }
 
 int main(){
