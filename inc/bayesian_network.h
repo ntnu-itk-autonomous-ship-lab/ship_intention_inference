@@ -37,7 +37,7 @@ class BayesianNetwork{
 
     auto getNodeId(std::string name) const{
         const auto node_id = net.FindNode(name.c_str());
-        if(node_id<0) printf("ERROR: Node name \"%s\" resulted in error", name.c_str());
+        if(node_id<0) std::cout << "ERROR: Node name " << name.c_str() << " resulted in error" << std::endl;
         assert(node_id>=0);
         return node_id;
     }
@@ -45,7 +45,7 @@ class BayesianNetwork{
     auto getOutcomeId(std::string node_name, std::string outcome_name){
         const auto node_id = getNodeId(node_name);
         const auto outcome_id = net.GetNode(node_id)->Definition()->GetOutcomesNames()->FindPosition(outcome_name.c_str());
-        if(outcome_id<0)printf("ERROR: Outcome name \"%s\" resulted in error for node name \"%s\"", outcome_name.c_str(), node_name.c_str());
+        if(outcome_id<0) std::cout << "ERROR: Outcome name " << outcome_name.c_str() << " resulted in error for node name " << node_name.c_str() << std::endl;
         assert(outcome_id>=0);
         return outcome_id;
     }
@@ -53,7 +53,7 @@ class BayesianNetwork{
     auto getNumberOfOutcomes(std::string node_name){
         const auto node_id = getNodeId(node_name);
         const auto outcome_count = net.GetNode(node_id)->Definition()->GetNumberOfOutcomes();
-        if(outcome_count<=0) printf("ERROR: No outcomes for node_id %s", node_name.c_str());
+        if(outcome_count<=0) std::cout << "ERROR: No outcomes for node_id " << node_name.c_str() << std::endl;
         assert(outcome_count>0);
         return outcome_count;
     }
@@ -64,11 +64,11 @@ class BayesianNetwork{
             sum += CPT[i];
         }
         //if(sum<0.9999 || sum>1.00001 || !isfinite(sum)) printf("ERROR: Prior distribution on \"%s\" sums to %f, should be 1", node_name.c_str(), sum);
-        if(sum<0.8 || sum>1.1 || !isfinite(sum)) printf("ERROR: Prior distribution on \"%s\" sums to %f, should be 1", node_name.c_str(), sum);
+        if(sum<0.8 || sum>1.1 || !isfinite(sum)) std::cout << "ERROR: Prior distribution on " << node_name.c_str() << " sums to " << sum << ", should be 1" << std::endl;
         assert(sum>=0.8 && sum<=1.1);
         const auto node_id = getNodeId(node_name);
         auto result =  net.GetNode(node_id)->Definition()->SetDefinition(CPT);
-        if(result<0) printf("ERROR: Setting priors failed on node \"%s\"", node_name.c_str());
+        if(result<0) std::cout << "ERROR: Setting priors failed on node " << node_name.c_str() << std::endl;
         assert(result>=0);
     }
 
@@ -77,7 +77,7 @@ class BayesianNetwork{
         if (*time_slice < 0){
             *time_slice = num_slices+*time_slice;
         }
-        if(*time_slice>=num_slices) printf("ERROR: Attempted to access nonexisting timeslice %d", *time_slice);
+        if(*time_slice>=num_slices) std::cout << "ERROR: Attempted to access nonexisting timeslice " << *time_slice << std::endl;
         assert(*time_slice<num_slices);
     }
 
@@ -155,7 +155,7 @@ class BayesianNetwork{
             {
                 const auto res = net.GetNode(node_id)->Value()->SetEvidence(outcome_id);
                 if (res < 0)
-                    printf("ERROR: Set temporal evidence (slice=%d, outcome_id=%d) on node \"%d\" resulted in an error", i, outcome_id, node_id);
+                    std::cout << "ERROR: Set temporal evidence (slice=" << i << " outcome_id=" << outcome_id << ") on node " << node_id << " resulted in an error" << std::endl; 
                 assert(res >= 0);
             }
 
@@ -163,7 +163,7 @@ class BayesianNetwork{
             {
                 const auto res = net.GetNode(node_id)->Value()->SetTemporalEvidence(i, evidence_vec);
                 if (res < 0)
-                    printf("ERROR: Set temporal evidence (slice=%d) on node \"%d\" resulted in an error", i, node_id);
+                    std::cout << "ERROR: Set temporal evidence (slice=" << i << ") on node " << node_id << " resulted in an error" << std::endl;
                 assert(res >= 0);
             }
 
@@ -197,14 +197,14 @@ public:
         DSL_errorH().RedirectToFile(stdout); //Rederects errors to standard output
         std::string full_path = file_name;
         const auto result = net.ReadFile(full_path.c_str());
-        if(result<0) printf("ERROR: Unable to read file: \"%s\"", full_path.c_str());
+        if(result<0) std::cout << "ERROR: Unable to read file: " << full_path.c_str() << std::endl;
         assert(result>=0);
         const auto result_slice = net.SetNumberOfSlices(1);
-        if(result_slice<0) printf("ERROR: Insufficient number of time slices");
+        if(result_slice<0) std::cout << "ERROR: Insufficient number of time slices" << std::endl;
         assert(result_slice>=0);
         net.SetDefaultBNAlgorithm(DSL_ALG_BN_EPISSAMPLING);
         const auto return_set_samples = net.SetNumberOfSamples(num_network_evaluation_samples);
-        if(return_set_samples<0) printf("ERROR: Illigal number of samples set: %d", num_network_evaluation_samples);
+        if(return_set_samples<0) std::cout << "ERROR: Illigal number of samples set: " << num_network_evaluation_samples << std::endl;
         assert(return_set_samples>=0);
 
         temporal_evidence_.push_back(std::map<int, int>{});
@@ -214,9 +214,9 @@ public:
     void save_network(std::string file_name){
         std::string full_path = file_name;
         const auto result = net.WriteFile(full_path.c_str());
-        if(result<0) printf("ERROR: Unable to write file: \"%s\"", full_path.c_str());
+        if(result<0) std::cout << "ERROR: Unable to write file: " << full_path.c_str() << std::endl;
         assert(result>=0);
-        printf("Network saved to %s", full_path.c_str());
+        std::cout << "Network saved to " << full_path.c_str() << std::endl;
     }
 
     void add_to_dequeue(){
@@ -232,13 +232,13 @@ public:
             //std::map<int, int> new_temporal_evidence { { node_id, outcome_id} };
             //temporal_evidence_.push_back(new_temporal_evidence);
             const auto res = net.GetNode(node_id)->Value()->SetTemporalEvidence(time_slice,outcome_id);
-            if(res<0) printf("ERROR: Set temporal evidence (t=%d, outcome_id=%d) on node \"%s\" resulted in error",time_slice, outcome_id, node_name.c_str());
+            if(res<0) std::cout << "ERROR: Set temporal evidence (t=" << time_slice << ", outcome_id=" << outcome_id << ") on node " << node_name.c_str() << " resulted in error" << std::endl;
             assert(res>=0);
         }
         else{
             evidence_[node_id] = outcome_id;
             const auto res = net.GetNode(node_id)->Value()->SetEvidence(outcome_id);
-            if(res<0) printf("ERROR: Set evidence (outcome_id=%d) on node \"%s\" resulted in error",outcome_id,node_name.c_str());
+            if(res<0) std::cout << "ERROR: Set evidence (outcome_id=" << outcome_id << ") on node " << node_name.c_str() <<" resulted in error" <<std::endl;
             assert(res>=0);
         }
     }
@@ -377,14 +377,14 @@ public:
     void incrementTime(){
         const auto number_of_time_slices = net.GetNumberOfSlices();
         const auto res = net.SetNumberOfSlices(number_of_time_slices+1);
-        if(res<0) printf("ERROR: Increment time failed");
+        if(res<0) std::cout << "ERROR: Increment time failed" << std::endl;
         assert(res>=0);
     }
 
     void decrementTime(){
         const auto number_of_time_slices = net.GetNumberOfSlices();
         const auto res = net.SetNumberOfSlices(number_of_time_slices-1);
-        if(res<0) printf("ERROR: Decrement time failed");
+        if(res<0) std::cout << "ERROR: Decrement time failed" << std::endl;
         assert(res>=0);
     }
 
@@ -402,7 +402,7 @@ public:
         }
         const auto update_res = net.UpdateBeliefs();
         if(update_res<0){
-            printf("ERROR: Unable to update beliefs");
+            std::cout << "ERROR: Unable to update beliefs" << std::endl;
             throw "Unable to update beliefs";
         } 
         assert(update_res>=0);
