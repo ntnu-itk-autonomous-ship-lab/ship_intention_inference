@@ -152,49 +152,6 @@ std::map<int, Eigen::MatrixXd> generate_trajectories(Eigen::Vector4d ship_state,
     return trajectories;
 }
 
-
-std::map<int, Eigen::MatrixXd> generate_random_trajectories(Eigen::Vector4d ship_state, double dt, int num_timesteps, int num_trajectories) {
-
-    std::map<int, Eigen::MatrixXd> trajectories;
-
-    for (int traj_id = 0; traj_id < num_trajectories; ++traj_id) {
-        Eigen::MatrixXd trajectory(4, num_timesteps);
-        double x = ship_state[0];
-        double y = ship_state[1];
-        double cog = ship_state[2];
-        double sog = ship_state[3];
-
-        std::random_device rd;
-        std::default_random_engine engine(rd());
-        std::uniform_real_distribution<double> cog_perturbation(-0.5, 0.5);
-        std::uniform_real_distribution<double> sog_perturbation(-0.1 * sog, 0.1 * sog);
-
-        trajectory(0, 0) = x;
-        trajectory(1, 0) = y;
-        trajectory(2, 0) = cog;
-        trajectory(3, 0) = sog;
-
-        for (int t = 1; t < num_timesteps; ++t) {
-            sog += sog_perturbation(engine);
-            cog += cog_perturbation(engine);
-
-            double dx = sog * std::cos(cog);
-            double dy = sog * std::sin(cog);
-            x += dx * dt;
-            y += dy * dt;
-
-            trajectory(0, t) = x;
-            trajectory(1, t) = y;
-            trajectory(2, t) = cog;
-            trajectory(3, t) = sog;
-        }
-
-        trajectories[traj_id] = trajectory;
-    }
-
-    return trajectories;
-}
-
 void writeIntentionToFile(int timestep,
                           INTENTION_INFERENCE::IntentionModelParameters parameters,
                           std::string filename,

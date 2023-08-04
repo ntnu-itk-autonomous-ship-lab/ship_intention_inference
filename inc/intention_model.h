@@ -541,8 +541,7 @@ namespace INTENTION_INFERENCE
 		 * @param time current time
 		 * @return double If timestep has been iterated in the bayesian network
 		 */
-		bool run_intention_inference(const std::map<int, Eigen::Vector4d> ship_states, std::vector<int> ship_list, double time
-								, std::map<int, Eigen::MatrixXd> trajectory_candidates = {}, double dt = 0)
+		bool run_intention_inference(const std::map<int, Eigen::Vector4d> ship_states, std::vector<int> ship_list, double time)
 		{
 
 			bool do_save = doSave(ship_states, time);
@@ -589,9 +588,8 @@ namespace INTENTION_INFERENCE
 		 * @param ship_list a list of all ships mmsi
 		 * @param trajectory_candidates map with key being the trajectory id, and object
 		 * being the trajectory, where the rows are the ship states, and columns are the
-		 * timesteps. Leave empty if you dont want to calculate trajectory probabilities
-		 * @param dt timestep size in seconds. Leave empty or >=0 if you dont want to
-		 * calculate trajectory probabilities
+		 * timesteps.
+		 * @param dt timestep size in seconds.
 		 */
 		void run_trajectory_inference(const std::map<int, Eigen::Vector4d> ship_states, std::vector<int> ship_list
 						, std::map<int, Eigen::MatrixXd> trajectory_candidates, double dt){
