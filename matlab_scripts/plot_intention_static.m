@@ -383,9 +383,8 @@ end
 subplot(subplot_n_rows,subplot_n_cols,[1:2, 4:5]);
 
 has_added_legend = false;
-row_nr = find(data{:,'start'}) 
-step_nr = round((row_nr)/2);
 for i = 1:length(shipnames)
+    step_nr = find(data{data.mmsi == shipnames(i),'start'}); 
     j=0;
     if(has_added_legend)
         plot(xs(i,1),ys(i,1), 'X', 'LineWidth',3, 'Color', '#77AC30','HandleVisibility','off');

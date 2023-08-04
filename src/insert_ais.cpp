@@ -127,26 +127,25 @@ std::map<int, Eigen::MatrixXd> generate_trajectories(Eigen::Vector4d ship_state,
         double cog = ship_state[2];
         double sog = ship_state[3];
 
-        trajectory(0, 0) = x;
-        trajectory(1, 0) = y;
-        trajectory(2, 0) = cog;
-        trajectory(3, 0) = sog;
+        int sign = 1;
+        double coeff = 1.0;
 
-        for (int t = 1; t < num_timesteps; ++t) {
-            sog += sog * scenarios(0, traj_id);
-            cog += scenarios(1, traj_id);
+        for (int t = 0; t < num_timesteps; ++t) {
+            if (t == 1) {sign = sign*(-1);}
+            if (t >= 1) {coeff *= 0.5;}
+            cog += coeff * sign*scenarios(1, traj_id);
+            //sog += sog * scenarios(0, traj_id);
 
             double dx = sog * std::cos(cog);
             double dy = sog * std::sin(cog);
-            x += dx * dt;
-            y += dy * dt;
+            x += dx * dt/2;
+            y += dy * dt/2;
 
             trajectory(0, t) = x;
             trajectory(1, t) = y;
             trajectory(2, t) = cog;
             trajectory(3, t) = sog;
         }
-
         trajectories[traj_id] = trajectory;
     }
 
@@ -167,8 +166,8 @@ std::map<int, Eigen::MatrixXd> generate_random_trajectories(Eigen::Vector4d ship
 
         std::random_device rd;
         std::default_random_engine engine(rd());
-        std::uniform_real_distribution<double> sog_perturbation(-0.1 * sog, 0.1 * sog);
         std::uniform_real_distribution<double> cog_perturbation(-0.5, 0.5);
+        std::uniform_real_distribution<double> sog_perturbation(-0.1 * sog, 0.1 * sog);
 
         trajectory(0, 0) = x;
         trajectory(1, 0) = y;
@@ -221,7 +220,7 @@ void writeIntentionToFile(int timestep,
 
     Eigen::MatrixXd traj_scenarios(2,9);
     traj_scenarios << 0, 0, 0, 0, 0, 0, 0, 0, 0, /* Pertubations in sog */
-                 0, 0.1, -0.1, 0.2, -0.2, 0.3, -0.3, 0.4, -0.4; /* Perturbations in cog */
+                 0, 0.2, -0.2, 0.4, -0.4, 0.6 ,-0.6, 0.8, -0.8; /* Perturbations in cog */
 
     for(int i = timestep; i < unique_time_vec.size() ; i++){
         std::cout << "timestep: " << unique_time_vec[i] << std::endl;
@@ -232,15 +231,16 @@ void writeIntentionToFile(int timestep,
             double dt = unique_time_vec[i] - unique_time_vec[i-1];
 
             //auto trajectory_candidates = generate_random_trajectories(ship_state[i][ship_id], dt, parameters.time_into_trajectory, 10);
-            auto trajectory_candidates = generate_trajectories(ship_state[i][ship_id], dt, parameters.time_into_trajectory, traj_scenarios);
-            current_ship_intention_model.run_inference(ship_state[i] ,ship_list, trajectory_candidates, dt);
+            auto trajectory_candidates = generate_trajectories(ship_state[i][ship_id], dt, 3, traj_scenarios);
+            bool did_save = current_ship_intention_model.run_intention_inference(ship_state[i] ,ship_list, unique_time_vec[i]);
             current_ship_intention_model.save_intention_predictions_to_file(filename_intention,
                                                                             x_vec[unique_time_vec.size()*j+i], /* x pos for ship j at time i */
                                                                             y_vec[unique_time_vec.size()*j+i],
                                                                             unique_time_vec[i]);
+            current_ship_intention_model.run_trajectory_inference(ship_state[i] ,ship_list, trajectory_candidates, dt);
             current_ship_intention_model.save_trajectories_to_file(filename_trajectories,
-                                                                    unique_time_vec[i],
-                                                                    trajectory_candidates);
+                                                                   unique_time_vec[i],
+                                                                   trajectory_candidates);
         }
     }
     std::cout << "Finished writing intentions to file \n";

@@ -51,11 +51,11 @@ namespace INTENTION_INFERENCE
 		std::vector<std::string> ship_names;
 		std::map<int, Eigen::Vector4d> ship_states_before_cpa_limit; /* Used for the insertObservation function to store last ship state while CPA > 240 */
 		std::map<std::string,std::map<std::string,double>> intention_model_predictions; /* Predictions from observations. Is changed by the insertObservation fuction */
-		int write_start_to_file = 0; /* Either 1 or 0. For writing to file*/
+		int write_startpoint_set_to_file = 0; /* Either 1 or 0. For writing to file*/
 		int write_remove_timestep_to_file = 0; /* Either 1 or 0. For writing to file*/
 		bool risk_of_collision_for_current_timestep = false;
 		bool startpoint_is_set = false;
-		bool risk_of_collision_is_set = false;
+		bool risky_situation = false; /* If there is a risk of collision at one point of time after the situation starts, then the situation should be considered as risky. */
 		std::deque<std::map<int, Eigen::Vector4d >> ship_states_history; /* a queue of all ship states used for calculating intentions */
 		std::map<int, double> traj_probabilities = {}; /* Trajectory probabilities for different trajectory ids */
 
@@ -100,7 +100,9 @@ namespace INTENTION_INFERENCE
 		std::map<int, double> time_last_saved_shipstate;
 
 		/**
-		 * @brief 
+		 * @brief Checks if the baysian network should go to the next time step.
+		 * Bases the decision on last time the states have been saved, and if
+		 * there has been any significant changes in course or speed.
 		 * 
 		 * @param ship_states 
 		 * @param time 
@@ -109,8 +111,8 @@ namespace INTENTION_INFERENCE
 		 */
 		bool doSave(const std::map<int, Eigen::Vector4d> &ship_states, double time)
 		{
-			const auto min_time_between_saved_states = 20;
-			const auto max_time_between_saved_states = 1200;
+			const auto min_time_between_saved_states = parameters.expanding_dbn.min_time_s;
+			const auto max_time_between_saved_states = parameters.expanding_dbn.max_time_s;
 			const auto heading_change_to_save = parameters.expanding_dbn.min_course_change_rad;
 			const auto speed_change_to_save = parameters.expanding_dbn.min_speed_change_m_s;
 			if (!previously_saved_ship_states.size())
@@ -129,7 +131,9 @@ namespace INTENTION_INFERENCE
 				{
 					const auto &past_ship_state = better_at(previously_saved_ship_states, ship_id);
 					const auto time_passed = time - better_at(time_last_saved_shipstate, ship_id);
-					if (time_passed > min_time_between_saved_states && (time_passed > max_time_between_saved_states || std::abs(current_ship_state[CHI] - past_ship_state[CHI]) > heading_change_to_save || std::abs(current_ship_state[U] - past_ship_state[U]) > speed_change_to_save))
+					if (time_passed > min_time_between_saved_states && (time_passed > max_time_between_saved_states
+																		|| std::abs(current_ship_state[CHI] - past_ship_state[CHI]) > heading_change_to_save
+																		|| std::abs(current_ship_state[U] - past_ship_state[U]) > speed_change_to_save))
 					{
 						previously_saved_ship_states = ship_states;
 						time_last_saved_shipstate[ship_id] = time;
@@ -212,10 +216,10 @@ namespace INTENTION_INFERENCE
 					auto current_risk_of_collision = better_at(better_at(intention_model_predictions, "Current_risk_of_collision_towards_" + ship_name), "true");
 					intentionFile << current_risk_of_collision<<",";
 					if (write_remove_timestep_to_file){
-						write_start_to_file = 1;
+						write_startpoint_set_to_file = 1;
 						write_remove_timestep_to_file = 0;
 					}
-					intentionFile << write_start_to_file << std::endl;
+					intentionFile << write_startpoint_set_to_file << std::endl;
 				}
 			}
 		}
@@ -227,15 +231,16 @@ namespace INTENTION_INFERENCE
  		 * @param ship_states
  		 * @param last_ship_states
  		 * @param currently_tracked_ships ship list of all ships (including own)
-		 * @return bool true or false. Returns start for pybind11 compatability
+		 * @param do_save if timestep sould be iterated in the bayesian network.
+		 * The value of \ref doSave() function.
+		 * @return bool true or false
 		 */
-		bool insertObservation(const std::map<int, Eigen::Vector4d> ship_states
+		void insertObservation(const std::map<int, Eigen::Vector4d> ship_states
 							   , std::map<int, Eigen::Vector4d> last_ship_states
 							   , std::vector<int> currently_tracked_ships
+							   , bool do_save
 							   )
 		{
-			bool did_save = false;
-
 			net.setEvidence("change_in_course", changeInCourseIdentifier(parameters, better_at(ship_states, my_id)[CHI], my_initial_ship_state[CHI]));
 			net.setEvidence("change_in_speed", changeInSpeedIdentifier(parameters, better_at(ship_states, my_id)[U], my_initial_ship_state[U]));
 
@@ -305,41 +310,43 @@ namespace INTENTION_INFERENCE
 					other_ship_id = ship_id;
 					//&& !check_changing_course[my_id] &&!check_changing_course[other_ship_id] && (cpa.time_untill_CPA<600)
 					if(result_risk_of_collision>0.9  && (!check_changing_course || (cpa.time_untill_CPA < parameters.set_startpoint.min_time_cpa))){
-						risk_of_collision_is_set = true;
+						risky_situation = true;
 						risk_of_collision_for_current_timestep = true;
 					}
 				}
 			}
 
-			write_start_to_file = 0;
+			write_startpoint_set_to_file = 0;
 			/* This sets new initial conditions if we are in risk of collision and non of the ships are changing course. 
 			If time to CPA is too small, it will set the startpoint regardless. */
-			if(risk_of_collision_is_set){
+			if(risky_situation){
 				if((!startpoint_is_set && risk_of_collision_for_current_timestep) || startpoint_is_set){
 					if(!startpoint_is_set && ((!is_changing_course && !other_is_changing_course) ||
 						(cpa.time_untill_CPA < parameters.set_startpoint.min_time_cpa)) || startpoint_is_set){
-						net.add_to_dequeue();
-						net.incrementTime();
-						did_save = true;
 
-						/* For remove start  */
-						if(check_remove_steps(cpa.time_untill_CPA)){
-							net.restartTime();
-							net.clearEvidence();
-							startpoint_is_set = true;
-							write_start_to_file = 1;
-							if(cpa.time_untill_CPA > 600){
-								my_initial_ship_state = better_at(ship_states, my_id);
-							}
-							else{
-								std::string throw_object = "Remove time steps";
-								throw throw_object;
+						if(do_save){
+							net.add_to_dequeue();
+							net.incrementTime();
+
+							/* For removing timesteps */
+							if(check_remove_steps(cpa.time_untill_CPA)){
+								net.restartTime();
+								net.clearEvidence();
+								startpoint_is_set = true;
+								write_startpoint_set_to_file = 1;
+								if(cpa.time_untill_CPA > 600){
+									my_initial_ship_state = better_at(ship_states, my_id);
+								}
+								else{
+									std::string throw_object = "Remove time steps";
+									throw throw_object;
+								}
 							}
 						}
 
 						if (!startpoint_is_set){
 							my_initial_ship_state = better_at(ship_states, my_id);
-							write_start_to_file = 1;
+							write_startpoint_set_to_file = 1;
 						}
 						startpoint_is_set = true;
 					}
@@ -353,8 +360,6 @@ namespace INTENTION_INFERENCE
 				net.clearEvidence();
 				my_initial_ship_state = better_at(ship_states, my_id);
 			}
-
-			return did_save;
 		}
 
 		/**
@@ -364,7 +369,8 @@ namespace INTENTION_INFERENCE
 		 * @param ship_states for all ships
 		 * @param currently_tracked_ships 
 		 * @param dt timestep
-		 * @return double 
+		 * @return double The probability that the trajectiry fits the ships
+		 * predicted intetntions.
 		 */
 		double evaluateTrajectory(const Eigen::MatrixXd &trajectory
 								  , const std::map<int, Eigen::Vector4d> &ship_states
@@ -374,7 +380,7 @@ namespace INTENTION_INFERENCE
 		{
 			net.incrementTime();
 
-			unsigned steps_into_trajectory = parameters.time_into_trajectory - 1; /* Only used for change in course and change in speed */
+			unsigned steps_into_trajectory = parameters.time_into_trajectory; /* Only used for change in course and change in speed */
 			net.setEvidence("change_in_course", changeInCourseIdentifier(parameters, trajectory(CHI, steps_into_trajectory), my_initial_ship_state[CHI]));
 			net.setEvidence("change_in_speed", changeInSpeedIdentifier(parameters, trajectory(U, steps_into_trajectory), my_initial_ship_state[U]));
 			net.setEvidence("is_changing_course", false); 
@@ -504,15 +510,15 @@ namespace INTENTION_INFERENCE
 			net.setEvidence(priors);
 
 			// Initiate colregs situation
-			for (auto const &[ship_id, ship_state] : ship_states)
-			{
-				if (ship_id != my_id)
-				{
-					std::string ship_name = better_at(ship_name_map, ship_id);
-					const auto situation = evaluateRelativeSituation2(parameters, better_at(ship_states, my_id), ship_state);
-					net.setPriors("colav_situation_towards_" + ship_name, situation);
-				}
-			}
+			// for (auto const &[ship_id, ship_state] : ship_states)
+			// {
+			// 	if (ship_id != my_id)
+			// 	{
+			// 		std::string ship_name = better_at(ship_name_map, ship_id);
+			// 		const auto situation = evaluateRelativeSituation2(parameters, better_at(ship_states, my_id), ship_state);
+			// 		net.setPriors("colav_situation_towards_" + ship_name, situation);
+			// 	}
+			// }
 
 			for (auto [ship_id, ship_name] : ship_name_map)
 			{
@@ -526,22 +532,24 @@ namespace INTENTION_INFERENCE
 		/**
 		 * @brief Inserts observation to intention model, and stores it in local queue.
 		 * Removes states from queue and recalculates intentions if remove timesteps argument
-		 * is thrown from /ref insertObservation(). Optionally also calculates trajectory 
-		 * probabilities if trajectories and timestep are provided
+		 * is thrown from /ref insertObservation(). 
 		 * 
 		 * @param ship_states a map of states of all ships with mmsi as key and
 		 * object as a 4d vector consisting of x, y, sog, cog, where this acts
 		 * as startpoint or initial state for the intention inference
 		 * @param ship_list a list of all ships mmsi
-		 * @param trajectory_candidates map with key being the trajectory id, and object
-		 * being the trajectory, where the rows are the ship states, and columns are the
-		 * timesteps. Leave empty if you dont want to calculate trajectory probabilities
-		 * @param dt timestep size in seconds. Leave empty or >=0 if you dont want to
-		 * calculate trajectory probabilities
+		 * @param time current time
+		 * @return double If timestep has been iterated in the bayesian network
 		 */
-		void run_inference(const std::map<int, Eigen::Vector4d> ship_states, std::vector<int> ship_list
+		bool run_intention_inference(const std::map<int, Eigen::Vector4d> ship_states, std::vector<int> ship_list, double time
 								, std::map<int, Eigen::MatrixXd> trajectory_candidates = {}, double dt = 0)
 		{
+
+			bool do_save = doSave(ship_states, time);
+			if(!do_save && (ship_states_history.size() > 1)){
+				ship_states_history.pop_back();
+			}
+
 			/* Intention calculation */
 			ship_states_history.push_back(ship_states);
 			auto ship_states_history_it = std::prev(ship_states_history.end(), 1);
@@ -550,7 +558,7 @@ namespace INTENTION_INFERENCE
 				try{
 					if(ship_states_history_it == ship_states_history.begin()) {ship_states_history_it++;}
 
-					insertObservation(*ship_states_history_it, *std::prev(ship_states_history_it), ship_list);
+					insertObservation(*ship_states_history_it, *std::prev(ship_states_history_it), ship_list, do_save);
 
 					if (!startpoint_is_set){
 						ship_states_history.pop_front();
@@ -569,34 +577,50 @@ namespace INTENTION_INFERENCE
 					write_remove_timestep_to_file = 1;
 				}
 			}
+			return do_save;
+		}
+
+		/**
+		 * @brief calculates trajectory probabilities for current calculated intentions
+		 * 
+		 * @param ship_states a map of states of all ships with mmsi as key and
+		 * object as a 4d vector consisting of x, y, sog, cog, where this acts
+		 * as startpoint or initial state for the intention inference
+		 * @param ship_list a list of all ships mmsi
+		 * @param trajectory_candidates map with key being the trajectory id, and object
+		 * being the trajectory, where the rows are the ship states, and columns are the
+		 * timesteps. Leave empty if you dont want to calculate trajectory probabilities
+		 * @param dt timestep size in seconds. Leave empty or >=0 if you dont want to
+		 * calculate trajectory probabilities
+		 */
+		void run_trajectory_inference(const std::map<int, Eigen::Vector4d> ship_states, std::vector<int> ship_list
+						, std::map<int, Eigen::MatrixXd> trajectory_candidates, double dt){
 
 			/* Trajectory probability calculation */
-			if (!trajectory_candidates.empty() && (dt > 0)){
-				traj_probabilities = {};
-				double trajectory_prob_sum = 0;
+			traj_probabilities = {};
+			double trajectory_prob_sum = 0;
 
-				for (auto const &[traj_id, trajectory] : trajectory_candidates){
-					auto res = evaluateTrajectory(trajectory, ship_states, ship_list, dt);
+			for (auto const &[traj_id, trajectory] : trajectory_candidates){
+				auto res = evaluateTrajectory(trajectory, ship_states, ship_list, dt);
 
-					// Find the difference between trajectory heading and ownship heading.
-					double trajectory_course = trajectory(CHI, parameters.time_into_trajectory - 1);
-					double current_course = better_at(ship_states, my_id)(CHI);
-					double course_diff = wrapPI(trajectory_course - current_course);
+				// Find the difference between trajectory heading and ownship heading.
+				double trajectory_course = trajectory(CHI, parameters.time_into_trajectory);
+				double current_course = better_at(ship_states, my_id)(CHI);
+				double course_diff = wrapPI(trajectory_course - current_course);
 
-					/* Weights trajectory probabilities based on distance from original traj.
-					 * +1 to prevent neg probabilities. */
-					traj_probabilities[traj_id] = res * ((std::cos(course_diff) + 1) / 2);
+				/* Weights trajectory probabilities based on distance from original traj.
+				 * +1 to prevent neg probabilities. */
+				traj_probabilities[traj_id] = res * ((std::cos(course_diff) + 1) / 2);
 
-					/* For normailization */
-					trajectory_prob_sum += traj_probabilities[traj_id];
-				}
-				if (trajectory_prob_sum < 0.0001){
-					std::cout << "Error: Sum of trajectory probabilities is close to zero.\n";
-					assert(false);
-				}
-				for (auto const &[traj_id, probability] : traj_probabilities){
-					traj_probabilities[traj_id] = probability/trajectory_prob_sum;
-				}
+				/* For normailization */
+				trajectory_prob_sum += traj_probabilities[traj_id];
+			}
+			if (trajectory_prob_sum < 0.0001){
+				std::cout << "Error: Sum of trajectory probabilities is close to zero.\n";
+				assert(false);
+			}
+			for (auto const &[traj_id, probability] : traj_probabilities){
+				traj_probabilities[traj_id] = probability/trajectory_prob_sum;
 			}
 		}
 
@@ -648,6 +672,11 @@ namespace INTENTION_INFERENCE
 			return intention_model_predictions;
 		}
 
+		/**
+		 * @brief Get the traj probabilities object
+		 * 
+		 * @return std::map<int, double> list of trajectory id and its probability
+		 */
 		std::map<int, double> get_traj_probabilities(void){
 			return traj_probabilities;
 		}
