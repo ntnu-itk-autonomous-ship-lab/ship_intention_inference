@@ -29,6 +29,7 @@ void readFileToVecs (std::string filename, std::vector<int> &mmsi_vec, std::vect
 
     if(ifile.is_open()){
         getline(ifile,str);
+        double min_time;
         while(getline(ifile,str)){
             std::istringstream iss(str);
             std::string token;
@@ -60,17 +61,19 @@ void readFileToVecs (std::string filename, std::vector<int> &mmsi_vec, std::vect
             double cog_rad = cog*M_PI/180;
             cog_vec.push_back(cog_rad);
             if (time_vec.empty()){
-                time_vec.push_back(time_d);
+                min_time = time_d;
             }
-            else {
-                double time_from_null = time_d-time_vec[0];
-                time_vec.push_back(time_from_null);
+            else if (min_time > time_d) {
+                min_time = time_d;
             }
+            time_vec.push_back(time_d);
         }
-        time_vec[0]=0;
+        for (int i = 0; i < time_vec.size(); i++){
+            time_vec[i] -= min_time;
+        }
     }
     else{
-				std::cout << "Could not open file";
+        std::cout << "Could not open file";
     }
 }
 
