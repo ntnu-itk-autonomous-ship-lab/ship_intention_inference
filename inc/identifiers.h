@@ -90,13 +90,13 @@ namespace INTENTION_INFERENCE
         return new_initial_states;
     }
 
-   bool currentChangeInCourseIdentifier(double current_course, double last_course){
-        auto minimal_change = 0.06;
-        if (current_course - last_course > minimal_change)
+   bool currentChangeInCourseIdentifier(const IntentionModelParameters &parameters, double current_course, double last_course){
+        auto minimal_change = parameters.change_in_course_rad.minimal_change_since_last_state;
+        if (wrapPI(current_course - last_course) > minimal_change)
         {
             return true;
         }
-        else if (last_course - current_course > minimal_change)
+        else if (wrapPI(last_course - current_course) > minimal_change)
         {
             return true;
         }
@@ -114,12 +114,12 @@ namespace INTENTION_INFERENCE
      */
     std::string changeInCourseIdentifier(const IntentionModelParameters &parameters, double current_course, double initial_course)
     {
-        auto minimal_change = parameters.change_in_course_rad.minimal_change;
-        if (current_course - initial_course > minimal_change)
+        auto minimal_change = parameters.change_in_course_rad.minimal_change_since_init_state;
+        if (wrapPI(current_course - initial_course) > minimal_change)
         {
             return "starboardwards";
         }
-        else if (initial_course - current_course > minimal_change)
+        else if (wrapPI(initial_course - current_course) > minimal_change)
         {
             return "portwards";
         }

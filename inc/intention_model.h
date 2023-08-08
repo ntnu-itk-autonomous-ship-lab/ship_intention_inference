@@ -244,7 +244,7 @@ namespace INTENTION_INFERENCE
 			net.setEvidence("change_in_course", changeInCourseIdentifier(parameters, better_at(ship_states, my_id)[CHI], my_initial_ship_state[CHI]));
 			net.setEvidence("change_in_speed", changeInSpeedIdentifier(parameters, better_at(ship_states, my_id)[U], my_initial_ship_state[U]));
 
-			bool is_changing_course = currentChangeInCourseIdentifier(better_at(ship_states, my_id)[CHI], last_ship_states[my_id][CHI]);
+			bool is_changing_course = currentChangeInCourseIdentifier(parameters ,better_at(ship_states, my_id)[CHI], last_ship_states[my_id][CHI]);
 			net.setEvidence("is_changing_course", is_changing_course);
 			bool other_is_changing_course = false;
 			std::vector<std::string> handled_ship_names;
@@ -253,7 +253,7 @@ namespace INTENTION_INFERENCE
 			{
 				if (ship_id != my_id)
 				{
-					other_is_changing_course = currentChangeInCourseIdentifier(better_at(ship_states, ship_id)[CHI], last_ship_states[ship_id][CHI]);
+					other_is_changing_course = currentChangeInCourseIdentifier(parameters, better_at(ship_states, ship_id)[CHI], last_ship_states[ship_id][CHI]);
 					const std::string ship_name = better_at(ship_name_map, ship_id);
 					const auto ship_state = better_at(ship_states, ship_id);
 					handled_ship_names.push_back(ship_name);

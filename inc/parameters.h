@@ -73,7 +73,8 @@ struct IntentionModelParameters{
      * 
      */
     struct{
-        double minimal_change;
+        double minimal_change_since_init_state;
+        double minimal_change_since_last_state;
     }change_in_course_rad;
 
     /**
@@ -161,7 +162,8 @@ struct IntentionModelParameters{
         param.safe_distance_front_m.sigma = 50;
         param.safe_distance_front_m.max = 1000;
         param.safe_distance_front_m.n_bins = 30; // this value must match the bayesian network
-        param.change_in_course_rad.minimal_change = 0.2617994; /* 15 degrees */
+        param.change_in_course_rad.minimal_change_since_init_state = 0.2617994; /* 15 degrees */
+        param.change_in_course_rad.minimal_change_since_last_state = 0.06;
         param.change_in_speed_m_s.minimal_change = 1.5;
         param.colregs_situation_borders_rad.HO_uncertainty_start = 2.79;
         param.colregs_situation_borders_rad.HO_start = 2.96;
