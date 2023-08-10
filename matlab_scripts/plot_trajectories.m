@@ -11,8 +11,8 @@ data = readtable('nostart_trajectory_new_1_Case - 08-09-2018, 19-12-24 - 4XJ3B-6
 %intention_data = readtable('nostart_intention_new_1_Case - 06-25-2019, 14-22-43 - OO430-60-sec.csv');
 %data = readtable('nostart_trajectory_new_1_Case - 06-25-2019, 14-22-43 - OO430-60-sec.csv');
 
-%intention_data = readtable('nostart_intention_new_1_Case - 12-02-2018, 20-10-07 - PW6UL-60-sec.csv');
-%data = readtable('nostart_trajectory_new_1_Case - 12-02-2018, 20-10-07 - PW6UL-60-sec.csv');
+%intention_data = readtable('nostart_intention_new_Case - 01-12-2018, 03-56-43 - WRNUL-60-sec.csv');
+%data = readtable('nostart_trajectory_new_Case - 01-12-2018, 03-56-43 - WRNUL-60-sec.csv');
 
 %intention_data = readtable('nostart_intention_new_Case - 01-02-2018, 01-05-22 - GP38T-60-sec.csv');
 %data = readtable('nostart_trajectory_new_Case - 01-02-2018, 01-05-22 - GP38T-60-sec.csv');
@@ -22,6 +22,12 @@ data = readtable('nostart_trajectory_new_1_Case - 08-09-2018, 19-12-24 - 4XJ3B-6
 
 %intention_data = readtable('nostart_intention_new_1_Case - 07-09-2019, 05-52-22 - O7LU9-60-sec.csv');
 %data = readtable('nostart_trajectory_new_1_Case - 07-09-2019, 05-52-22 - O7LU9-60-sec.csv');
+
+%intention_data = readtable("nostart_intention_new_case_2ZC9Z-60-sec-two-ships.csv");
+%data = readtable("nostart_trajectory_new_case_2ZC9Z-60-sec-two-ships.csv");
+
+%intention_data = readtable('nostart_intention_new_Case - 01-12-2018, 03-56-43 - WRNUL-60-sec.csv');
+%data = readtable('nostart_trajectory_new_Case - 01-12-2018, 03-56-43 - WRNUL-60-sec.csv');
 
 unique_traj_ids = unique(data.traj_id);
 unique_time_steps = unique(data.time);

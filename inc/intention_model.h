@@ -27,6 +27,7 @@
 #include "geometry.h"
 #include "parameters.h"
 #include "utils.h"
+#include <iomanip> // Include the header for std::fixed and std::setprecision
 #include <deque>
 
 //TODO fiks:
@@ -171,55 +172,55 @@ namespace INTENTION_INFERENCE
 		 */
 		void write_results_to_file(std::ofstream &intentionFile,
 								   double time, double x, double y){
-			intentionFile << my_id << ",";
-            intentionFile << x << ",";
-            intentionFile << y << ",";
-            intentionFile << time << ",";
+			intentionFile << std::fixed << std::setprecision(10) << my_id << ",";
+            intentionFile << std::fixed << std::setprecision(10) << x << ",";
+            intentionFile << std::fixed << std::setprecision(10) << y << ",";
+            intentionFile << std::fixed << std::setprecision(10) << time << ",";
 
 			auto intention_colregs_compliant = better_at(better_at(intention_model_predictions, "intention_colregs_compliant"), "true");
-			intentionFile << intention_colregs_compliant << ",";
+			intentionFile << std::fixed << std::setprecision(10) << intention_colregs_compliant << ",";
 			auto intention_good_seamanship = better_at(better_at(intention_model_predictions, "intention_good_seamanship"), "true");
-			intentionFile << intention_good_seamanship << ",";
+			intentionFile << std::fixed << std::setprecision(10) << intention_good_seamanship << ",";
 			auto intention_unmodeled_behaviour = better_at(better_at(intention_model_predictions, "unmodelled_behaviour"), "true");
-			intentionFile << intention_unmodeled_behaviour << ",";
+			intentionFile << std::fixed << std::setprecision(10) << intention_unmodeled_behaviour << ",";
 			auto has_turned_portwards = better_at(better_at(intention_model_predictions, "has_turned_portwards"), "true");
-			intentionFile << has_turned_portwards << ",";
+			intentionFile << std::fixed << std::setprecision(10) << has_turned_portwards << ",";
 			auto has_turned_starboardwards = better_at(better_at(intention_model_predictions, "has_turned_starboardwards"), "true");
-			intentionFile << has_turned_starboardwards << ",";
+			intentionFile << std::fixed << std::setprecision(10) << has_turned_starboardwards << ",";
 			auto change_in_speed = !better_at(better_at(intention_model_predictions, "change_in_speed"), "similar");
-			intentionFile << change_in_speed << ",";
+			intentionFile << std::fixed << std::setprecision(10) << change_in_speed << ",";
 			auto check_is_changing_course = better_at(better_at(intention_model_predictions, "is_changing_course"), "true");
-			intentionFile << check_is_changing_course << ",";
+			intentionFile << std::fixed << std::setprecision(10) << check_is_changing_course << ",";
 
 			for (auto const &[ship_id, ship_name] : ship_name_map)
 			{
 				if (ship_id != my_id)
 				{
 					auto intention_colav_situation_CR_PS = better_at(better_at(intention_model_predictions, "colav_situation_towards_" + ship_name), "CR_PS");
-					intentionFile << intention_colav_situation_CR_PS << ",";
+					intentionFile << std::fixed << std::setprecision(10) << intention_colav_situation_CR_PS << ",";
 					auto intention_colav_situation_CR_SS = better_at(better_at(intention_model_predictions, "colav_situation_towards_" + ship_name), "CR_SS");
-					intentionFile << intention_colav_situation_CR_SS << ",";
+					intentionFile << std::fixed << std::setprecision(10) << intention_colav_situation_CR_SS << ",";
 					auto intention_colav_situation_HO = better_at(better_at(intention_model_predictions, "colav_situation_towards_" + ship_name), "HO");
-					intentionFile << intention_colav_situation_HO << ",";
+					intentionFile << std::fixed << std::setprecision(10) << intention_colav_situation_HO << ",";
 					auto intention_colav_situation_OT_en = better_at(better_at(intention_model_predictions, "colav_situation_towards_" + ship_name), "OT_en");
-					intentionFile << intention_colav_situation_OT_en << ",";
+					intentionFile << std::fixed << std::setprecision(10) << intention_colav_situation_OT_en << ",";
 					auto intention_colav_situation_OT_ing = better_at(better_at(intention_model_predictions, "colav_situation_towards_" + ship_name), "OT_ing");
-					intentionFile << intention_colav_situation_OT_ing << ",";
+					intentionFile << std::fixed << std::setprecision(10) << intention_colav_situation_OT_ing << ",";
 					auto priority_intention_lower = better_at(better_at(intention_model_predictions, "priority_intention_to_" + ship_name), "lower");
-					intentionFile << priority_intention_lower << ",";
+					intentionFile << std::fixed << std::setprecision(10) << priority_intention_lower << ",";
 					auto priority_intention_similar = better_at(better_at(intention_model_predictions, "priority_intention_to_" + ship_name), "similar");
-					intentionFile << priority_intention_similar << ",";
+					intentionFile << std::fixed << std::setprecision(10) << priority_intention_similar << ",";
 					auto priority_intention_higher = better_at(better_at(intention_model_predictions, "priority_intention_to_" + ship_name), "higher");
-					intentionFile << priority_intention_higher<< ",";
+					intentionFile << std::fixed << std::setprecision(10) << priority_intention_higher<< ",";
 					auto risk_of_collision = better_at(better_at(intention_model_predictions, "risk_of_collision_towards_"+ ship_name), "true");
-					intentionFile << risk_of_collision<< ",";
+					intentionFile << std::fixed << std::setprecision(10) << risk_of_collision<< ",";
 					auto current_risk_of_collision = better_at(better_at(intention_model_predictions, "Current_risk_of_collision_towards_" + ship_name), "true");
-					intentionFile << current_risk_of_collision<<",";
+					intentionFile << std::fixed << std::setprecision(10) << current_risk_of_collision<<",";
 					if (write_remove_timestep_to_file){
 						write_startpoint_set_to_file = 1;
 						write_remove_timestep_to_file = 0;
 					}
-					intentionFile << write_startpoint_set_to_file << std::endl;
+					intentionFile << std::fixed << std::setprecision(10) << write_startpoint_set_to_file << std::endl;
 				}
 			}
 		}
@@ -614,11 +615,15 @@ namespace INTENTION_INFERENCE
 				trajectory_prob_sum += traj_probabilities[traj_id];
 			}
 			if (trajectory_prob_sum < 0.0001){
-				std::cout << "Error: Sum of trajectory probabilities is close to zero.\n";
-				assert(false);
+				std::cout << "WARNING: Sum of trajectory probabilities is close to zero.\n";
+				for (auto const &[traj_id, probability] : traj_probabilities){
+					traj_probabilities[traj_id] = 0;
+				}
 			}
-			for (auto const &[traj_id, probability] : traj_probabilities){
-				traj_probabilities[traj_id] = probability/trajectory_prob_sum;
+			else{
+				for (auto const &[traj_id, probability] : traj_probabilities){
+					traj_probabilities[traj_id] = probability/trajectory_prob_sum;
+				}
 			}
 		}
 
@@ -651,12 +656,12 @@ namespace INTENTION_INFERENCE
 			if (intentionFile.is_open()) {
 				for (auto const &[traj_id, trajectory] : trajectory_candidates){
 					for (int t = 0; t < trajectory.cols(); t++){
-						intentionFile << my_id << ",";
-						intentionFile << time << ",";
-						intentionFile << traj_id << ",";
-						intentionFile << trajectory(0,t) << ",";
-						intentionFile << trajectory(1,t) << ",";
-						intentionFile << traj_probabilities[traj_id] << "\n";
+						intentionFile << std::fixed << std::setprecision(10) << my_id << ",";
+						intentionFile << std::fixed << std::setprecision(10) << time << ",";
+						intentionFile << std::fixed << std::setprecision(10) << traj_id << ",";
+						intentionFile << std::fixed << std::setprecision(10) << trajectory(0,t) << ",";
+						intentionFile << std::fixed << std::setprecision(10) << trajectory(1,t) << ",";
+						intentionFile << std::fixed << std::setprecision(10) << traj_probabilities[traj_id] << "\n";
 					}
 				}
 				intentionFile.close();

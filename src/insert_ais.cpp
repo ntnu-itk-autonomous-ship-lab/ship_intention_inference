@@ -180,7 +180,7 @@ void writeIntentionToFile(int timestep,
 
     Eigen::MatrixXd traj_scenarios(2,9);
     traj_scenarios << 0, 0, 0, 0, 0, 0, 0, 0, 0, /* Pertubations in sog */
-                 0, 0.2, -0.2, 0.4, -0.4, 0.6 ,-0.6, 0.8, -0.8; /* Perturbations in cog */
+                 0, 0.3, -0.3, 0.6, -0.6, 0.9 ,-0.9, 1.2, -1.2; /* Perturbations in cog */
 
     for(int i = timestep; i < unique_time_vec.size() ; i++){
         std::cout << "timestep: " << unique_time_vec[i] << std::endl;
@@ -191,7 +191,7 @@ void writeIntentionToFile(int timestep,
             double dt = unique_time_vec[i] - unique_time_vec[i-1];
 
             //auto trajectory_candidates = generate_random_trajectories(ship_state[i][ship_id], dt, parameters.time_into_trajectory, 10);
-            auto trajectory_candidates = generate_trajectories(ship_state[i][ship_id], dt, 3, traj_scenarios);
+            auto trajectory_candidates = generate_trajectories(ship_state[i][ship_id], dt, 6, traj_scenarios);
             bool did_save = current_ship_intention_model.run_intention_inference(ship_state[i] ,ship_list, unique_time_vec[i]);
             current_ship_intention_model.save_intention_predictions_to_file(filename_intention,
                                                                             x_vec[unique_time_vec.size()*j+i], /* x pos for ship j at time i */
@@ -229,8 +229,8 @@ int main(){
     //std::string filename = "new_Case - 01-02-2018, 01-05-22 - GP38T-60-sec.csv"; //crossing wrong both
     //std::string filename = "new_Case - 05-09-2018, 10-05-48 - 9PNLJ-60-sec.csv";
 
-    std::string intentionModelFilename = "files/intention_models/intention_model_from_code.xdsl";
-    //std::string intentionModelFilename = "intention_model_two_ships.xdsl";
+    //std::string intentionModelFilename = "files/intention_models/intention_model_from_code.xdsl";
+    //std::string intentionModelFilename = "files/intention_models/intention_model_two_ships.xdsl";
     //std::string intentionModelFilename = "files/intention_models/intention_model_with_risk_of_collision_no_startpoint_3.xdsl";
 
     std::vector<std::map<int, Eigen::Vector4d> > ship_state;

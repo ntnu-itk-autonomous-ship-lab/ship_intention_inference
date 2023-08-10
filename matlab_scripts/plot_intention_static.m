@@ -57,6 +57,10 @@ intention_filename = "nostart_intention_new_1_Case - 08-09-2018, 19-12-24 - 4XJ3
 %intention_filename = "nostart_intention_new_case_2ZC9Z-60-sec-two-ships.csv"
 %intention_filename = "nostart_intention_new_Case - 01-09-2018, 03-55-18 - QZPS3-60-sec.csv"
 %intention_filename = "nostart_intention_new_1_Case - 07-09-2019, 05-52-22 - O7LU9-60-sec.csv"
+%intention_filename = "nostart_intention_new_Case - 01-12-2018, 03-56-43 - WRNUL-60-sec.csv"
+%intention_filename = "nostart_intention_new_Case - 01-17-2018, 06-26-20 - W4H51-60-sec.csv"
+%intention_filename = "nostart_intention_new_Case - 05-26-2019, 20-39-57 - 60GEW-60-sec.csv"
+%intention_filename = "intention_file.csv"
 %measurement_filename = "measurements_"+base_filename;
 %2760
 
