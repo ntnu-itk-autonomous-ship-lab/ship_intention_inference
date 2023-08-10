@@ -229,7 +229,7 @@ int main(){
     //std::string filename = "new_Case - 01-02-2018, 01-05-22 - GP38T-60-sec.csv"; //crossing wrong both
     //std::string filename = "new_Case - 05-09-2018, 10-05-48 - 9PNLJ-60-sec.csv";
 
-    //std::string intentionModelFilename = "files/intention_models/intention_model_from_code.xdsl";
+    std::string intentionModelFilename = "files/intention_models/intention_model_from_code.xdsl";
     //std::string intentionModelFilename = "files/intention_models/intention_model_two_ships.xdsl";
     //std::string intentionModelFilename = "files/intention_models/intention_model_with_risk_of_collision_no_startpoint_3.xdsl";
 
