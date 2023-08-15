@@ -1,6 +1,53 @@
 # ship_intention_inference
+Intention model to predict intentions of ships using ais data. To use in another project, the files in `inc/` are of interest, in particular `intention_model.h`. In addition, a range of .cpp files are made to test and improve the intention model. **Currently, only insert_ais.cpp and generate_intention_model.cpp are supported**. The rest of the cpp files are reminants from older versions. The matlab script `plot_intentions_static.m` can be used to plot intentions written to the intention files, and `plot_trajectories.m` can be use to plot trajectories written to a trajectory file.
 
+## Setup
+To get the intention model to run we need the eigen library and the smile library. To install the eigen library, simply run
 
+```bash
+sudo apt install libeigen3-dev
+```
+
+For the smile library, you need to download the correct version of this for your computer from https://www.bayesfusion.com. Add the contents of the smile folder to `external/smile`. We also need `smile_licence.h`, that must be added to this folder as well, and can be downloaded from the same page. 
+
+To build, run
+
+```bash
+cmake -S . -B build
+cmake --build build
+```
+After that, the compiled programs will be in the `build` folder. Then to generate priors for the intention model, run
+
+```bash
+./build/generate_intention_model
+```
+and then run to test the intention model with the `insert_ais` program, run the following command:
+
+```bash
+./build/insert_ais
+```
+## Using AIS data to evaluate intention model
+
+The goal of this work is to evaluate the intention model using AIS data.
+
+To run AIS data on the intention model a case file with two (three) ships is used. The file must contain mmsi, times (YYYY-mm-dd HH:MM:SS), x (north), y (east), sog (speen over ground) and cog (course over ground). The file must have consistent time intervals that are the same for both ships. A matlab file (*extract_file.m*) was used to filter case files to only get the wanted mmsis and x,y coordinates instead of latitude and longitude.
+
+*insert_ais.cpp* reads the AIS data file and uses the intention model. For each timestep, it inserts an observation of the ships into the model and writes the intentions at that timestep to an intention file. These variables are written to the intention file in the following format: mmsi, x, y, time, colreg_compliant, good_seamanship, unmodeled_behaviour, has_turned_portwards, has_turned_starboardwards, change_in_speed, is_changing_course, CR_PS, CR_SS, HO, OT_en, OT_ing, priority_lower, priority_similar, priority_higher, risk_of_collision, current_risk_of_collision, startpoint_set.
+
+As a baseline for generating intention model priors, the intention model `intention_model_with_risk_of_collision_no_startpoint_3.xdsl` was used. This only works for 2 ships. Other intention model files can be found in `files/intention_models/`, but these might miss some nodes, and needs to be updated with genie. 
+
+Can also use a different intentionModelFile: `intention_model_with_risk_of_collision.xdsl`. This is currently working on a different branch called `riskofCollision`. Here the risk of collision is taken into consideration, a risk distance distribution is used and if `r_cpa` is high there is no risk of collision and maneuvers will not affect the intentions.
+
+In the file `parameters.h`, a function with default parameters is defined, that is used both for `insert_ais` and `generate_intention_model`. 
+
+To evaluate the intentions, by plotting the values from the intention file, a matlab file (*plot_intentions.m*) was used. The ship positions and intention variables were plotted with circles moving indicating each timestep.
+
+When evaluating the intention model using different situations it seems like the intentions are mostly correct. However, it is difficult to decide when a situation has actually started. Now the situation is defined as started if the distance between the ships is under a certain value and both ships have a speed above 1 m/s. It is also difficult to know for sure if the maneuvers made are related to the situation or not.
+
+## TODOs
+Functionality for intention inference with more than 2 ships needs to be implemented. This is mostly compatible, but the intention model priors need to be updated. Also a way to switch between intention model prior files based on how many ships are in the situation would be a nice feature.
+
+## Working with genie
 Going from continuous to discrete:
 intention_model_continious.xdsl is used to design the network but must be discretized before use. 
 This is done by opening the model in Genie (https://www.bayesfusion.com/) then opening the menu "Network" and pressing Discretize. 
