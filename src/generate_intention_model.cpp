@@ -16,7 +16,7 @@
 #include <math.h>
 #include "../inc/bayesian_network.h"
 #include "../inc/parameters.h"
-#include "../external/Eigen/Dense"
+#include <Eigen/Dense>
 
 int main(int argc, char* argv[]){
     using namespace INTENTION_INFERENCE;

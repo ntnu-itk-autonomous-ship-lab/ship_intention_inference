@@ -2,7 +2,13 @@
 Intention model to predict intentions of ships using ais data. To use in another project, the files in `inc/` are of interest, in particular `intention_model.h`. In addition, a range of .cpp files are made to test and improve the intention model. **Currently, only insert_ais.cpp and generate_intention_model.cpp are supported**. The rest of the cpp files are reminants from older versions. The matlab script `plot_intentions_static.m` can be used to plot intentions written to the intention files, and `plot_trajectories.m` can be use to plot trajectories written to a trajectory file.
 
 ## Setup
-To get the intention model to run we need the smile library. Therefore, you need to download the correct version of this for your computer from https://www.bayesfusion.com. Add the contents of the smile folder to `external/smile`. We also need `smile_licence.h`, that must be added to this folder as well, and can be downloaded from the same page. 
+To get the intention model to run we need the eigen library and the smile library. To install the eigen library, simply run
+
+```bash
+sudo apt install libeigen3-dev
+```
+
+For the smile library, you need to download the correct version of this for your computer from https://www.bayesfusion.com. Add the contents of the smile folder to `external/smile`. We also need `smile_licence.h`, that must be added to this folder as well, and can be downloaded from the same page. 
 
 To build, run
 

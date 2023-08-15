@@ -12,7 +12,7 @@
 #include "../inc/parameters.h"
 #include "../inc/geometry.h"
 #include "../inc/utils.h"
-#include "../external/Eigen/Dense"
+#include <Eigen/Dense>
 #include <map>
 
 void readFileToVecs (std::string filename, std::vector<int> &mmsi_vec, std::vector<double> &time_vec, std::vector<double> &x_vec, std::vector<double> &y_vec, std::vector<double> &sog_vec, std::vector<double> &cog_vec){
