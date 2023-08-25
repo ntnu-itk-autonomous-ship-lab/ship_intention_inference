@@ -185,4 +185,17 @@ struct IntentionModelParameters{
         param.priority_probability["higher"] = 0.05;
         return param;
     }
+
+    /**
+     * @brief Creates an IntentionModelParameters instance from another IntentionModelParameters instance
+     * 
+     * @param IntentionModelParameters instance of IntentionModelParameters
+     * @return IntentionModelParameters class
+     */
+    IntentionModelParameters copy_parameters_to_new_instance(const IntentionModelParameters &other) 
+    {
+        IntentionModelParameters copy;
+        copy = other;
+        return copy;
+    }
 }
