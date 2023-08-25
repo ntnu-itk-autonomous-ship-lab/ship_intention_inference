@@ -30,7 +30,7 @@
 #include <iomanip> // Include the header for std::fixed and std::setprecision
 #include <deque>
 
-//TODO fiks:
+// TODO fiks:
 // ros::Time::now() <- tidspunktet for denne målingen
 // custom_msgs::... <- er bare brukt for å vise frem resultatet, kan fjernes (erstattes?)
 // putt inn tid som input i observation
@@ -61,19 +61,19 @@ namespace INTENTION_INFERENCE
 		std::map<int, double> traj_probabilities = {}; /* Trajectory probabilities for different trajectory ids */
 
 		const std::vector<std::string> intention_node_names_ship_specific = {"colav_situation_towards_"
-                                                                             , "priority_intention_to_"
-                                                                             , "disable_"};
+                                                                            , "priority_intention_to_"
+                                                                            , "disable_"};
 		const std::vector<std::string> intention_node_names_general = {"intention_colregs_compliant"
-                                                                       , "intention_good_seamanship"
-                                                                       , "intention_safe_distance"
-                                                                       , "intention_safe_distance_front"
-                                                                       , "intention_safe_distance_midpoint"
-                                                                       , "intention_ample_time"
-                                                                       , "intention_ignoring_safety"
-                                                                       , "unmodelled_behaviour"
-                                                                       ,"intention_distance_risk_of_collision"
-                                                                       ,"intention_distance_risk_of_collision_front"};
-		//const std::vector<std::string> intention_node_names_general = {"intention_colregs_compliant", "intention_good_seamanship", "intention_safe_distance", "intention_safe_distance_front", "intention_safe_distance_midpoint", "intention_ample_time", "intention_ignoring_safety", "unmodelled_behaviour"};
+                                                                        , "intention_good_seamanship"
+                                                                        , "intention_safe_distance"
+                                                                        , "intention_safe_distance_front"
+                                                                        , "intention_safe_distance_midpoint"
+                                                                        , "intention_ample_time"
+                                                                        , "intention_ignoring_safety"
+                                                                        , "unmodelled_behaviour"
+                                                                        ,"intention_distance_risk_of_collision"
+                                                                        ,"intention_distance_risk_of_collision_front"};
+		// const std::vector<std::string> intention_node_names_general = {"intention_colregs_compliant", "intention_good_seamanship", "intention_safe_distance", "intention_safe_distance_front", "intention_safe_distance_midpoint", "intention_ample_time", "intention_ignoring_safety", "unmodelled_behaviour"};
 		const std::vector<std::string> intermediate_node_names_ship_specific = {"risk_of_collision_towards_"
                                                                                 , "is_pre_ample_time_to_"
                                                                                 , "safe_distance_at_CPA_towards_"
@@ -87,7 +87,7 @@ namespace INTENTION_INFERENCE
                                                                                 , "Current_risk_of_collision_CPA_towards_"
                                                                                 , "Current_risk_of_collision_front_towards_"
                                                                                 , "Current_risk_of_collision_towards_"};
-		//const std::vector<std::string> intermediate_node_names_ship_specific = {"is_pre_ample_time_to_", "safe_distance_at_CPA_towards_", "safe_crossing_front_towards_", "safe_distance_to_", "safe_distance_to_midpoint_", "gives_way_correct_towards_", "Observation_applicable_towards_", "role_towards_", "good_seamanship_to_"};
+		// const std::vector<std::string> intermediate_node_names_ship_specific = {"is_pre_ample_time_to_", "safe_distance_at_CPA_towards_", "safe_crossing_front_towards_", "safe_distance_to_", "safe_distance_to_midpoint_", "gives_way_correct_towards_", "Observation_applicable_towards_", "role_towards_", "good_seamanship_to_"};
 		std::vector<std::string> intermediate_node_names_general = {"has_turned_portwards"
                                                                     , "has_turned_starboardwards"
                                                                     , "observation_applicable"
@@ -171,7 +171,7 @@ namespace INTENTION_INFERENCE
 		 * @param y
 		 */
 		void write_results_to_file(std::ofstream &intentionFile,
-								   double time, double x, double y){
+								double time, double x, double y){
 			intentionFile << std::fixed << std::setprecision(10) << my_id << ",";
             intentionFile << std::fixed << std::setprecision(10) << x << ",";
             intentionFile << std::fixed << std::setprecision(10) << y << ",";
@@ -237,10 +237,9 @@ namespace INTENTION_INFERENCE
 		 * @return bool true or false
 		 */
 		void insertObservation(const std::map<int, Eigen::Vector4d> ship_states
-							   , std::map<int, Eigen::Vector4d> last_ship_states
-							   , std::vector<int> currently_tracked_ships
-							   , bool do_save
-							   )
+							, std::map<int, Eigen::Vector4d> last_ship_states
+							, std::vector<int> currently_tracked_ships
+							, bool do_save)
 		{
 			net.setEvidence("change_in_course", changeInCourseIdentifier(parameters, better_at(ship_states, my_id)[CHI], my_initial_ship_state[CHI]));
 			net.setEvidence("change_in_speed", changeInSpeedIdentifier(parameters, better_at(ship_states, my_id)[U], my_initial_ship_state[U]));
@@ -281,7 +280,7 @@ namespace INTENTION_INFERENCE
 
 					if (cpa.time_untill_CPA > 240){
 						ship_states_before_cpa_limit = ship_states;
-				    }
+					}
 					std::map<std::string, double> situation = evaluateRelativeSituation2(parameters, better_at(ship_states_before_cpa_limit, my_id), better_at(ship_states_before_cpa_limit, ship_id));
 					net.setVirtualEvidence("colav_situation_towards_" + ship_name, situation);
 				}
@@ -309,7 +308,7 @@ namespace INTENTION_INFERENCE
 					bool check_changing_course = better_at(better_at(intention_model_predictions, "is_changing_course"), "true");
 					cpa = evaluateCPA(better_at(ship_states, my_id), better_at(ship_states, ship_id));
 					other_ship_id = ship_id;
-					//&& !check_changing_course[my_id] &&!check_changing_course[other_ship_id] && (cpa.time_untill_CPA<600)
+					// && !check_changing_course[my_id] &&!check_changing_course[other_ship_id] && (cpa.time_untill_CPA<600)
 					if(result_risk_of_collision>0.9  && (!check_changing_course || (cpa.time_untill_CPA < parameters.set_startpoint.min_time_cpa))){
 						risky_situation = true;
 						risk_of_collision_for_current_timestep = true;
@@ -374,10 +373,9 @@ namespace INTENTION_INFERENCE
 		 * predicted intetntions.
 		 */
 		double evaluateTrajectory(const Eigen::MatrixXd &trajectory
-								  , const std::map<int, Eigen::Vector4d> &ship_states
-								  , std::vector<int> currently_tracked_ships
-								  , double dt
-                                  )
+								, const std::map<int, Eigen::Vector4d> &ship_states
+								, std::vector<int> currently_tracked_ships
+								, double dt)
 		{
 			net.incrementTime();
 
@@ -453,22 +451,22 @@ namespace INTENTION_INFERENCE
 		 * as startpoint or initial state for the intention inference
 		 */
 		IntentionModel(std::string network_file_name,
-					   const IntentionModelParameters &parameters,
-					   int ship_id, const std::map<int,
-					   Eigen::Vector4d> &ship_states) : IntentionModel(network_file_name,
-                                                                       parameters,
-                                                                       ship_id,
-                                                                       ship_states,
-                                                                       std::map<std::string, std::string>{}){}
+						const IntentionModelParameters &parameters,
+						int ship_id, const std::map<int,
+						Eigen::Vector4d> &ship_states) : IntentionModel(network_file_name,
+                                                                        parameters,
+                                                                        ship_id,
+                                                                        ship_states,
+                                                                        std::map<std::string, std::string>{}){}
 
 		IntentionModel(std::string network_file_name,
-					   const IntentionModelParameters &parameters,
-					   int ship_id, const std::map<int, Eigen::Vector4d> &ship_states,
-					   const std::map<std::string, std::string> &priors) : parameters(parameters),
-                                                                           net(network_file_name, parameters.number_of_network_evaluation_samples),
-                                                                           my_id(ship_id),
-																		   ship_states_before_cpa_limit(ship_states),
-                                                                           my_initial_ship_state(better_at(ship_states,my_id))
+						const IntentionModelParameters &parameters,
+						int ship_id, const std::map<int, Eigen::Vector4d> &ship_states,
+						const std::map<std::string, std::string> &priors) : parameters(parameters),
+                                                                            net(network_file_name, parameters.number_of_network_evaluation_samples),
+                                                                            my_id(ship_id),
+																			ship_states_before_cpa_limit(ship_states),
+                                                                            my_initial_ship_state(better_at(ship_states,my_id))
 		{
 			ship_names.clear();
 			ship_states_history.clear();

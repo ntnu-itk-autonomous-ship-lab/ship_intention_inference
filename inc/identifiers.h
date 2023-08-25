@@ -81,7 +81,7 @@ namespace INTENTION_INFERENCE
             return "starboard";
     }
 
-   Eigen::Vector4d newInitialStatesIdentifier(Eigen::Vector4d ship_states, Eigen::Vector4d initial_ship_states, int time){
+    Eigen::Vector4d newInitialStatesIdentifier(Eigen::Vector4d ship_states, Eigen::Vector4d initial_ship_states, int time){
         Eigen::Vector4d new_initial_states;
         new_initial_states = initial_ship_states;
         if (time % 600==0){
@@ -90,7 +90,7 @@ namespace INTENTION_INFERENCE
         return new_initial_states;
     }
 
-   bool currentChangeInCourseIdentifier(const IntentionModelParameters &parameters, double current_course, double last_course){
+    bool currentChangeInCourseIdentifier(const IntentionModelParameters &parameters, double current_course, double last_course){
         auto minimal_change = parameters.change_in_course_rad.minimal_change_since_last_state;
         if (wrapPI(current_course - last_course) > minimal_change)
         {
@@ -332,7 +332,7 @@ namespace INTENTION_INFERENCE
         {
             result.at("CR_PS") = CR;
         }
-         if ((bearing_relative_to_ownship_heading > -theta2 && bearing_relative_to_ownship_heading < theta2 ) && (relative_heading > (M_PI - theta4) && relative_heading < (M_PI - theta1) ))
+        if ((bearing_relative_to_ownship_heading > -theta2 && bearing_relative_to_ownship_heading < theta2 ) && (relative_heading > (M_PI - theta4) && relative_heading < (M_PI - theta1) ))
         {
             result.at("CR_PS") = CR;
         }
@@ -454,7 +454,7 @@ namespace INTENTION_INFERENCE
             /*if (relative_heading > bearing_relative_to_ownship_heading+M_PI-theta1 || relative_heading< bearing_relative_to_ownship_heading-M_PI+theta1){
                 result["CR_SS"] = 1;
             }
-             else if (relative_heading > bearing_relative_to_ownship_heading+M_PI-theta2){
+            else if (relative_heading > bearing_relative_to_ownship_heading+M_PI-theta2){
                 result["HO"] = 1;
             }
             else if (relative_heading< bearing_relative_to_ownship_heading-M_PI+theta2){
@@ -530,7 +530,7 @@ namespace INTENTION_INFERENCE
             if (relative_heading > M_PI-theta1+bearing_relative_to_ownship_heading || relative_heading< -M_PI+theta1+bearing_relative_to_ownship_heading){
                 result["CR_PS"] = 1;
             }
-             else if (relative_heading > M_PI-theta2+bearing_relative_to_ownship_heading){
+            else if (relative_heading > M_PI-theta2+bearing_relative_to_ownship_heading){
                 result["CR_PS"] = 1;
             }
             else if (relative_heading< -M_PI+theta2+bearing_relative_to_ownship_heading){
@@ -572,7 +572,7 @@ namespace INTENTION_INFERENCE
         else if (time_to_cpa < 1){
 
         }
-         else if (bearing_relative_to_ownship_heading < theta1 && bearing_relative_to_ownship_heading > -theta1){
+        else if (bearing_relative_to_ownship_heading < theta1 && bearing_relative_to_ownship_heading > -theta1){
             if (relative_heading > M_PI-theta1+uncertainty+bearing_relative_to_ownship_heading || relative_heading< -M_PI+theta1-uncertainty+bearing_relative_to_ownship_heading){
                 result.at("HO") = 1;
             }
@@ -716,7 +716,7 @@ namespace INTENTION_INFERENCE
         result["OT_en"] = 0;
         result["OT_ing"] = 0;
         }
-         else if (bearing_relative_to_ownship_heading < theta1 && bearing_relative_to_ownship_heading > -theta1){
+        else if (bearing_relative_to_ownship_heading < theta1 && bearing_relative_to_ownship_heading > -theta1){
             if (relative_heading > M_PI-theta1+uncertainty || relative_heading< -M_PI+theta1-uncertainty+bearing_relative_to_ownship_heading){
                 result.at("HO") = 1;
             }

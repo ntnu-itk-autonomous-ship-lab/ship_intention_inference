@@ -320,7 +320,7 @@ public:
         std::cout << "\n";
     }
 
-      void setAmpleTimeDistribution(const std::string node_name, std::string filename, int ample_time_idx, int timestep, int n_bins){
+    void setAmpleTimeDistribution(const std::string node_name, std::string filename, int ample_time_idx, int timestep, int n_bins){
         std::vector<std::vector<std::string> > content = read_file(filename);
         std::vector<double> ample_time_vec = ampleTimeVec(content, ample_time_idx, timestep);
         std::vector<double> distr_ample_time_vec = find_distribution(ample_time_vec, n_bins);
@@ -451,7 +451,7 @@ public:
     auto isEvidence(){
         return net.IsThereAnyEvidence();
     }
-     
+    
     auto isDecisions(){
         return net.IsThereAnyDecision();
     }

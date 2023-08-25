@@ -21,7 +21,7 @@ struct IntentionModelParameters{
         double max_time_s;
         double min_course_change_rad;
         double min_speed_change_m_s;
-    } expanding_dbn;
+    }expanding_dbn;
     
     /* #The normal distributions are discretized into 30 bins. Everything above the max value is in the highest bin. Max should probably be around mu+2sigma */
     
@@ -47,8 +47,7 @@ struct IntentionModelParameters{
         double sigma;
         double max;
         unsigned n_bins;
-    }
-    risk_distance_m;
+    }risk_distance_m;
     struct{
         double mu;
         double sigma;
