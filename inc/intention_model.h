@@ -48,6 +48,7 @@ namespace INTENTION_INFERENCE
 		BayesianNetwork net;
 		const int my_id; /* mmsi of ship for which intentions are being calculated */
 		Eigen::Vector4d my_initial_ship_state; /* Ship state from where intentions are calculated */
+		Eigen::Vector3d my_initial_land_state;
 		std::map<int, std::string> ship_name_map;
 		std::vector<std::string> ship_names;
 		std::map<int, Eigen::Vector4d> ship_states_before_cpa_limit; /* Used for the insertObservation function to store last ship state while CPA > 240 */
@@ -58,6 +59,7 @@ namespace INTENTION_INFERENCE
 		bool startpoint_is_set = false;
 		bool risky_situation = false; /* If there is a risk of collision at one point of time after the situation starts, then the situation should be considered as risky. */
 		std::deque<std::map<int, Eigen::Vector4d >> ship_states_history; /* a queue of all ship states used for calculating intentions */
+		std::deque<std::map<int, Eigen::Vector3d >> land_states_history;
 		std::map<int, double> traj_probabilities = {}; /* Trajectory probabilities for different trajectory ids */
 
 		const std::vector<std::string> intention_node_names_ship_specific = {"colav_situation_towards_"
@@ -71,8 +73,9 @@ namespace INTENTION_INFERENCE
                                                                        , "intention_ample_time"
                                                                        , "intention_ignoring_safety"
                                                                        , "unmodelled_behaviour"
-                                                                       ,"intention_distance_risk_of_collision"
-                                                                       ,"intention_distance_risk_of_collision_front"};
+                                                                       , "intention_distance_risk_of_collision"
+                                                                       , "intention_distance_risk_of_collision_front"
+																	   , "intention_avoiding_land"};
 		//const std::vector<std::string> intention_node_names_general = {"intention_colregs_compliant", "intention_good_seamanship", "intention_safe_distance", "intention_safe_distance_front", "intention_safe_distance_midpoint", "intention_ample_time", "intention_ignoring_safety", "unmodelled_behaviour"};
 		const std::vector<std::string> intermediate_node_names_ship_specific = {"risk_of_collision_towards_"
                                                                                 , "is_pre_ample_time_to_"
@@ -93,11 +96,15 @@ namespace INTENTION_INFERENCE
                                                                     , "observation_applicable"
                                                                     , "stands_on_correct"
                                                                     , "change_in_speed"
-                                                                    , "is_changing_course"};
+                                                                    , "is_changing_course"
+																	, "avoiding_land_portside"
+																	, "avoiding_land_front"
+																	, "avoiding_land_starboardside"};
 		std::vector<std::string> all_node_names;
 		const std::string output_name = "observation_applicable";
 
 		std::map<int, Eigen::Vector4d> previously_saved_ship_states;
+		std::map<int, Eigen::Vector3d> previously_saved_land_states;
 		std::map<int, double> time_last_saved_shipstate;
 
 		/**
@@ -110,7 +117,7 @@ namespace INTENTION_INFERENCE
 		 * @return true 
 		 * @return false 
 		 */
-		bool doSave(const std::map<int, Eigen::Vector4d> &ship_states, double time)
+		bool doSave(const std::map<int, Eigen::Vector4d> &ship_states, const std::map<int, Eigen::Vector3d> &land_states, double time)
 		{
 			const auto min_time_between_saved_states = parameters.expanding_dbn.min_time_s;
 			const auto max_time_between_saved_states = parameters.expanding_dbn.max_time_s;
@@ -119,6 +126,7 @@ namespace INTENTION_INFERENCE
 			if (!previously_saved_ship_states.size())
 			{
 				previously_saved_ship_states = ship_states;
+				previously_saved_land_states = land_states;
 				for (const auto &[ship_id, state] : previously_saved_ship_states)
 				{
 					(void)state; // discard state to avoid compiler warning for unused variable
@@ -137,6 +145,7 @@ namespace INTENTION_INFERENCE
 																		|| std::abs(current_ship_state[U] - past_ship_state[U]) > speed_change_to_save))
 					{
 						previously_saved_ship_states = ship_states;
+						previously_saved_land_states = land_states;
 						time_last_saved_shipstate[ship_id] = time;
 						return true;
 					}
@@ -171,11 +180,14 @@ namespace INTENTION_INFERENCE
 		 * @param y
 		 */
 		void write_results_to_file(std::ofstream &intentionFile,
-								   double time, double x, double y){
+								   double time, double x, double y, bool land_port, bool land_front, bool land_starboard){
 			intentionFile << std::fixed << std::setprecision(10) << my_id << ",";
             intentionFile << std::fixed << std::setprecision(10) << x << ",";
             intentionFile << std::fixed << std::setprecision(10) << y << ",";
             intentionFile << std::fixed << std::setprecision(10) << time << ",";
+			intentionFile << std::fixed << std::setprecision(10) << land_port << ",";
+			intentionFile << std::fixed << std::setprecision(10) << land_front << ",";
+			intentionFile << std::fixed << std::setprecision(10) << land_starboard << ",";
 
 			auto intention_colregs_compliant = better_at(better_at(intention_model_predictions, "intention_colregs_compliant"), "true");
 			intentionFile << std::fixed << std::setprecision(10) << intention_colregs_compliant << ",";
@@ -191,6 +203,8 @@ namespace INTENTION_INFERENCE
 			intentionFile << std::fixed << std::setprecision(10) << change_in_speed << ",";
 			auto check_is_changing_course = better_at(better_at(intention_model_predictions, "is_changing_course"), "true");
 			intentionFile << std::fixed << std::setprecision(10) << check_is_changing_course << ",";
+			auto intention_avoiding_land = better_at(better_at(intention_model_predictions, "avoiding_land"), "true");
+			intentionFile << std::fixed << std::setprecision(10) << intention_avoiding_land << ",";
 
 			for (auto const &[ship_id, ship_name] : ship_name_map)
 			{
@@ -238,12 +252,17 @@ namespace INTENTION_INFERENCE
 		 */
 		void insertObservation(const std::map<int, Eigen::Vector4d> ship_states
 							   , std::map<int, Eigen::Vector4d> last_ship_states
+							   , const std::map<int, Eigen::Vector3d> land_states
 							   , std::vector<int> currently_tracked_ships
 							   , bool do_save
 							   )
 		{
 			net.setEvidence("change_in_course", changeInCourseIdentifier(parameters, better_at(ship_states, my_id)[CHI], my_initial_ship_state[CHI]));
 			net.setEvidence("change_in_speed", changeInSpeedIdentifier(parameters, better_at(ship_states, my_id)[U], my_initial_ship_state[U]));
+
+			net.setEvidence("land_close_portside", better_at(land_states, my_id)[LP]);
+			net.setEvidence("land_close_front", better_at(land_states, my_id)[LF]);
+			net.setEvidence("land_close_starboardside", better_at(land_states, my_id)[LS]);
 
 			bool is_changing_course = currentChangeInCourseIdentifier(parameters ,better_at(ship_states, my_id)[CHI], last_ship_states[my_id][CHI]);
 			net.setEvidence("is_changing_course", is_changing_course);
@@ -454,22 +473,26 @@ namespace INTENTION_INFERENCE
 		 */
 		IntentionModel(std::string network_file_name,
 					   const IntentionModelParameters &parameters,
-					   int ship_id, const std::map<int,
-					   Eigen::Vector4d> &ship_states) : IntentionModel(network_file_name,
+					   int ship_id, const std::map<int, Eigen::Vector4d> &ship_states,
+					   const std::map<int, Eigen::Vector3d> &land_states) : IntentionModel(network_file_name,
                                                                        parameters,
                                                                        ship_id,
                                                                        ship_states,
+																	   land_states,
                                                                        std::map<std::string, std::string>{}){}
 
 		IntentionModel(std::string network_file_name,
 					   const IntentionModelParameters &parameters,
 					   int ship_id, const std::map<int, Eigen::Vector4d> &ship_states,
+					   const std::map<int,Eigen::Vector3d> &land_states,
 					   const std::map<std::string, std::string> &priors) : parameters(parameters),
                                                                            net(network_file_name, parameters.number_of_network_evaluation_samples),
                                                                            my_id(ship_id),
 																		   ship_states_before_cpa_limit(ship_states),
-                                                                           my_initial_ship_state(better_at(ship_states,my_id))
+                                                                           my_initial_ship_state(better_at(ship_states,my_id)),
+																		   my_initial_land_state(better_at(land_states,my_id))
 		{
+            std::cout << "\n\n Hello \n\n";
 			ship_names.clear();
 			ship_states_history.clear();
 
@@ -542,38 +565,45 @@ namespace INTENTION_INFERENCE
 		 * @param time current time
 		 * @return double If timestep has been iterated in the bayesian network
 		 */
-		bool run_intention_inference(const std::map<int, Eigen::Vector4d> ship_states, std::vector<int> ship_list, double time)
+		bool run_intention_inference(const std::map<int, Eigen::Vector4d> ship_states, const std::map<int, Eigen::Vector3d> land_states, std::vector<int> ship_list, double time)
 		{
 
-			bool do_save = doSave(ship_states, time);
+			bool do_save = doSave(ship_states, land_states, time);
 			if(!do_save && (ship_states_history.size() > 1)){
 				ship_states_history.pop_back();
 			}
 
 			/* Intention calculation */
 			ship_states_history.push_back(ship_states);
+			land_states_history.push_back(land_states);
 			auto ship_states_history_it = std::prev(ship_states_history.end(), 1);
+			auto land_states_history_it = std::prev(land_states_history.end(), 1);
 			int num_remove_timesteps = 1;
 			while((ship_states_history_it != ship_states_history.end()) && (num_remove_timesteps < parameters.time_step_removal.min_timesteps_in_state_history)){
 				try{
 					if(ship_states_history_it == ship_states_history.begin()) {ship_states_history_it++;}
 
-					insertObservation(*ship_states_history_it, *std::prev(ship_states_history_it), ship_list, do_save);
+					insertObservation(*ship_states_history_it, *std::prev(ship_states_history_it), *land_states_history_it, ship_list, do_save);
 
 					if (!startpoint_is_set){
 						ship_states_history.pop_front();
+						land_states_history.pop_front();
 					}
 					ship_states_history_it++;
+					land_states_history_it++;
 				}
 				catch (std::string throw_object){
 					++num_remove_timesteps;
 					if(ship_states_history.size() > parameters.time_step_removal.min_timesteps_in_state_history){
 						for (int i = 0; i < num_remove_timesteps; ++i) {
 							ship_states_history.pop_front();
+							land_states_history.pop_front();
 						}
 					}
 					my_initial_ship_state = ship_states_history.front()[my_id];
 					ship_states_history_it = ship_states_history.begin();
+					my_initial_land_state = land_states_history.front()[my_id];
+					land_states_history_it = land_states_history.begin();
 					write_remove_timestep_to_file = 1;
 				}
 			}
@@ -636,12 +666,12 @@ namespace INTENTION_INFERENCE
 		 * @param y y coordinate at time \ref time
 		 * @param time current time, just used for writing to file
 		 */
-		void save_intention_predictions_to_file(std::string filename, double x, double y, double time){
+		void save_intention_predictions_to_file(std::string filename, double x, double y, bool land_port_vec, bool land_front_vec, bool land_starboard_vec, double time){
 			std::ofstream intentionFile;
 
 			intentionFile.open (filename, std::ios_base::app);
 			if (intentionFile.is_open()) {
-				write_results_to_file(intentionFile, time, x, y);
+				write_results_to_file(intentionFile, time, x, y, land_port_vec, land_front_vec, land_starboard_vec);
 				intentionFile.close();
 			} else {
 				std::cout << "ERROR: Failed to open " << filename << std::endl;

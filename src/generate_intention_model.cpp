@@ -25,8 +25,8 @@ int main(int argc, char* argv[]){
     if (argc > 1) {num_ships = std::atoi(argv[1]);}
     else{num_ships = 2;}
 
-    std::string network_file_name = "files/intention_models/intention_model_with_risk_of_collision_no_startpoint_3.xdsl";
-
+    //std::string network_file_name = "files/intention_models/intention_model_with_risk_of_collision_no_startpoint_3.xdsl";
+    std::string network_file_name = "files/intention_models/intention_model_with_risk_of_collision_no_startpoint_yes_coast.xdsl";
     IntentionModelParameters parameters = default_parameters(num_ships);
     BayesianNetwork net(network_file_name, parameters.number_of_network_evaluation_samples);
 

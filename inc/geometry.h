@@ -19,6 +19,10 @@ namespace INTENTION_INFERENCE
 	static constexpr short PY = 1;
 	static constexpr short CHI = 2;
 	static constexpr short U = 3;
+	
+	static constexpr short LP = 0;
+	static constexpr short LF = 1;
+	static constexpr short LS = 2;
 
 	static constexpr float DEG2RAD = M_PI / 180.0f;
 	static constexpr float RAD2DEG = 180.0f / M_PI;

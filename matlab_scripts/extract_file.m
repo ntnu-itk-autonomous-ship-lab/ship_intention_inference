@@ -22,11 +22,12 @@
 %filename = "Case - 06-25-2019, 14-22-43 - OO430-60-sec.csv" %not unmodeled
 %filename = "Case - 12-02-2018, 20-10-07 - PW6UL-60-sec.csv" %unmodeled
 %filename = "Case - 07-18-2019, 05-46-19 - W6ZUC-60-sec.csv"  %
-filename = "Case - 09-17-2018, 18-24-32 - 0URFX-60-sec.csv"
+%filename = "Case - 09-17-2018, 18-24-32 - 0URFX-60-sec.csv"
+filename = "Case - 01-08-2021, 08-21-29 - AQ5VM-60-sec-two-ships-radius-300.csv";
 
 
-lat0 = 57.5;  %must choose a reference point
-lon0 = 8.3;   %must choose a reference point
+lat0 = 59.5;  %must choose a reference point
+lon0 = 5.5;   %must choose a reference point
 h = 0;          %because we do not care about height
 h0 = h;
 wgs84 = wgs84Ellipsoid;
@@ -37,12 +38,12 @@ clf
 
 data1 = readtable(filename);
 %shipnames = unique(data{:,'mmsi'})
-shipnames = [259490000,219829000] %choose the mmsis that is wanted
+shipnames = [257062170,259299000]; %choose the mmsis that is wanted
 
 data = [data1(data1.mmsi == shipnames(1), :);data1(data1.mmsi == shipnames(2), :)];
 
-num_ships = length(shipnames)
-num_values = (height(data))/num_ships
+num_ships = length(shipnames);
+num_values = (height(data))/num_ships;
 %%times = unique(data{:,'date_time_utc'});
 lats = zeros(num_values,num_ships);
 lons = zeros(num_values,num_ships);
@@ -78,8 +79,11 @@ mmsi = data{:,'mmsi'};
 sog = data{:,'sog'};
 cog = data{:,'cog'};
 times = data{:,'date_time_utc'};
-new_data = table(mmsi,times,x,y,sog,cog)
-new_filename = sprintf('new_2_%s',filename);
+land_port = ~isnan(data{:,'dcoast_port'});
+land_front = ~isnan(data{:,'dcoast_front'});
+land_starboard = ~isnan(data{:,'dcoast_starboard'});
+new_data = table(mmsi,times,x,y,sog,cog,land_port,land_front,land_starboard);
+new_filename = sprintf('input_ready_%s',filename);
 writetable(new_data,new_filename)
 
 
