@@ -582,7 +582,7 @@ namespace INTENTION_INFERENCE
 		 * @brief calculates trajectory probabilities for current calculated intentions
 		 * 
 		 * @param ship_states a map of states of all ships with mmsi as key and
-		 * object as a 4d vector consisting of x, y, sog, cog, where this acts
+		 * object as a 4d vector consisting of x, y, cog, sog, where this acts
 		 * as startpoint or initial state for the intention inference
 		 * @param ship_list a list of all ships mmsi
 		 * @param trajectory_candidates map with key being the trajectory id, and object
@@ -607,7 +607,7 @@ namespace INTENTION_INFERENCE
 
 				/* Weights trajectory probabilities based on distance from original traj.
 				 * +1 to prevent neg probabilities. */
-				traj_probabilities[traj_id] = res * ((std::cos(course_diff) + 1) / 2);
+				traj_probabilities[traj_id] = res * ((std::cos(course_diff) + 1));
 
 				/* For normailization */
 				trajectory_prob_sum += traj_probabilities[traj_id];
