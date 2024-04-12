@@ -1,0 +1,945 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- This network was created in GeNIe Academic, which can be used for academic teaching and research purposes only -->
+<smile version="1.0" id="Unnamed" numsamples="100000" discsamples="10000">
+	<nodes>
+		<cpt id="passed_ship0" dynamic="plate">
+			<state id="false" />
+			<state id="true" />
+			<probabilities>0.8 0.2</probabilities>
+		</cpt>
+		<cpt id="distance_at_cpa_to_ship0" dynamic="plate">
+			<state id="State01" />
+			<state id="State02" />
+			<state id="State03" />
+			<state id="State04" />
+			<state id="State05" />
+			<state id="State06" />
+			<state id="State07" />
+			<state id="State08" />
+			<state id="State09" />
+			<state id="State10" />
+			<state id="State11" />
+			<state id="State12" />
+			<state id="State13" />
+			<state id="State14" />
+			<state id="State15" />
+			<state id="State16" />
+			<state id="State17" />
+			<state id="State18" />
+			<state id="State19" />
+			<state id="State20" />
+			<state id="State21" />
+			<state id="State22" />
+			<state id="State23" />
+			<state id="State24" />
+			<state id="State25" />
+			<state id="State26" />
+			<state id="State27" />
+			<state id="State28" />
+			<state id="State29" />
+			<state id="State30" />
+			<probabilities>0.03333333333333333 0.03333333333333333 0.03333333333333333 0.03333333333333333 0.03333333333333333 0.03333333333333333 0.03333333333333333 0.03333333333333333 0.03333333333333333 0.03333333333333333 0.03333333333333333 0.03333333333333333 0.03333333333333333 0.03333333333333333 0.03333333333333333 0.03333333333333333 0.03333333333333333 0.03333333333333333 0.03333333333333333 0.03333333333333333 0.03333333333333333 0.03333333333333333 0.03333333333333333 0.03333333333333333 0.03333333333333333 0.03333333333333333 0.03333333333333333 0.03333333333333333 0.03333333333333333 0.03333333333333344</probabilities>
+		</cpt>
+		<cpt id="intention_safe_distance_midpoint">
+			<state id="State01" />
+			<state id="State02" />
+			<state id="State03" />
+			<state id="State04" />
+			<state id="State05" />
+			<state id="State06" />
+			<state id="State07" />
+			<state id="State08" />
+			<state id="State09" />
+			<state id="State10" />
+			<state id="State11" />
+			<state id="State12" />
+			<state id="State13" />
+			<state id="State14" />
+			<state id="State15" />
+			<state id="State16" />
+			<state id="State17" />
+			<state id="State18" />
+			<state id="State19" />
+			<state id="State20" />
+			<state id="State21" />
+			<state id="State22" />
+			<state id="State23" />
+			<state id="State24" />
+			<state id="State25" />
+			<state id="State26" />
+			<state id="State27" />
+			<state id="State28" />
+			<state id="State29" />
+			<state id="State30" />
+			<probabilities>0.03593031911292579 0.01886897258663219 0.02595736753421306 0.03431301098793724 0.04358558370974874 0.05320014465193962 0.06239771916667697 0.07032514063960221 0.07616203217122114 0.07925970943910304 0.07925970943910299 0.07616203217122119 0.07032514063960227 0.06239771916667691 0.05320014465193967 0.04358558370974874 0.03431301098793726 0.02595736753421296 0.01886897258663223 0.01318018716474656 0.008846684434680618 0.005705911588902435 0.003536347900877423 0.002106057693290753 0.001205232298797876 0.000662760093714243 0.0003502086722390052 0.0001778206755193024 8.676054623246721e-05 7.234804392508565e-05</probabilities>
+		</cpt>
+		<cpt id="safe_distance_at_cpa_to_ship0" dynamic="plate">
+			<state id="false" />
+			<state id="true" />
+			<parents>intention_safe_distance_midpoint distance_at_cpa_to_ship0</parents>
+			<probabilities>0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5</probabilities>
+		</cpt>
+		<cpt id="crossing_distance_front_to_ship0" dynamic="plate">
+			<state id="State01" />
+			<state id="State02" />
+			<state id="State03" />
+			<state id="State04" />
+			<state id="State05" />
+			<state id="State06" />
+			<state id="State07" />
+			<state id="State08" />
+			<state id="State09" />
+			<state id="State10" />
+			<state id="State11" />
+			<state id="State12" />
+			<state id="State13" />
+			<state id="State14" />
+			<state id="State15" />
+			<state id="State16" />
+			<state id="State17" />
+			<state id="State18" />
+			<state id="State19" />
+			<state id="State20" />
+			<state id="State21" />
+			<state id="State22" />
+			<state id="State23" />
+			<state id="State24" />
+			<state id="State25" />
+			<state id="State26" />
+			<state id="State27" />
+			<state id="State28" />
+			<state id="State29" />
+			<state id="State30" />
+			<probabilities>1e-05 1e-05 1e-05 1e-05 1e-05 2e-05 4e-05 0.00017 0.00031 0.00062 0.00119 0.00197 0.0037 0.00615 0.00861 0.01324 0.01902 0.02584 0.033 0.0426 0.05166 0.06346 0.07105 0.07563 0.07981000000000001 0.07932 0.07631 0.07006999999999999 0.06295000000000001 0.21321</probabilities>
+		</cpt>
+		<cpt id="intention_safe_distance_front">
+			<state id="State01" />
+			<state id="State02" />
+			<state id="State03" />
+			<state id="State04" />
+			<state id="State05" />
+			<state id="State06" />
+			<state id="State07" />
+			<state id="State08" />
+			<state id="State09" />
+			<state id="State10" />
+			<state id="State11" />
+			<state id="State12" />
+			<state id="State13" />
+			<state id="State14" />
+			<state id="State15" />
+			<state id="State16" />
+			<state id="State17" />
+			<state id="State18" />
+			<state id="State19" />
+			<state id="State20" />
+			<state id="State21" />
+			<state id="State22" />
+			<state id="State23" />
+			<state id="State24" />
+			<state id="State25" />
+			<state id="State26" />
+			<state id="State27" />
+			<state id="State28" />
+			<state id="State29" />
+			<state id="State30" />
+			<probabilities>0.007253771124867826 0.005880374566153291 0.009615986257158081 0.01497004786522104 0.0221867272893716 0.03130431262309603 0.04204904317663757 0.05377113584293583 0.06546113880148163 0.07586810573496233 0.08370980458905747 0.08792955212905729 0.08792955212905751 0.08370980458905741 0.07586810573496217 0.06546113880148174 0.0537711358429358 0.04204904317663749 0.03130431262309608 0.02218672728937165 0.01497004786522094 0.009615986257158093 0.005880374566153312 0.003423390557278028 0.001897352297607902 0.001001104302466915 0.0005028636343181736 0.000240469718277625 0.0001094736288730358 7.911698604612383e-05</probabilities>
+		</cpt>
+		<cpt id="safe_crossing_front_with_ship0" dynamic="plate">
+			<state id="false" />
+			<state id="true" />
+			<parents>intention_safe_distance_front crossing_distance_front_to_ship0</parents>
+			<probabilities>0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5</probabilities>
+		</cpt>
+		<cpt id="intention_ignoring_safety">
+			<state id="false" />
+			<state id="true" />
+			<probabilities>0.99 0.01</probabilities>
+		</cpt>
+		<cpt id="safe_distance_to_ship0" dynamic="plate">
+			<state id="false" />
+			<state id="true" />
+			<parents>intention_ignoring_safety safe_distance_at_cpa_to_ship0 safe_crossing_front_with_ship0</parents>
+			<probabilities>1 0 1 0 1 0 0 1 0 1 0 1 0 1 0 1</probabilities>
+		</cpt>
+		<deterministic id="safely_passed_ship0" dynamic="plate">
+			<state id="false" />
+			<state id="true" />
+			<parents>passed_ship0 safe_distance_to_ship0</parents>
+			<resultingstates>false false false true</resultingstates>
+		</deterministic>
+		<cpt id="course_change" dynamic="plate">
+			<state id="portwards" />
+			<state id="none" />
+			<state id="starboardwards" />
+			<probabilities>0.3 0.4 0.3</probabilities>
+		</cpt>
+		<cpt id="speed_change" dynamic="plate">
+			<state id="lower" />
+			<state id="similar" />
+			<state id="higher" />
+			<probabilities>0.25 0.5 0.25</probabilities>
+		</cpt>
+		<deterministic id="stands_on_correctly" dynamic="plate">
+			<state id="false" />
+			<state id="true" />
+			<parents>course_change speed_change</parents>
+			<resultingstates>false false false false true false false false false</resultingstates>
+		</deterministic>
+		<cpt id="land_close_front" dynamic="plate">
+			<state id="false" />
+			<state id="true" />
+			<probabilities>0.5 0.5</probabilities>
+		</cpt>
+		<cpt id="land_close_port" dynamic="plate">
+			<state id="false" />
+			<state id="true" />
+			<probabilities>0.5 0.5</probabilities>
+		</cpt>
+		<cpt id="land_close_starboard" dynamic="plate">
+			<state id="false" />
+			<state id="true" />
+			<probabilities>0.5 0.5</probabilities>
+		</cpt>
+		<deterministic id="turned_port" dynamic="plate">
+			<state id="false" />
+			<state id="true" />
+			<parents>course_change</parents>
+			<resultingstates>true false false</resultingstates>
+		</deterministic>
+		<deterministic id="turned_starboard" dynamic="plate">
+			<state id="false" />
+			<state id="true" />
+			<parents>course_change</parents>
+			<resultingstates>false false true</resultingstates>
+		</deterministic>
+		<cpt id="avoiding_land" dynamic="plate">
+			<state id="false" />
+			<state id="true" />
+			<parents>land_close_front speed_change land_close_port land_close_starboard turned_port turned_starboard</parents>
+			<probabilities>1 0 1 0 1 0 1 0 1 0 1 0 0 1 0 1 1 0 0 1 1 0 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0 1 0 1 1 0 0 1 1 0 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0 1 0 1 1 0 0 1 1 0 0 1 0 1 1 0 1 0 1 0 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0</probabilities>
+		</cpt>
+		<deterministic id="soc_or_forced_to_give_way" dynamic="plate">
+			<state id="false" />
+			<state id="true" />
+			<parents>stands_on_correctly avoiding_land</parents>
+			<resultingstates>false true true true</resultingstates>
+		</deterministic>
+		<cpt id="colav_situation_towards_ship0">
+			<state id="HO" />
+			<state id="CR_SS" />
+			<state id="OT_ing" />
+			<state id="CR_PS" />
+			<state id="OT_en" />
+			<probabilities>0.2 0.2 0.2 0.2 0.2</probabilities>
+		</cpt>
+		<cpt id="priority_intention_to_ship0">
+			<state id="lower" />
+			<state id="similar" />
+			<state id="higher" />
+			<probabilities>0.05 0.9 0.05</probabilities>
+		</cpt>
+		<deterministic id="role_towards_ship0">
+			<state id="GW" />
+			<state id="SO" />
+			<parents>colav_situation_towards_ship0 priority_intention_to_ship0</parents>
+			<resultingstates>GW GW SO GW GW SO GW GW SO GW SO SO GW SO SO</resultingstates>
+		</deterministic>
+		<cpt id="which_side_ship0" dynamic="plate">
+			<state id="port" />
+			<state id="starboard" />
+			<probabilities>0.5 0.5</probabilities>
+		</cpt>
+		<deterministic id="gw_ho_correct_ship0" dynamic="plate">
+			<state id="false" />
+			<state id="true" />
+			<parents>safe_distance_at_cpa_to_ship0 which_side_ship0</parents>
+			<resultingstates>false false true false</resultingstates>
+		</deterministic>
+		<deterministic id="gw_cr_ss_correct_ship0" dynamic="plate">
+			<state id="false" />
+			<state id="true" />
+			<parents>safe_distance_to_ship0 which_side_ship0</parents>
+			<resultingstates>false false true false</resultingstates>
+		</deterministic>
+		<deterministic id="gw_ot_ing_correct_ship0" dynamic="plate">
+			<state id="false" />
+			<state id="true" />
+			<parents>safe_distance_to_ship0</parents>
+			<resultingstates>false true</resultingstates>
+		</deterministic>
+		<deterministic id="gw_cr_ps_correct_ship0" dynamic="plate">
+			<state id="false" />
+			<state id="true" />
+			<parents>safe_distance_to_ship0 course_change</parents>
+			<resultingstates>false false false false true true</resultingstates>
+		</deterministic>
+		<deterministic id="gw_ot_en_correct_ship0" dynamic="plate">
+			<state id="false" />
+			<state id="true" />
+			<parents>safe_distance_to_ship0</parents>
+			<resultingstates>false true</resultingstates>
+		</deterministic>
+		<cpt id="intention_colregs_compliant">
+			<state id="false" />
+			<state id="true" />
+			<probabilities>0.02 0.98</probabilities>
+		</cpt>
+		<deterministic id="gives_way_correctly_to_ship0" dynamic="plate">
+			<state id="false" />
+			<state id="true" />
+			<parents>colav_situation_towards_ship0 gw_ho_correct_ship0 gw_cr_ss_correct_ship0 gw_ot_ing_correct_ship0 gw_cr_ps_correct_ship0 gw_ot_en_correct_ship0</parents>
+			<resultingstates>false false false false false false false false false false false false false false false false true true true true true true true true true true true true true true true true false false false false false false false false true true true true true true true true false false false false false false false false true true true true true true true true false false false false true true true true false false false false true true true true false false false false true true true true false false false false true true true true false false true true false false true true false false true true false false true true false false true true false false true true false false true true false false true true false true false true false true false true false true false true false true false true false true false true false true false true false true false true false true false true</resultingstates>
+		</deterministic>
+		<cpt id="intention_ample_time">
+			<state id="State01" />
+			<state id="State02" />
+			<state id="State03" />
+			<state id="State04" />
+			<state id="State05" />
+			<state id="State06" />
+			<state id="State07" />
+			<state id="State08" />
+			<state id="State09" />
+			<state id="State10" />
+			<state id="State11" />
+			<state id="State12" />
+			<state id="State13" />
+			<state id="State14" />
+			<state id="State15" />
+			<state id="State16" />
+			<state id="State17" />
+			<state id="State18" />
+			<state id="State19" />
+			<state id="State20" />
+			<state id="State21" />
+			<state id="State22" />
+			<state id="State23" />
+			<state id="State24" />
+			<state id="State25" />
+			<state id="State26" />
+			<state id="State27" />
+			<state id="State28" />
+			<state id="State29" />
+			<state id="State30" />
+			<probabilities>8.112116925907537e-08 8.777497752385318e-07 8.148777629986388e-06 6.050970069787371e-05 0.0003594429839244796 0.001708306646889443 0.006496605018001539 0.01977154196927598 0.04815821154247095 0.09388818245423045 0.1465174339766079 0.1830306580593269 0.1830306580593273 0.1465174339766078 0.09388818245423014 0.04815821154247102 0.019771541969276 0.006496605018001533 0.001708306646889479 0.0003594429839244295 6.050970069781947e-05 8.148777630001547e-06 8.777497753076346e-07 7.561288062341021e-08 5.208374953546979e-09 2.86829671125588e-10 1.262689952596929e-11 4.443112544549876e-13 1.243449787580175e-14 3.33066907387547e-16</probabilities>
+		</cpt>
+		<cpt id="time_until_cpa_with_ship0" dynamic="plate">
+			<state id="State01" />
+			<state id="State02" />
+			<state id="State03" />
+			<state id="State04" />
+			<state id="State05" />
+			<state id="State06" />
+			<state id="State07" />
+			<state id="State08" />
+			<state id="State09" />
+			<state id="State10" />
+			<state id="State11" />
+			<state id="State12" />
+			<state id="State13" />
+			<state id="State14" />
+			<state id="State15" />
+			<state id="State16" />
+			<state id="State17" />
+			<state id="State18" />
+			<state id="State19" />
+			<state id="State20" />
+			<state id="State21" />
+			<state id="State22" />
+			<state id="State23" />
+			<state id="State24" />
+			<state id="State25" />
+			<state id="State26" />
+			<state id="State27" />
+			<state id="State28" />
+			<state id="State29" />
+			<state id="State30" />
+			<probabilities>0.03333333333333333 0.03333333333333333 0.03333333333333333 0.03333333333333333 0.03333333333333333 0.03333333333333333 0.03333333333333333 0.03333333333333333 0.03333333333333333 0.03333333333333333 0.03333333333333333 0.03333333333333333 0.03333333333333333 0.03333333333333333 0.03333333333333333 0.03333333333333333 0.03333333333333333 0.03333333333333333 0.03333333333333333 0.03333333333333333 0.03333333333333333 0.03333333333333333 0.03333333333333333 0.03333333333333333 0.03333333333333333 0.03333333333333333 0.03333333333333333 0.03333333333333333 0.03333333333333333 0.03333333333333344</probabilities>
+		</cpt>
+		<cpt id="changing_course" dynamic="plate">
+			<state id="false" />
+			<state id="true" />
+			<probabilities>0.5 0.5</probabilities>
+		</cpt>
+		<cpt id="pre_ample_time_to_ship0" dynamic="plate">
+			<state id="false" />
+			<state id="true" />
+			<parents>changing_course intention_ample_time time_until_cpa_with_ship0</parents>
+			<probabilities>0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1</probabilities>
+		</cpt>
+		<cpt id="intention_good_seamanship">
+			<state id="false" />
+			<state id="true" />
+			<probabilities>0.01 0.99</probabilities>
+		</cpt>
+		<deterministic id="good_seamanship_wrt_ship0" dynamic="plate">
+			<state id="false" />
+			<state id="true" />
+			<parents>intention_good_seamanship avoiding_land turned_port turned_starboard which_side_ship0</parents>
+			<resultingstates>true true true true true true true true true true true true true true true true true true true false false true false false true true true true true true true true</resultingstates>
+		</deterministic>
+		<deterministic id="gwc_or_pre_ample_time_towards_ship0" dynamic="plate">
+			<state id="false" />
+			<state id="true" />
+			<parents>pre_ample_time_to_ship0 gives_way_correctly_to_ship0</parents>
+			<resultingstates>false true true true</resultingstates>
+		</deterministic>
+		<deterministic id="following_colregs_wrt_ship0" dynamic="plate">
+			<state id="false" />
+			<state id="true" />
+			<parents>intention_colregs_compliant good_seamanship_wrt_ship0 role_towards_ship0 gwc_or_pre_ample_time_towards_ship0 soc_or_forced_to_give_way</parents>
+			<resultingstates>true true true true true true true true true true true true true true true true false false false false false false false false false false true true false true false true</resultingstates>
+		</deterministic>
+		<cpt id="disable_ship0" dynamic="plate">
+			<state id="disabled" />
+			<state id="enabled" />
+			<probabilities>0.5 0.5</probabilities>
+		</cpt>
+		<cpt id="intention_distance_risk_of_collision">
+			<state id="State1" />
+			<state id="State2" />
+			<state id="State3" />
+			<state id="State4" />
+			<state id="State5" />
+			<state id="State6" />
+			<state id="State7" />
+			<state id="State8" />
+			<state id="State9" />
+			<state id="State10" />
+			<state id="State11" />
+			<state id="State12" />
+			<state id="State13" />
+			<state id="State14" />
+			<state id="State15" />
+			<state id="State16" />
+			<state id="State17" />
+			<state id="State18" />
+			<state id="State19" />
+			<state id="State20" />
+			<state id="State21" />
+			<state id="State22" />
+			<state id="State23" />
+			<state id="State24" />
+			<state id="State25" />
+			<state id="State26" />
+			<state id="State27" />
+			<state id="State28" />
+			<state id="State29" />
+			<state id="State30" />
+			<probabilities>9.99960001599936e-06 9.99960001599936e-06 9.99960001599936e-06 9.99960001599936e-06 9.99960001599936e-06 9.99960001599936e-06 6.999720011199552e-05 0.0001999920003199872 0.0005499780008799648 0.001119955201791928 0.002929882804687812 0.005989760409583616 0.01139954401823927 0.01999920003199872 0.03305867765289389 0.04983800647974081 0.06948722051117956 0.08688652453901843 0.1024759009639614 0.1126054957801688 0.1139954401823927 0.1057757689692412 0.08730650773969041 0.06911723531058758 0.05041798328066877 0.03344866205351786 0.0203091876324947 0.01183952641894324 0.006299748010079597 0.004819807207711691</probabilities>
+		</cpt>
+		<cpt id="risk_of_collision_cpa_with_ship0" dynamic="plate">
+			<state id="false" />
+			<state id="true" />
+			<parents>distance_at_cpa_to_ship0 intention_distance_risk_of_collision</parents>
+			<probabilities>0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5</probabilities>
+		</cpt>
+		<cpt id="intention_distance_risk_of_collision_front">
+			<state id="State1" />
+			<state id="State2" />
+			<state id="State3" />
+			<state id="State4" />
+			<state id="State5" />
+			<state id="State6" />
+			<state id="State7" />
+			<state id="State8" />
+			<state id="State9" />
+			<state id="State10" />
+			<state id="State11" />
+			<state id="State12" />
+			<state id="State13" />
+			<state id="State14" />
+			<state id="State15" />
+			<state id="State16" />
+			<state id="State17" />
+			<state id="State18" />
+			<state id="State19" />
+			<state id="State20" />
+			<state id="State21" />
+			<state id="State22" />
+			<state id="State23" />
+			<state id="State24" />
+			<state id="State25" />
+			<state id="State26" />
+			<state id="State27" />
+			<state id="State28" />
+			<state id="State29" />
+			<state id="State30" />
+			<probabilities>9.999500024998749e-06 9.999500024998749e-06 9.999500024998749e-06 9.999500024998749e-06 9.999500024998749e-06 9.999500024998749e-06 5.999700014999249e-05 8.999550022498874e-05 0.00039998000099995 0.0008099595020248986 0.002109894505274736 0.004539773011349432 0.01050947452627369 0.01790910454477276 0.03172841357932103 0.04843757812109394 0.06893655317234137 0.08970551472426377 0.1085145742712864 0.1171141442927854 0.1171641417929103 0.1091745412729363 0.08890555472226389 0.06731663416829159 0.04913754312284386 0.03140842957852107 0.01765911704414779 0.01000949952502375 0.00462976851157442 0.003669816509174639</probabilities>
+		</cpt>
+		<cpt id="risk_of_collision_front_with_ship0" dynamic="plate">
+			<state id="false" />
+			<state id="true" />
+			<parents>crossing_distance_front_to_ship0 intention_distance_risk_of_collision_front</parents>
+			<probabilities>0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0.5 0.5</probabilities>
+		</cpt>
+		<deterministic id="risk_of_collision_with_ship0" dynamic="plate">
+			<state id="false" />
+			<state id="true" />
+			<parents>risk_of_collision_cpa_with_ship0 risk_of_collision_front_with_ship0</parents>
+			<resultingstates>false true true true</resultingstates>
+		</deterministic>
+		<deterministic id="risky_situation_with_ship0" dynamic="plate">
+			<state id="false" />
+			<state id="true" />
+			<parents>risk_of_collision_with_ship0 safely_passed_ship0</parents>
+			<resultingstates>false false true false</resultingstates>
+		</deterministic>
+		<deterministic id="behaving_safely_wrt_ship0" dynamic="plate">
+			<state id="false" />
+			<state id="true" />
+			<parents>safely_passed_ship0 risky_situation_with_ship0 following_colregs_wrt_ship0</parents>
+			<resultingstates>true true false true true true true true</resultingstates>
+		</deterministic>
+		<cpt id="unmodelled_behaviour">
+			<state id="false" />
+			<state id="true" />
+			<probabilities>0.999 0.001</probabilities>
+		</cpt>
+		<deterministic id="observation_explicable" dynamic="plate">
+			<state id="false" />
+			<state id="true" />
+			<parents>disable_ship0 behaving_safely_wrt_ship0 unmodelled_behaviour</parents>
+			<resultingstates>true true true true false true true true</resultingstates>
+		</deterministic>
+	</nodes>
+	<dynamic numslices="2">
+		<deterministic id="turned_port" order="1">
+			<parents>turned_port</parents>
+			<resultingstates>true true false true false true</resultingstates>
+		</deterministic>
+		<deterministic id="turned_starboard" order="1">
+			<parents>turned_starboard</parents>
+			<resultingstates>false true false true true true</resultingstates>
+		</deterministic>
+		<deterministic id="risky_situation_with_ship0" order="1">
+			<parents>risky_situation_with_ship0</parents>
+			<resultingstates>false true false false true true false false</resultingstates>
+		</deterministic>
+	</dynamic>
+	<extensions>
+		<genie version="1.0" app="GeNIe 4.1.3402.0 ACADEMIC" name="simplified">
+			<plate leftwidth="100" rightwidth="100">5 80 1449 1239</plate>
+			<node id="passed_ship0">
+				<name>Passed ship0</name>
+				<interior color="339966" />
+				<outline color="003300" />
+				<font color="000000" name="Arial" size="8" />
+				<position>887 603 967 653</position>
+				<barchart active="true" width="128" height="78" />
+			</node>
+			<node id="distance_at_cpa_to_ship0">
+				<name>Distance at CPA to ship0</name>
+				<interior color="339966" />
+				<outline color="003300" />
+				<font color="000000" name="Arial" size="8" />
+				<position>1080 587 1177 647</position>
+				<comment>Original equation:\ndistance_at_cpa_towards_ship0=Uniform(0,600)\nBounds: (0, 600)</comment>
+				<barchart width="128" height="918" />
+			</node>
+			<node id="safe_distance_at_cpa_to_ship0">
+				<name>Safe distance at CPA to ship0</name>
+				<interior color="e5f6f7" />
+				<outline color="000080" />
+				<font color="000000" name="Arial" size="8" />
+				<position>1076 693 1204 801</position>
+				<comment>Original equation:\nsafe_distance_at_CPA_towards_ship0=distance_at_cpa_towards_ship0&gt;intention_safe_distance\nBounds: (0, 1)</comment>
+				<barchart active="true" width="128" height="92" />
+			</node>
+			<node id="crossing_distance_front_to_ship0">
+				<name>Crossing distance front to ship0</name>
+				<interior color="339966" />
+				<outline color="003300" />
+				<font color="000000" name="Arial" size="8" />
+				<position>1212 629 1320 696</position>
+				<comment>Original equation:\ncrossing_distance_front_towards_ship0=Uniform(0,900)\nBounds: (0, 900)</comment>
+				<barchart width="128" height="918" />
+			</node>
+			<node id="intention_safe_distance_front">
+				<name>Intention: Safe distance front</name>
+				<interior color="ff9900" />
+				<outline color="993300" />
+				<font color="000000" name="Arial" size="8" />
+				<position>1453 840 1556 905</position>
+				<comment>Original equation:\nintention_safe_distance_front=Min(TruncNormal(500,120,0),900)\nBounds: (0, 900)</comment>
+				<barchart width="128" height="558" />
+			</node>
+			<node id="safe_crossing_front_with_ship0">
+				<name>Safe crossing front with ship0</name>
+				<interior color="e5f6f7" />
+				<outline color="000080" />
+				<font color="000000" name="Arial" size="8" />
+				<position>1199 818 1327 926</position>
+				<comment>Original equation:\nsafe_crossing_front_towards_ship0=crossing_distance_front_towards_ship0&gt;intention_safe_distance_front\nBounds: (0, 1)</comment>
+				<barchart active="true" width="128" height="92" />
+			</node>
+			<node id="intention_ignoring_safety">
+				<name>Intention: Ignoring safety</name>
+				<interior color="ff9900" />
+				<outline color="993300" />
+				<font color="000000" name="Arial" size="8" />
+				<position>1470 973 1554 1025</position>
+				<barchart active="true" width="121" height="78" />
+			</node>
+			<node id="safe_distance_to_ship0">
+				<name>Safe distance to ship0</name>
+				<interior color="e5f6f7" />
+				<outline color="000080" />
+				<font color="000000" name="Arial" size="8" />
+				<position>1064 947 1192 1055</position>
+				<comment>Original equation:\nsafe_distance_to_ship0=And(safe_distance_at_CPA_towards_ship0&gt;0.5,safe_crossing_front_towards_ship0&gt;0.5)\nBounds: (0, 1)</comment>
+				<barchart active="true" width="128" height="92" />
+			</node>
+			<node id="safely_passed_ship0">
+				<name>Safely passed ship0</name>
+				<interior color="e5f6f7" />
+				<outline color="000080" />
+				<font color="000000" name="Arial" size="8" />
+				<position>916 457 1044 521</position>
+				<comment>Original equation:\nsafely_passed_ship0=And(passed_ship0=&quot;true&quot;,safe_distance_to_ship0&gt;0.5)\nBounds: (0, 1)</comment>
+				<barchart active="true" width="128" height="78" />
+			</node>
+			<node id="course_change">
+				<name>Course change since start</name>
+				<interior color="339966" />
+				<outline color="003300" />
+				<font color="000000" name="Arial" size="8" />
+				<position>134 839 262 947</position>
+				<barchart active="true" width="162" height="108" />
+			</node>
+			<node id="speed_change">
+				<name>Change in speed</name>
+				<interior color="339966" />
+				<outline color="003300" />
+				<font color="000000" name="Arial" size="8" />
+				<position>283 598 411 706</position>
+				<barchart active="true" width="128" height="108" />
+			</node>
+			<node id="stands_on_correctly">
+				<name>Stands on correctly</name>
+				<interior color="e5f6f7" />
+				<outline color="000080" />
+				<font color="000000" name="Arial" size="8" />
+				<position>397 756 494 816</position>
+				<barchart active="true" width="128" height="78" />
+			</node>
+			<node id="soc_or_forced_to_give_way">
+				<name>Stands on correctly or forced to give way</name>
+				<interior color="e5f6f7" />
+				<outline color="000080" />
+				<font color="000000" name="Arial" size="8" />
+				<position>421 577 549 685</position>
+				<comment>Original equation:\nstands_on_correctly_or_forced_to_give_way=stands_on_correctly\nBounds: (0, 1)</comment>
+				<barchart active="true" width="128" height="92" />
+			</node>
+			<node id="colav_situation_towards_ship0">
+				<name>Colav situation towards ship0</name>
+				<interior color="ff9900" />
+				<outline color="993300" />
+				<font color="000000" name="Arial" size="8" />
+				<position>678 1250 806 1358</position>
+				<barchart active="true" width="128" height="122" />
+			</node>
+			<node id="priority_intention_to_ship0">
+				<name>Priority towards ship0</name>
+				<interior color="ff9900" />
+				<outline color="993300" />
+				<font color="000000" name="Arial" size="8" />
+				<position>979 1258 1107 1330</position>
+				<barchart active="true" width="128" height="108" />
+			</node>
+			<node id="role_towards_ship0">
+				<name>Role towards ship0</name>
+				<interior color="e5f6f7" />
+				<outline color="000080" />
+				<font color="000000" name="Arial" size="8" />
+				<position>832 1257 954 1365</position>
+				<barchart active="true" width="128" height="78" />
+			</node>
+			<node id="intention_safe_distance_midpoint">
+				<name>Intention: Safe distance between midpoints</name>
+				<interior color="ff9900" />
+				<outline color="993300" />
+				<font color="000000" name="Arial" size="8" />
+				<position>1462 714 1590 779</position>
+				<comment>Original equation:\nintention_safe_distance_midpoint=Min(TruncNormal(300,75,0),600)\nBounds: (0, 600)</comment>
+				<barchart width="128" height="558" />
+			</node>
+			<node id="gw_ho_correct_ship0">
+				<name>GW HO correct ship0</name>
+				<interior color="e5f6f7" />
+				<outline color="000080" />
+				<font color="000000" name="Arial" size="8" />
+				<position>880 694 1008 802</position>
+				<comment>Original equation:\nGW_HO_correct_ship0=safe_distance_to_midpoint_ship0&gt;0.5\nBounds: (0, 1)</comment>
+				<barchart active="true" width="107" height="92" />
+			</node>
+			<node id="gw_cr_ss_correct_ship0">
+				<name>GW CR SS correct ship0</name>
+				<interior color="e5f6f7" />
+				<outline color="000080" />
+				<font color="000000" name="Arial" size="8" />
+				<position>880 801 1008 909</position>
+				<comment>Original equation:\nGW_CR_SS_correct_ship0=(safe_distance_to_ship0&gt;0.5)*(aft_front_crossing_side_to_ship0&lt;0.5)\nBounds: (0, 1)</comment>
+				<barchart active="true" width="108" height="92" />
+			</node>
+			<node id="gw_ot_ing_correct_ship0">
+				<name>GW OTing correct ship0</name>
+				<interior color="e5f6f7" />
+				<outline color="000080" />
+				<font color="000000" name="Arial" size="8" />
+				<position>882 1118 1010 1226</position>
+				<comment>Original equation:\nGW_OT_ing_correct_ship0=safe_distance_to_ship0&gt;0.5\nBounds: (0, 1)</comment>
+				<barchart active="true" width="108" height="92" />
+			</node>
+			<node id="gw_cr_ps_correct_ship0">
+				<name>GW CR PS correct ship0</name>
+				<interior color="e5f6f7" />
+				<outline color="000080" />
+				<font color="000000" name="Arial" size="8" />
+				<position>881 907 1009 1015</position>
+				<comment>Original equation:\nGW_CR_PS_correct_ship0=And(safe_distance_to_ship0&gt;0.5,1-(change_in_course=&quot;portwards&quot;))\nBounds: (0, 1)</comment>
+				<barchart active="true" width="109" height="92" />
+			</node>
+			<node id="gw_ot_en_correct_ship0">
+				<name>GW OTen correct ship0</name>
+				<interior color="e5f6f7" />
+				<outline color="000080" />
+				<font color="000000" name="Arial" size="8" />
+				<position>881 1013 1009 1121</position>
+				<comment>Original equation:\nGW_OT_en_correct_ship0=safe_distance_to_ship0&gt;0.5\nBounds: (0, 1)</comment>
+				<barchart active="true" width="108" height="92" />
+			</node>
+			<node id="intention_colregs_compliant">
+				<name>Intention: COLREGS compliant</name>
+				<interior color="ff9900" />
+				<outline color="993300" />
+				<font color="000000" name="Arial" size="8" />
+				<position>823 9 951 73</position>
+				<barchart active="true" width="128" height="78" />
+			</node>
+			<node id="gives_way_correctly_to_ship0">
+				<name>Gives way correctly to ship0</name>
+				<interior color="e5f6f7" />
+				<outline color="000080" />
+				<font color="000000" name="Arial" size="8" />
+				<position>673 944 801 1052</position>
+				<comment>Original equation:\ngives_way_correct_towards_ship0=If(intention_colregs_compliant=&quot;false&quot;,safe_distance_to_ship0&gt;0.5,If(colav_situation_towards_ship0&lt;0.5,GW_HO_correct_ship0&gt;0.5,If(colav_situation_towards_ship0&lt;1.5,GW_CR_SS_correct_ship0&gt;0.5,If(colav_situation_towards_ship0&lt;2.5,GW_OT_ing_correct_ship0&gt;0.5,If(colav_situation_towards_ship0&lt;3.5,GW_CR_PS_correct_ship0&gt;0.5,GW_OT_en_correct_ship0&gt;0.5)))))\nBounds: (0, 1)</comment>
+				<barchart active="true" width="128" height="92" />
+			</node>
+			<node id="intention_ample_time">
+				<name>Intention: Ample time</name>
+				<interior color="ff9900" />
+				<outline color="993300" />
+				<font color="000000" name="Arial" size="8" />
+				<position>388 1248 505 1312</position>
+				<comment>Original equation:\nintention_ample_time=Min(TruncNormal(360,75,0),600)\nBounds: (0, 600)</comment>
+				<barchart width="128" height="558" />
+			</node>
+			<node id="time_until_cpa_with_ship0">
+				<name>Time until CPA with ship0</name>
+				<interior color="339966" />
+				<outline color="003300" />
+				<font color="000000" name="Arial" size="8" />
+				<position>564 1009 667 1073</position>
+				<comment>Original equation:\ntime_untill_closest_point_of_approach_towards_ship0=Uniform(0,600)\nBounds: (0, 600)</comment>
+				<barchart width="128" height="918" />
+			</node>
+			<node id="pre_ample_time_to_ship0">
+				<name>Is pre ample time to ship0</name>
+				<interior color="e5f6f7" />
+				<outline color="000080" />
+				<font color="000000" name="Arial" size="8" />
+				<position>556 798 684 906</position>
+				<comment>Original equation:\nis_pre_ample_time_to_ship0=time_untill_closest_point_of_approach_towards_ship0&gt;intention_ample_time\nBounds: (0, 1)</comment>
+				<barchart active="true" width="109" height="92" />
+			</node>
+			<node id="intention_good_seamanship">
+				<name>Intention: Good seamanship</name>
+				<interior color="ff9900" />
+				<outline color="993300" />
+				<font color="000000" name="Arial" size="8" />
+				<position>492 17 587 76</position>
+				<barchart active="true" width="118" height="68" />
+			</node>
+			<node id="turned_port">
+				<name>Has turned portwards</name>
+				<interior color="e5f6f7" />
+				<outline color="000080" />
+				<font color="000000" name="Arial" size="8" />
+				<position>141 401 220 450</position>
+				<barchart active="true" width="134" height="78" />
+			</node>
+			<node id="turned_starboard">
+				<name>Has turned starboardwards</name>
+				<interior color="e5f6f7" />
+				<outline color="000080" />
+				<font color="000000" name="Arial" size="8" />
+				<position>209 491 309 553</position>
+				<barchart active="true" width="132" height="92" />
+			</node>
+			<node id="good_seamanship_wrt_ship0">
+				<name>Good seamanship wrt ship0</name>
+				<interior color="e5f6f7" />
+				<outline color="000080" />
+				<font color="000000" name="Arial" size="8" />
+				<position>592 450 687 509</position>
+				<barchart active="true" width="115" height="92" />
+			</node>
+			<node id="gwc_or_pre_ample_time_towards_ship0">
+				<name>Gives way correctly or pre ample time towards ship0</name>
+				<interior color="e5f6f7" />
+				<outline color="000080" />
+				<font color="000000" name="Arial" size="8" />
+				<position>699 763 827 871</position>
+				<comment>Original equation:\nGWC_or_pre_ample_time_towards_ship0=Or(And(gives_way_correct_towards_ship0&gt;0.5,good_seamanship=&quot;true&quot;),And(is_pre_ample_time_to_ship0&gt;0.5,stands_on_correctly_or_forced_to_give_way&gt;0.5))\nBounds: (0, 1)</comment>
+				<barchart active="true" width="128" height="106" />
+			</node>
+			<node id="following_colregs_wrt_ship0">
+				<name>Following COLREGS wrt ship0</name>
+				<interior color="e5f6f7" />
+				<outline color="000080" />
+				<font color="000000" name="Arial" size="8" />
+				<position>751 436 879 544</position>
+				<comment>Original equation:\nObservation_applicable_towards_ship0=Or(safely_passed_ship0&gt;0.5,And(role_towards_ship0&gt;0.5,stands_on_correctly_or_forced_to_give_way&gt;0.5),And(role_towards_ship0&lt;0.5,GWC_or_pre_ample_time_towards_ship0&gt;0.5))\nBounds: (0, 1)</comment>
+				<barchart active="true" width="128" height="92" />
+			</node>
+			<node id="disable_ship0">
+				<name>Disable ship0</name>
+				<interior color="339966" />
+				<outline color="003300" />
+				<font color="000000" name="Arial" size="8" />
+				<position>938 191 1013 237</position>
+				<barchart active="true" width="128" height="78" />
+			</node>
+			<node id="observation_explicable">
+				<name>Observation explicable</name>
+				<interior color="00ccff" />
+				<outline color="000080" />
+				<font color="000000" name="Arial" size="8" />
+				<position>699 191 781 242</position>
+				<comment>Original equation:\nobservation_applicable=Or(intention_unmodeled_behaviour&lt;0.5,Observation_applicable_towards_ship0&gt;0.5)\nBounds: (0, 1)</comment>
+				<barchart active="true" width="128" height="92" />
+			</node>
+			<node id="which_side_ship0">
+				<name>Ship0 on which side at CPA</name>
+				<interior color="339966" />
+				<outline color="003300" />
+				<font color="000000" name="Arial" size="8" />
+				<position>654 613 759 678</position>
+				<barchart active="true" width="128" height="92" />
+			</node>
+			<node id="unmodelled_behaviour">
+				<name>Unmodelled behaviour</name>
+				<interior color="ff9900" />
+				<outline color="993300" />
+				<font color="000000" name="Arial" size="8" />
+				<position>684 12 802 85</position>
+				<barchart active="true" width="128" height="64" />
+			</node>
+			<node id="changing_course">
+				<name>Is changing course</name>
+				<interior color="339966" />
+				<outline color="003300" />
+				<font color="000000" name="Arial" size="8" />
+				<position>349 938 452 1002</position>
+				<barchart active="true" width="128" height="78" />
+			</node>
+			<node id="behaving_safely_wrt_ship0">
+				<name>Behaving safely wrt ship0</name>
+				<interior color="e5f6f7" />
+				<outline color="000080" />
+				<font color="000000" name="Arial" size="8" />
+				<position>669 298 797 406</position>
+				<comment>Original equation:\nObservation_applicable_towards_ship0=Or(safely_passed_ship0&gt;0.5,And(role_towards_ship0&gt;0.5,stands_on_correctly_or_forced_to_give_way&gt;0.5),And(role_towards_ship0&lt;0.5,GWC_or_pre_ample_time_towards_ship0&gt;0.5))\nBounds: (0, 1)</comment>
+				<barchart active="true" width="141" height="92" />
+			</node>
+			<node id="intention_distance_risk_of_collision">
+				<name>Intention: Distance risk of collision</name>
+				<interior color="ff9900" />
+				<outline color="993300" />
+				<font color="000000" name="Arial" size="8" />
+				<position>1451 211 1567 292</position>
+				<comment>Original equation:\nintention_distance_risk_of_collision=Min(TruncNormal(1000,175,0),1500)\nBounds: (0, 1500)</comment>
+			</node>
+			<node id="risk_of_collision_cpa_with_ship0">
+				<name>Risk of collision CPA with ship0</name>
+				<interior color="e5f6f7" />
+				<outline color="000080" />
+				<font color="000000" name="Arial" size="8" />
+				<position>1060 444 1188 552</position>
+				<comment>Original equation:\nCurrent_risk_of_collision_CPA_towards_ship0=lowres_distance_at_cpa_towards_ship0&lt;intention_distance_risk_of_collision\nBounds: (0, 1)</comment>
+				<barchart active="true" width="140" height="92" />
+			</node>
+			<node id="intention_distance_risk_of_collision_front">
+				<name>Intention: Distance risk of collision front</name>
+				<interior color="ff9900" />
+				<outline color="993300" />
+				<font color="000000" name="Arial" size="8" />
+				<position>1452 455 1576 536</position>
+				<comment>Original equation:\nintention_distance_risk_of_collision_front=Min(TruncNormal(1500,250,0),2250)\nBounds: (0, 2250)</comment>
+			</node>
+			<node id="risk_of_collision_front_with_ship0">
+				<name>Risk of collision front with ship0</name>
+				<interior color="e5f6f7" />
+				<outline color="000080" />
+				<font color="000000" name="Arial" size="8" />
+				<position>1210 443 1338 551</position>
+				<comment>Original equation:\nCurrent_risk_of_collision_front_towards_ship0=lowres_crossing_distance_front_towards_ship0&lt;intention_distance_risk_of_collision_front\nBounds: (0, 1)</comment>
+				<barchart active="true" width="141" height="92" />
+			</node>
+			<node id="risk_of_collision_with_ship0">
+				<name>Risk of collision with ship0</name>
+				<interior color="e5f6f7" />
+				<outline color="000080" />
+				<font color="000000" name="Arial" size="8" />
+				<position>1105 296 1233 404</position>
+				<comment>Original equation:\nCurrent_risk_of_collision_towards_ship0=Or(Current_risk_of_collision_CPA_towards_ship0&gt;0.5,Current_risk_of_collision_front_towards_ship0&gt;0.5)\nBounds: (0, 1)</comment>
+				<barchart active="true" width="137" height="92" />
+			</node>
+			<node id="risky_situation_with_ship0">
+				<name>Risky situation with ship0</name>
+				<interior color="e5f6f7" />
+				<outline color="000080" />
+				<font color="000000" name="Arial" size="8" />
+				<position>916 301 1044 409</position>
+				<comment>Original equation:\nrisk_of_collision_towards_ship0=Or(risk_of_collision_towards_ship0_t_1&gt;0.5,Current_risk_of_collision_towards_ship0&gt;0.5)\nBounds: (0, 1)</comment>
+				<barchart active="true" width="134" height="92" />
+			</node>
+			<node id="avoiding_land">
+				<name>Is avoiding land</name>
+				<interior color="e5f6f7" />
+				<outline color="000080" />
+				<font color="000000" name="Arial" size="8" />
+				<position>326 301 454 409</position>
+				<comment>Original equation:\nCurrent_risk_of_collision_CPA_towards_ship0=lowres_distance_at_cpa_towards_ship0&lt;intention_distance_risk_of_collision\nBounds: (0, 1)</comment>
+				<barchart active="true" width="140" height="78" />
+			</node>
+			<node id="land_close_port">
+				<name>Land close port side</name>
+				<interior color="339966" />
+				<outline color="000000" />
+				<font color="000000" name="Arial" size="8" />
+				<position>132 135 240 202</position>
+				<barchart active="true" width="128" height="78" />
+			</node>
+			<node id="land_close_starboard">
+				<name>Land close starboard side</name>
+				<interior color="339966" />
+				<outline color="000000" />
+				<font color="000000" name="Arial" size="8" />
+				<position>281 138 377 198</position>
+				<barchart active="true" width="128" height="92" />
+			</node>
+			<node id="land_close_front">
+				<name>Land close front</name>
+				<interior color="339966" />
+				<outline color="000000" />
+				<font color="000000" name="Arial" size="8" />
+				<position>428 143 517 198</position>
+				<barchart active="true" width="128" height="78" />
+			</node>
+		</genie>
+	</extensions>
+</smile>

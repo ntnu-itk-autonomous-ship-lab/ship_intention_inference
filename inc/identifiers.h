@@ -16,7 +16,7 @@ namespace INTENTION_INFERENCE
 {
     unsigned discretizer(double input, int max, int n_bins)
     {
-        if (!std::isfinite(input) || std::floor(input * n_bins / max) > INT_MAX)
+        if (!std::isfinite(input) || std::floor(input * n_bins) > INT_MAX)
             return n_bins-1;
         else
             return std::clamp(int(std::floor(input * n_bins / max)), 0, n_bins-1);
@@ -26,43 +26,13 @@ namespace INTENTION_INFERENCE
     {
         return discretizer(time_s, parameters.ample_time_s.max, parameters.ample_time_s.n_bins);
     }
-    unsigned highresCPADistanceIdentifier(const IntentionModelParameters &parameters, double distance_m)
+    unsigned distanceIdentifier(const IntentionModelParameters &parameters, double distance_m)
     {
-        return discretizer(distance_m, parameters.safe_distance_m.max, parameters.safe_distance_m.n_bins);
+        return discretizer(distance_m, parameters.distance_midpoint_m.max, parameters.distance_midpoint_m.n_bins);
     }
-    unsigned lowresCPADistanceIdentifier(const IntentionModelParameters &parameters, double distance_m)
+    unsigned frontDistanceIdentifier(const IntentionModelParameters &parameters, double distance_m)
     {
-        //std::cout << "In lowres bin: " << discretizer(distance_m, parameters.risk_distance_m.max, parameters.risk_distance_m.n_bins) << "\n";
-        return discretizer(distance_m, parameters.risk_distance_m.max, parameters.risk_distance_m.n_bins);
-    }
-    unsigned twotimesDistanceToMidpointIdentifier(const IntentionModelParameters &parameters, double distance_to_midpoint_m)
-    {
-        return discretizer(2 * distance_to_midpoint_m, parameters.safe_distance_midpoint_m.max, parameters.safe_distance_midpoint_m.n_bins);
-    }
-    unsigned crossInFrontHighresIdentifier(const IntentionModelParameters &parameters, double distance_m)
-    {
-        return discretizer(2 * distance_m, parameters.safe_distance_front_m.max, parameters.safe_distance_front_m.n_bins);
-    }
-    unsigned crossInFrontLowresIdentifier(const IntentionModelParameters &parameters, double distance_m)
-    {
-        //std::cout << "In front bin: " << discretizer(2 * distance_m, parameters.risk_distance_front_m.max, parameters.risk_distance_front_m.n_bins) << "\n";
-        return discretizer(2 * distance_m, parameters.risk_distance_front_m.max, parameters.risk_distance_front_m.n_bins);
-    }
-
-    //Side of other ship at CPA
-    std::string sideIdentifier(double angle_diff)
-    {
-        return angle_diff >= 0 ? "port" : "starboard";
-    }
-
-    std::string frontAftIdentifier(bool passing_in_front)
-    {
-        return passing_in_front ? "front" : "aft";
-    }
-
-    std::string crossingWithMidpointOnSideIdentifier(bool port_side)
-    {
-        return port_side ? "port" : "starboard";
+        return discretizer(2 * distance_m, parameters.distance_front_m.max, parameters.distance_front_m.n_bins);
     }
 
     std::string hasPassedIdentifier(double time)
@@ -79,15 +49,6 @@ namespace INTENTION_INFERENCE
             return "port";
         else
             return "starboard";
-    }
-
-   Eigen::Vector4d newInitialStatesIdentifier(Eigen::Vector4d ship_states, Eigen::Vector4d initial_ship_states, int time){
-        Eigen::Vector4d new_initial_states;
-        new_initial_states = initial_ship_states;
-        if (time % 600==0){
-            new_initial_states = ship_states;
-        }
-        return new_initial_states;
     }
 
    bool currentChangeInCourseIdentifier(const IntentionModelParameters &parameters, double current_course, double last_course){
@@ -148,7 +109,7 @@ namespace INTENTION_INFERENCE
         }
         return "similar";
     }
-
+/*
     std::map<std::string, double> evaluateSitution(const IntentionModelParameters &parameters, const Eigen::Vector4d &ownship_state, const Eigen::Vector4d &obstacle_state)
     {
         const auto &p = parameters.colregs_situation_borders_rad;
@@ -360,8 +321,6 @@ namespace INTENTION_INFERENCE
         return result;
     }
 
-
-
     std::map<std::string, double> evaluateRelativeSituation2(const IntentionModelParameters &parameters, const Eigen::Vector4d &ownship_state, const Eigen::Vector4d &obstacle_state) //method Emil
     {
         const auto &p = parameters.colregs_situation_borders_rad;
@@ -386,13 +345,6 @@ namespace INTENTION_INFERENCE
         double theta2 = 5*M_PI/8;
         double theta3 = 112.5*M_PI/180;
         double uncertainty = 0.2;
-        /*if (time_to_cpa <= 0){
-            result["HO"] = 0;
-        result["CR_PS"] = 0;
-        result["CR_SS"] = 0;
-        result["OT_en"] = 0;
-        result["OT_ing"] = 0;
-        }*/
 
         if ((bearing_relative_to_ownship_heading < theta1) && (bearing_relative_to_ownship_heading > -theta1)){
             if ((relative_heading > M_PI-theta1+uncertainty+bearing_relative_to_ownship_heading) || (relative_heading< -(M_PI-theta1+uncertainty)+bearing_relative_to_ownship_heading)){
@@ -462,7 +414,7 @@ namespace INTENTION_INFERENCE
             }
             else if (relative_heading < bearing_relative_to_ownship_heading+M_PI-theta2 && relative_heading > bearing_relative_to_ownship_heading-M_PI+theta2){
                 result["OT_ing"] = 1;
-            }*/
+            }* /
 
         }
         else if (bearing_relative_to_ownship_heading > theta2 || bearing_relative_to_ownship_heading < -theta2){
@@ -499,7 +451,7 @@ namespace INTENTION_INFERENCE
             }
             else if (relative_heading < M_PI-theta2+bearing_relative_to_ownship_heading && relative_heading> -M_PI+theta2+bearing_relative_to_ownship_heading){
                 result["HO"] = 1;
-            }*/
+            }* /
         }
         else if (bearing_relative_to_ownship_heading < -theta1 && bearing_relative_to_ownship_heading > -theta2){
             if (relative_heading > M_PI-theta1+uncertainty+bearing_relative_to_ownship_heading || relative_heading< -(M_PI-theta1+uncertainty)+bearing_relative_to_ownship_heading){
@@ -538,7 +490,7 @@ namespace INTENTION_INFERENCE
             }
             else if (relative_heading < M_PI-theta2+bearing_relative_to_ownship_heading && relative_heading > -M_PI+theta2+bearing_relative_to_ownship_heading){
                 result["OT_ing"] = 1;
-            }*/
+            }* /
         }
         return result;
     }
@@ -827,30 +779,67 @@ namespace INTENTION_INFERENCE
             
         }
         return result;
-    }
+    }*/
 
-    std::string compareSpeed(double ownship_speed, double obstacle_speed)
+    std::map<std::string, double> evaluateRelativeSituation(const IntentionModelParameters &parameters, const Eigen::Vector4d &ownship_state, const Eigen::Vector4d &obstacle_state) //method Jon Eivind
     {
-        if (ownship_speed > obstacle_speed)
-        {
-            return "higher";
+        const auto p = parameters.colregs_situation_borders_rad;
+
+        double relative_course = wrapPI(obstacle_state(CHI) - ownship_state(CHI));
+
+        std::map<std::string, double> result;
+        result["HO"] = 0;
+        result["CR_PS"] = 0;
+        result["CR_SS"] = 0;
+        result["OT_en"] = 0;
+        result["OT_ing"] = 0;
+
+        double ot_probability = 0;
+
+        if (relative_course <= -p.HO_certain || relative_course > p.HO_certain) {
+            result.at("HO") = 1;
         }
-        else
-        {
-            return "lower";
+        else if (relative_course <= -p.HO_uncertain && relative_course > -p.HO_certain) {
+            result.at("HO") = (relative_course + p.HO_uncertain)/(-p.HO_certain + p.HO_uncertain);
+            result.at("CR_PS") = (-p.HO_certain - relative_course)/(-p.HO_certain + p.HO_uncertain);
         }
+        else if (relative_course <= -p.OT_uncertain && relative_course > -p.HO_uncertain) {
+            result.at("CR_PS") = 1;
+        }
+        else if (relative_course <= -p.OT_certain && relative_course > -p.OT_uncertain) {
+            result.at("CR_PS") = (relative_course + p.OT_certain)/(-p.OT_uncertain + p.OT_certain);
+            ot_probability = (-p.OT_uncertain - relative_course)/(-p.OT_uncertain + p.OT_certain);
+        }
+        else if (relative_course <= p.OT_certain && relative_course > -p.OT_certain) {
+            ot_probability = 1;
+        }
+        else if (relative_course <= p.OT_uncertain && relative_course > p.OT_certain) {
+            ot_probability = (relative_course - p.OT_uncertain)/(p.OT_certain - p.OT_uncertain);
+            result.at("CR_SS") = (p.OT_certain - relative_course)/(p.OT_certain - p.OT_uncertain);
+        }
+        else if (relative_course <= p.HO_uncertain && relative_course > p.OT_uncertain) {
+            result.at("CR_SS") = 1;
+        }
+        else if (relative_course <= p.HO_certain && relative_course > p.HO_uncertain) {
+            result.at("CR_SS") = (relative_course - p.HO_certain)/(p.HO_uncertain - p.HO_certain);
+            result.at("HO") = (p.HO_uncertain - relative_course)/(p.HO_uncertain - p.HO_certain);
+        }
+        
+        const double speed_difference = ownship_state(U) - obstacle_state(U);
+        if (speed_difference > p.U_uncertainty_m_s) {
+            result.at("OT_ing") = ot_probability;
+        }
+        else if (speed_difference <= p.U_uncertainty_m_s && speed_difference > -p.U_uncertainty_m_s) {
+            result.at("OT_ing") = ot_probability * (speed_difference + p.U_uncertainty_m_s) / (2 * p.U_uncertainty_m_s);
+            result.at("OT_en") = ot_probability * (p.U_uncertainty_m_s - speed_difference) / (2 * p.U_uncertainty_m_s);
+        }
+        else if (speed_difference <= -p.U_uncertainty_m_s) {
+            result.at("OT_en") = ot_probability;
+        }
+
+        // if (result.at("HO")+result.at("CR_PS")+result.at("CR_SS")+result.at("OT_en")+result.at("OT_ing") != 1) {
+        //     std::cout<<"Situation probabilities sum to "<<result.at("HO")+result.at("CR_PS")+result.at("CR_SS")+result.at("OT_en")+result.at("OT_ing");
+        // }
+        return result;
     }
-
-    /*
-DENNE er feil, port/starboard gir ikke mening her
-std::string compareCourse(double ownship_course, double obstacle_course)
-{
-    double velocity_angle_diff = ownship_course - obstacle_course;
-    wrapPI(&velocity_angle_diff);
-
-    if (velocity_angle_diff >= 0)
-        return "port";
-    else
-        return "starboard";
-}*/
 }

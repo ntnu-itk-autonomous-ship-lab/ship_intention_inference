@@ -49,16 +49,13 @@ namespace INTENTION_INFERENCE
 	{
 		while (std::abs(*value) > M_PI)
 		{
-			while (std::abs(*value) > M_PI)
+			if (*value < 0)
 			{
-				if (*value < 0)
-				{
-					*value += 2 * M_PI;
-				}
-				else
-				{
-					*value -= 2 * M_PI;
-				}
+				*value += 2 * M_PI;
+			}
+			else
+			{
+				*value -= 2 * M_PI;
 			}
 		}
 	}
@@ -267,7 +264,7 @@ namespace INTENTION_INFERENCE
 	{
 		double bearing_relative_to_heading;
 		double distance_at_CPA = INFINITY;
-		double time_untill_CPA = INFINITY;
+		double time_until_CPA = INFINITY;
 		bool passing_in_front;
 		std::string has_passed;
 	};
@@ -288,12 +285,12 @@ namespace INTENTION_INFERENCE
 		{
 			// ships are relativly stationary
 			t = 0;
-			result.time_untill_CPA = INFINITY;
+			result.time_until_CPA = INFINITY;
 		}
 		else
 		{
 			t = -B / A;
-			result.time_untill_CPA = t;
+			result.time_until_CPA = t;
 		}
 
 		const double dx_at_CPA = dPx + dVx * t;
@@ -320,7 +317,7 @@ namespace INTENTION_INFERENCE
 		return result;
 	}
 
-	// Evaluate closest point of approach (CPA) distance, and time untill CPA
+	// Evaluate closest point of approach (CPA) distance, and time until CPA
 	inline CPA evaluateCPA(const Eigen::MatrixXd &trajectory, const Eigen::Vector4d &obstacle_state, double dt)
 	{
 		CPA result;
@@ -342,7 +339,7 @@ namespace INTENTION_INFERENCE
 			if (current_distane_to_obstacle < result.distance_at_CPA)
 			{
 				result.distance_at_CPA = current_distane_to_obstacle;
-				result.time_untill_CPA = current_time;
+				result.time_until_CPA = current_time;
 
 				const double angle_to_other_ship = std::atan2(vector_to_obst(1), vector_to_obst(0));
 				result.bearing_relative_to_heading = angle_to_other_ship - trajectory(CHI, i);
@@ -444,26 +441,6 @@ namespace INTENTION_INFERENCE
 		const auto Py2 = ship2[PY] + ship2[U] * sin(ship2[CHI]) * closest_point.ownship_arrival_time;
 		// Find distance
 		return evaluateDistance(Px2 - closest_point.x, Py2 - closest_point.y);
-	}
-
-	inline auto distanceToMidpointCourse(const Eigen::Vector4d &ship1, const Eigen::Vector4d &ship2)
-	{
-		struct {
-			double distance_to_midpoint;
-			bool crossing_with_midpoint_on_port_side;
-		} retval;
-
-		// Find midpoint
-		const double midpoint_x = (ship1(PX) + ship2(PX)) / 2;
-		const double midpoint_y = (ship1(PY) + ship2(PY)) / 2;
-		Eigen::Vector4d midpoint_state;
-		midpoint_state << midpoint_x, midpoint_y, 0, 0;
-		// Find CPA-vector relative to midpoint
-		CPA cpa_to_midpoint = evaluateCPA(ship1, midpoint_state);
-
-		retval.distance_to_midpoint = cpa_to_midpoint.distance_at_CPA;
-		retval.crossing_with_midpoint_on_port_side = cpa_to_midpoint.bearing_relative_to_heading < 0;
-		return retval;
 	}
 
 	inline auto distanceToMidpointTrajectory(const Eigen::MatrixXd &trajectory, const Eigen::Vector4d &ship2, double dt)
@@ -656,7 +633,6 @@ namespace INTENTION_INFERENCE
 		}
 		return ample_time_cases;
 	} 
-
 
 
 } // namespace INTENTION_INFERENCE
