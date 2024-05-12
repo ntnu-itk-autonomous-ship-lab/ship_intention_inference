@@ -34,6 +34,14 @@ namespace INTENTION_INFERENCE
     {
         return discretizer(2 * distance_m, parameters.distance_front_m.max, parameters.distance_front_m.n_bins);
     }
+    unsigned landDistanceSideIdentifier(const IntentionModelParameters &parameters, double distance_m)
+    {
+        return discretizer(distance_m, parameters.distance_land_side_m.max, parameters.distance_land_side_m.n_bins);
+    }
+    unsigned landDistanceFrontIdentifier(const IntentionModelParameters &parameters, double distance_m)
+    {
+        return discretizer(distance_m, parameters.distance_land_front_m.max, parameters.distance_land_front_m.n_bins);
+    }
 
     std::string hasPassedIdentifier(double time)
     {

@@ -51,6 +51,18 @@ struct IntentionModelParameters{
         double max;
         unsigned n_bins;
     }distance_front_m;
+    struct{
+        double mu;
+        double sigma;
+        double max;
+        unsigned n_bins;
+    }distance_land_side_m;
+    struct{
+        double mu;
+        double sigma;
+        double max;
+        unsigned n_bins;
+    }distance_land_front_m;
 
     /**
      * @brief Course change smaller than this is considered as keeping course
@@ -134,6 +146,14 @@ struct IntentionModelParameters{
         param.distance_front_m.risk_sigma = 200;
         param.distance_front_m.max = 1800;
         param.distance_front_m.n_bins = 30; // this value must match the bayesian network
+        param.distance_land_side_m.mu = 300;
+        param.distance_land_side_m.sigma = 75;
+        param.distance_land_side_m.max = 1800;
+        param.distance_land_side_m.n_bins = 30; // this value must match the bayesian network
+        param.distance_land_front_m.mu = 300;
+        param.distance_land_front_m.sigma = 75;
+        param.distance_land_front_m.max = 1800;
+        param.distance_land_front_m.n_bins = 30; // this value must match the bayesian network
         param.change_in_course_rad.minimal_change_since_init_state = 0.2617994; /* 15 degrees */
         param.change_in_course_rad.minimal_change_since_last_state = 0.06;
         param.change_in_speed_m_s.minimal_change = 1.5;
@@ -154,5 +174,12 @@ struct IntentionModelParameters{
         param.priority_probability["similar"] = 0.90;
         param.priority_probability["higher"] = 0.05;
         return param;
+    }
+
+    IntentionModelParameters copy_parameters_to_new_instance(const IntentionModelParameters &other) 
+    {
+        IntentionModelParameters copy;
+        copy = other;
+        return copy;
     }
 }

@@ -28,7 +28,7 @@
 namespace INTENTION_INFERENCE
 {
 class BayesianNetwork{
-    private:
+private:
     DSL_network net;
     std::deque<std::map<int, int>> temporal_evidence_; // que over timesteps, map <node_id, evidence_id>
     std::deque<std::map<int, std::vector<double>>> temporal_virtual_evidence_;
@@ -38,7 +38,7 @@ class BayesianNetwork{
     auto getNodeId(std::string name) const{
         const auto node_id = net.FindNode(name.c_str());
         if(node_id<0) std::cout << "ERROR: Node name " << name.c_str() << " resulted in error" << std::endl;
-        assert(node_id>=0);
+                    assert(node_id>=0);
         return node_id;
     }
 
@@ -224,7 +224,7 @@ public:
         temporal_virtual_evidence_.push_back(std::map<int, std::vector<double>>{});
     }
 
-    void setEvidence(std::string node_name, int outcome_id,int time_slice=-1){
+    void setEvidence(std::string node_name, int outcome_id, int time_slice = -1){
         wrapTimeSlice(&time_slice);
         const auto node_id = getNodeId(node_name);
         if(isTemporal(node_id)){
@@ -243,22 +243,22 @@ public:
         }
     }
 
-    void setEvidence(std::string node_name, std::string observed_outcome,int time_slice=-1){
+    void setEvidence(std::string node_name, std::string observed_outcome, int time_slice = -1){
         const auto outcome_id = getOutcomeId(node_name, observed_outcome);
-        setEvidence(node_name, outcome_id,time_slice);
+        setEvidence(node_name, outcome_id, time_slice);
     }
 
     //Input <node_name, observation>
-    void setEvidence(const std::map<std::string,std::string>&  evidence){
+    void setEvidence(const std::map<std::string, std::string>& evidence){
         for(auto e : evidence){
-            setEvidence(e.first,e.second);
+            setEvidence(e.first, e.second);
         }
     }
     
 
-    void setEvidence(std::string node_name, const std::map<std::string,std::string>&  evidence){
+    void setEvidence(std::string node_name, const std::map<std::string, std::string>& evidence){
         for(auto e : evidence){
-            setEvidence(e.first,e.second);
+            setEvidence(e.first, e.second);
         }
     }
 
@@ -320,7 +320,7 @@ public:
         std::cout << "\n";
     }
 
-      void setAmpleTimeDistribution(const std::string node_name, std::string filename, int ample_time_idx, int timestep, int n_bins){
+    void setAmpleTimeDistribution(const std::string node_name, std::string filename, int ample_time_idx, int timestep, int n_bins){
         std::vector<std::vector<std::string> > content = read_file(filename);
         std::vector<double> ample_time_vec = ampleTimeVec(content, ample_time_idx, timestep);
         std::vector<double> distr_ample_time_vec = find_distribution(ample_time_vec, n_bins);
@@ -451,7 +451,7 @@ public:
     auto isEvidence(){
         return net.IsThereAnyEvidence();
     }
-     
+    
     auto isDecisions(){
         return net.IsThereAnyDecision();
     }

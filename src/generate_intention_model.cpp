@@ -38,6 +38,8 @@ int main(int argc, char* argv[]){
     net.setPriorNormalDistribution("intention_safe_distance_midpoint", parameters.distance_midpoint_m.safe_mu, parameters.distance_midpoint_m.safe_sigma, parameters.distance_midpoint_m.max / parameters.distance_midpoint_m.n_bins);
     net.setPriorNormalDistribution("intention_safe_distance_front", parameters.distance_front_m.safe_mu, parameters.distance_front_m.safe_sigma, parameters.distance_front_m.max / parameters.distance_front_m.n_bins);
     net.setPriorNormalDistribution("intention_distance_risk_of_collision_front", parameters.distance_front_m.risk_mu, parameters.distance_front_m.risk_sigma, parameters.distance_front_m.max / parameters.distance_front_m.n_bins);
+    net.setPriorNormalDistribution("intention_safe_distance_land_side", parameters.distance_land_side_m.safe_mu, parameters.distance_land_side_m.safe_sigma, parameters.distance_land_side_m.max / parameters.distance_land_side_m.n_bins);
+    net.setPriorNormalDistribution("intention_safe_distance_land_front", parameters.distance_land_front_m.mu, parameters.distance_land_front_m.sigma, parameters.distance_land_front_m.max / parameters.distance_land_front_m.n_bins);
 
     int cpa_dist_idx = 6;
     int colreg_idx = 7;

@@ -68,6 +68,8 @@ namespace INTENTION_INFERENCE
                                                                         , "intention_good_seamanship"
                                                                         , "intention_safe_distance_front"
                                                                         , "intention_safe_distance_midpoint"
+																		, "intention_safe_distance_land_front"
+																		, "intention_safe_distance_land_side"
                                                                         , "intention_ample_time"
                                                                         , "intention_ignoring_safety"
                                                                         , "unmodelled_behaviour"
@@ -95,6 +97,9 @@ namespace INTENTION_INFERENCE
                                                                                 , "risk_of_collision_with_"};
 		std::vector<std::string> intermediate_node_names_general = {"turned_port"
                                                                     , "turned_starboard"
+																	, "land_close_front"
+																	, "land_close_starboard"
+																	, "land_close_port"
                                                                     , "avoiding_land"
                                                                     , "observation_explicable"
                                                                     , "stands_on_correctly"
@@ -108,9 +113,9 @@ namespace INTENTION_INFERENCE
 		std::vector<std::string> input_node_names_general = {"changing_course"
                                                             , "course_change"
                                                             , "speed_change"
-                                                            , "land_close_front"
-                                                            , "land_close_starboard"
-                                                            , "land_close_port"};
+                                                            , "land_distance_front"
+                                                            , "land_distance_starboard"
+                                                            , "land_distance_port"};
 		std::vector<std::string> all_node_names;
 		const std::string output_name = "observation_explicable";
 
@@ -124,6 +129,7 @@ namespace INTENTION_INFERENCE
 		 * there has been any significant changes in course or speed.
 		 * 
 		 * @param ship_states 
+		 * @param land_states 
 		 * @param time 
 		 * @return true 
 		 * @return false 
@@ -242,6 +248,7 @@ namespace INTENTION_INFERENCE
 		 * @param parameters Parameter object of intention model
  		 * @param ship_states
  		 * @param last_ship_states
+ 		 * @param land_states
  		 * @param currently_tracked_ships ship list of all ships (including own)
 		 * @param do_save if timestep sould be iterated in the bayesian network.
 		 * The value of \ref doSave() function.
@@ -256,9 +263,9 @@ namespace INTENTION_INFERENCE
 			net.setEvidence("course_change", changeInCourseIdentifier(parameters, better_at(ship_states, my_id)[CHI], my_initial_ship_state[CHI]));
 			net.setEvidence("speed_change", changeInSpeedIdentifier(parameters, better_at(ship_states, my_id)[U], my_initial_ship_state[U]));
 
-			net.setEvidence("land_close_port", better_at(land_states, my_id)[LP]);
-			net.setEvidence("land_close_front", better_at(land_states, my_id)[LF]);
-			net.setEvidence("land_close_starboard", better_at(land_states, my_id)[LS]);
+			net.setEvidence("land_distance_port", landDistanceSideIdentifier(parameters, better_at(land_states, my_id)[LP]));
+			net.setEvidence("land_distance_front", landDistanceFrontIdentifier(parameters, better_at(land_states, my_id)[LF]));
+			net.setEvidence("land_distance_starboard", landDistanceSideIdentifier(parameters, better_at(land_states, my_id)[LS]));
 
 			bool is_changing_course = currentChangeInCourseIdentifier(parameters ,better_at(ship_states, my_id)[CHI], last_ship_states[my_id][CHI]);
 			net.setEvidence("changing_course", is_changing_course);
@@ -384,7 +391,7 @@ namespace INTENTION_INFERENCE
 			unsigned steps_into_trajectory = parameters.time_into_trajectory; /* Only used for course change and speed change */
 			net.setEvidence("course_change", changeInCourseIdentifier(parameters, trajectory(CHI, steps_into_trajectory), my_initial_ship_state[CHI]));
 			net.setEvidence("speed_change", changeInSpeedIdentifier(parameters, trajectory(U, steps_into_trajectory), my_initial_ship_state[U]));
-			net.setEvidence("changing_course", false); 
+			net.setEvidence("changing_course", false);
 
 			std::vector<std::string> handled_ship_names;
 			for (auto const ship_id : currently_tracked_ships)
@@ -406,7 +413,7 @@ namespace INTENTION_INFERENCE
 					net.setEvidence("which_side_" + ship_name, crossing_port_starboard_identifier(cpa.bearing_relative_to_heading));
 
 					double crossing_in_front_distance = crossingInFrontDistanceTrajectory(trajectory, ship_state, dt);
-					net.setEvidence("crossing_distance_front_towards_" + ship_name, frontDistanceIdentifier(parameters, crossing_in_front_distance));
+					net.setEvidence("crossing_distance_front_to_" + ship_name, frontDistanceIdentifier(parameters, crossing_in_front_distance));
 
 					// if (cpa.time_until_CPA > 240){
 					// 	ship_states_before_cpa_limit = ship_states;
@@ -441,6 +448,8 @@ namespace INTENTION_INFERENCE
 		 * @param ship_states a map of states of all ships with mmsi as key and
 		 * object as a 4d vector consisting of x, y, cog, sog, where this acts
 		 * as startpoint or initial state for the intention inference
+		 * @param land_states a map of distances to land for all ships with mmsi as key
+		 * in portwards, forwards, and starboardwards direction
 		 */
 		IntentionModel(std::string network_file_name,
 					   const IntentionModelParameters &parameters,
@@ -537,6 +546,8 @@ namespace INTENTION_INFERENCE
 		 * @param ship_states a map of states of all ships with mmsi as key and
 		 * object as a 4d vector consisting of x, y, sog, cog, where this acts
 		 * as startpoint or initial state for the intention inference
+		 * @param land_states a map of distances to land for all ships with mmsi as key
+		 * in portwards, forwards, and starboardwards direction
 		 * @param ship_list a list of all ships mmsi
 		 * @param time current time
 		 * @return double If timestep has been iterated in the bayesian network
@@ -642,12 +653,12 @@ namespace INTENTION_INFERENCE
 		 * @param y y coordinate at time \ref time
 		 * @param time current time, just used for writing to file
 		 */
-		void save_intention_predictions_to_file(std::string filename, double x, double y, bool land_port_vec, bool land_front_vec, bool land_starboard_vec, double time){
+		void save_intention_predictions_to_file(std::string filename, double x, double y, double time){
 			std::ofstream intentionFile;
 
 			intentionFile.open (filename, std::ios_base::app);
 			if (intentionFile.is_open()) {
-				write_results_to_file(intentionFile, time, x, y, land_port_vec, land_front_vec, land_starboard_vec);
+				write_results_to_file(intentionFile, time, x, y);
 				intentionFile.close();
 			} else {
 				std::cout << "ERROR: Failed to open " << filename << std::endl;
