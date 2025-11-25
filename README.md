@@ -1,5 +1,5 @@
 # ship_intention_inference
-Intention model to predict intentions of ships using ais data. To use in another project, the files in `inc/` are of interest, in particular `intention_model.h`. In addition, a range of .cpp files are made to test and improve the intention model. **Currently, only insert_ais.cpp and generate_intention_model.cpp are supported**. The rest of the cpp files are reminants from older versions. The matlab script `plot_intentions_static.m` can be used to plot intentions written to the intention files, and `plot_trajectories.m` can be use to plot trajectories written to a trajectory file.
+Intention model to predict intentions of ships using AIS data. To use in another project, the files in `inc/` are of interest, in particular `intention_model.h`. In addition, a range of .cpp files are made to test and improve the intention model. **Currently, only insert_ais.cpp and generate_intention_model.cpp are supported**. The rest of the cpp files are reminants from older versions. The matlab script `plot_intentions_static.m` can be used to plot intentions written to the intention files, and `plot_trajectories.m` can be use to plot trajectories written to a trajectory file.
 
 ## Setup
 To get the intention model to run we need the eigen library and the smile library. To install the eigen library, simply run
